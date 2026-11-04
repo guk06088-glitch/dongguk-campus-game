@@ -2523,7 +2523,7 @@ function animate(time){requestAnimationFrame(animate);const dt=Math.min((time-pr
  mpTick(dt,time);renderer.render(scene,camera)}
 
 // Multiplayer: all remote avatars are lightweight and never control the local player.
-const mpPeers=new Map();let mpSocket=null,mpSelf=null,mpLastSend=0,mpRetry=0,mpLastPosition=null,mpLastRotation=null;
+const mpPeers=new Map();let mpSocket=null,mpSelf=null,mpLastSend=0,mpRetry=0;
 const mpMaterial=new THREE.MeshStandardMaterial({color:0x9eacba,roughness:.85});
 const mpHeadMaterial=new THREE.MeshStandardMaterial({color:0xf4cba9,roughness:.9});
 function mpCreatePeer(id,name){
@@ -2532,15 +2532,29 @@ function mpCreatePeer(id,name){
  const head=new THREE.Mesh(new THREE.SphereGeometry(.48,12,9),mpHeadMaterial);head.position.y=1.48;root.add(head);
  const nose=new THREE.Mesh(new THREE.SphereGeometry(.065,8,6),new THREE.MeshBasicMaterial({color:0x56453b}));nose.position.set(0,1.48,-.46);root.add(nose);
  const label=new THREE.Sprite(new THREE.SpriteMaterial({map:labelTexture(name,{w:480,h:112,font:54,bg:'#234b4a'}),transparent:true,depthTest:false}));label.scale.set(2.7,.64,1);label.position.y=2.35;root.add(label);
- const peer={root,label,target:new THREE.Vector3(),angle:0,name};mpPeers.set(id,peer);return peer;
+ const peer={root,label,target:new THREE.Vector3(),angle:0};mpPeers.set(id,peer);return peer;
 }
+// Temporary chat bubbles float above players and always face the camera.
+const mpBubbles=[];
+function mpShowBubble(root,message){
+ if(!root||!message)return;
+ let old=mpBubbles.find(b=>b.root===root);
+ if(old){root.remove(old.sprite);old.sprite.material.map?.dispose();old.sprite.material.dispose();mpBubbles.splice(mpBubbles.indexOf(old),1)}
+ const text=String(message).slice(0,65);
+ const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:labelTexture(text,{w:900,h:190,font:49,bg:'#ffffff'}),transparent:true,depthTest:false,depthWrite:false}));
+ sprite.scale.set(Math.min(5.1,Math.max(2.8,text.length*.105)),1.02,1);
+ sprite.position.set(0,3.27,0);sprite.renderOrder=999;root.add(sprite);
+ mpBubbles.push({root,sprite,expires:performance.now()+5200});
+}
+function mpExpireBubbles(now){for(let i=mpBubbles.length-1;i>=0;i--){const b=mpBubbles[i];if(now>=b.expires||(!b.root.parent&&b.root!==player)){b.root.remove(b.sprite);b.sprite.material.map?.dispose();b.sprite.material.dispose();mpBubbles.splice(i,1)}}}
+window.addEventListener('dongguk:localchat',e=>mpShowBubble(player,e.detail.text));
 function mpRemovePeer(id){const p=mpPeers.get(id);if(!p)return;scene.remove(p.root);p.root.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material&&o!==p.label&&o.material!==mpMaterial&&o.material!==mpHeadMaterial)o.material.dispose();if(o===p.label){o.material.map?.dispose();o.material.dispose();}});mpPeers.delete(id)}
 function mpReceive(data){
- if(data.type==='welcome'){mpSelf=data.id;mpLastPosition=null;mpLastRotation=null;for(const p of data.peers||[])mpReceive({type:'join',...p});window.dispatchEvent(new CustomEvent('dongguk:mpstatus',{detail:{online:true,count:mpPeers.size+1}}));}
- else if(data.type==='join'&&data.id!==mpSelf){let p=mpPeers.get(data.id)||mpCreatePeer(data.id,data.name||'방문자');if(p.name!==(data.name||'방문자')){p.name=data.name||'방문자';p.label.material.map?.dispose();p.label.material.map=labelTexture(p.name,{w:480,h:112,font:54,bg:'#234b4a'});p.label.material.needsUpdate=true;}p.target.set(data.x||0,data.y||0,data.z||0);p.root.position.copy(p.target);p.angle=data.r||0;}
+ if(data.type==='welcome'){mpSelf=data.id;for(const p of data.peers||[])mpReceive({type:'join',...p});window.dispatchEvent(new CustomEvent('dongguk:mpstatus',{detail:{online:true,count:mpPeers.size+1}}));}
+ else if(data.type==='join'&&data.id!==mpSelf){let p=mpPeers.get(data.id)||mpCreatePeer(data.id,data.name||'방문자');p.target.set(data.x||0,data.y||0,data.z||0);p.root.position.copy(p.target);p.angle=data.r||0;}
  else if(data.type==='move'&&data.id!==mpSelf){let p=mpPeers.get(data.id)||mpCreatePeer(data.id,data.name||'방문자');p.target.set(data.x||0,data.y||0,data.z||0);p.angle=data.r||0;}
  else if(data.type==='leave')mpRemovePeer(data.id);
- else if(data.type==='chat')window.dispatchEvent(new CustomEvent('dongguk:mpchat',{detail:data}));
+ else if(data.type==='chat'){const peer=mpPeers.get(data.id);if(peer)mpShowBubble(peer.root,data.text);window.dispatchEvent(new CustomEvent('dongguk:mpchat',{detail:data}));}
  else if(data.type==='count')window.dispatchEvent(new CustomEvent('dongguk:mpstatus',{detail:{online:true,count:data.count}}));
 }
 function mpConnect(){
@@ -2555,14 +2569,9 @@ function mpConnect(){
 window.__donggukMP={sendChat(message){if(mpSocket?.readyState!==WebSocket.OPEN||!mpSelf)return false;mpSocket.send(JSON.stringify({type:'chat',text:message}));return true},get online(){return !!mpSelf}};
 mpConnect();
 function mpTick(dt,time){
+ mpExpireBubbles(performance.now());
  for(const p of mpPeers.values()){p.root.position.lerp(p.target,Math.min(1,dt*9));const delta=Math.atan2(Math.sin(p.angle-p.root.rotation.y),Math.cos(p.angle-p.root.rotation.y));p.root.rotation.y+=delta*Math.min(1,dt*9);}
- // Free-tier friendly: send only when position/direction changes, at most four times per second.
- if(mpSelf&&started&&mpSocket?.readyState===WebSocket.OPEN&&time-mpLastSend>=250){
-  const p=player.position,r=player.rotation.y;
-  const moved=!mpLastPosition||p.distanceToSquared(mpLastPosition)>0.0016;
-  const turned=mpLastRotation===null||Math.abs(Math.atan2(Math.sin(r-mpLastRotation),Math.cos(r-mpLastRotation)))>0.045;
-  if(moved||turned){mpLastSend=time;mpLastPosition=p.clone();mpLastRotation=r;mpSocket.send(JSON.stringify({type:'move',x:+p.x.toFixed(2),y:+p.y.toFixed(2),z:+p.z.toFixed(2),r:+r.toFixed(3)}));}
- }
+ if(mpSelf&&started&&time-mpLastSend>125){mpLastSend=time;mpSocket.send(JSON.stringify({type:'move',x:+player.position.x.toFixed(2),y:+player.position.y.toFixed(2),z:+player.position.z.toFixed(2),r:+player.rotation.y.toFixed(3)}));}
 }
 
 function resize(){const w=innerWidth,h=innerHeight;camera.aspect=w/h;camera.fov=w<640?67:60;camera.updateProjectionMatrix();updateResolution()}
@@ -2692,20 +2701,39 @@ for(const id of ['chantFrame','templeSoundVideo']){const el=document.getElementB
 #localChatForm{display:flex;gap:6px;padding:10px;border-top:1px solid #ffffff30}#localChatInput{flex:1;min-width:0;border:1px solid #ffffff55;border-radius:9px;padding:10px;background:#fff;color:#142522;font-size:16px;touch-action:manipulation;user-select:text;-webkit-user-select:text}#localChatSend{border:0;border-radius:9px;background:#d9bd82;color:#152b27;font-weight:700;padding:0 14px;cursor:pointer}
 @media(max-width:600px){#localChatToggle{right:10px;bottom:calc(92px + env(safe-area-inset-bottom,0px));padding:10px 12px}#localChatPanel{right:8px;bottom:calc(145px + env(safe-area-inset-bottom,0px));width:calc(100vw - 16px);height:min(380px,57dvh)}}
 </style>
-<button id="localChatToggle" type="button" aria-label="채팅 열기" aria-expanded="false">💬 채팅</button>
-<section id="localChatPanel" role="dialog" aria-label="실시간 채팅" aria-hidden="true">
- <div id="localChatHeader"><div><b>💬 힐링 캠퍼스 채팅</b><div style="font-size:11px;opacity:.8">실시간 채팅 · 같은 게임 주소에 접속한 이용자끼리 대화</div></div><button id="localChatClose" type="button" aria-label="채팅 닫기">×</button></div>
+<style>
+#localChatNotify{background:#e9f4ed;color:#164634;border:1px solid #b5d5c1;border-radius:18px;padding:5px 10px;font-size:12px;cursor:pointer;white-space:nowrap}
+#localChatNotify[aria-pressed="false"]{background:#e8e8e8;color:#555;border-color:#ccc}
+#localChatUnread{position:absolute;top:-7px;right:-5px;background:#c92642;color:#fff;border-radius:20px;padding:2px 6px;font-size:11px;min-width:17px;text-align:center;pointer-events:none}
+#localChatToggle{position:relative}
+</style>
+<button id="localChatToggle" type="button" aria-label="채팅 열기" aria-expanded="false">💬 채팅<span id="localChatUnread" hidden></span></button>
+<section id="localChatPanel" role="dialog" aria-label="개인용 채팅" aria-hidden="true">
+ <div id="localChatHeader"><div><b>💬 힐링 캠퍼스 채팅</b><div style="font-size:11px;opacity:.8">실시간 멀티플레이 채팅</div></div><button id="localChatNotify" type="button" aria-pressed="true">🔔 알림 켜짐</button><button id="localChatClose" type="button" aria-label="채팅 닫기">×</button></div>
  <div id="localChatLog" role="log" aria-live="polite"></div>
- <form id="localChatForm"><input id="localChatInput" type="text" maxlength="240" placeholder="함께 접속한 친구에게 메시지를 보내세요" autocomplete="off" aria-label="채팅 내용"><button id="localChatSend" type="submit">전송</button></form>
+ <form id="localChatForm"><input id="localChatInput" type="text" maxlength="240" placeholder="정각원, 팔정도, 명진관에 대해 물어보세요" autocomplete="off" aria-label="채팅 내용"><button id="localChatSend" type="submit">전송</button></form>
 </section>
 <script>
 (()=>{'use strict';
 const panel=document.getElementById('localChatPanel'),toggle=document.getElementById('localChatToggle'),log=document.getElementById('localChatLog'),input=document.getElementById('localChatInput');
 function line(who,message,mine=false){const el=document.createElement('div');el.className='local-chat-line'+(mine?' me':'');const label=document.createElement('small');label.textContent=who;const body=document.createElement('span');body.textContent=message;el.append(label,body);log.appendChild(el);while(log.children.length>80)log.firstElementChild.remove();log.scrollTop=log.scrollHeight;}
+const notify=document.getElementById('localChatNotify'),unread=document.getElementById('localChatUnread');
+let notificationsOn=true,unreadCount=0;
+try{notificationsOn=localStorage.getItem('dgChatNotify')!=='off'}catch(e){}
+function updateNotify(){notify.textContent=notificationsOn?'🔔 알림 켜짐':'🔕 알림 꺼짐';notify.setAttribute('aria-pressed',String(notificationsOn))}
+function updateUnread(){unread.hidden=unreadCount===0;unread.textContent=unreadCount>99?'99+':String(unreadCount)}
+updateNotify();updateUnread();
+notify.addEventListener('click',()=>{notificationsOn=!notificationsOn;try{localStorage.setItem('dgChatNotify',notificationsOn?'on':'off')}catch(e){}updateNotify()});
+let audioCtx;
+function notifyIncoming(){
+ if(!notificationsOn)return;
+ try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;audioCtx=audioCtx||new C();if(audioCtx.state==='suspended')return;const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type='sine';osc.frequency.setValueAtTime(720,audioCtx.currentTime);osc.frequency.setValueAtTime(950,audioCtx.currentTime+.09);gain.gain.setValueAtTime(.0001,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(.045,audioCtx.currentTime+.01);gain.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.20);osc.connect(gain);gain.connect(audioCtx.destination);osc.start();osc.stop(audioCtx.currentTime+.21)}catch(e){}
+}
+document.addEventListener('pointerdown',()=>{if(notificationsOn&&audioCtx?.state==='suspended')audioCtx.resume().catch(()=>{})},{passive:true});
 function reply(t){if(/명진관|국어국문|학과|전공|도담/.test(t))return '도담: 명진관은 동국대학교의 역사적인 건물입니다. 대학원 국어국문학과는 고전문학·국어학·외국어로서의 한국어교육·현대문학·문예창작 전공을 소개합니다.';if(/팔정도|정견|정념|정정진/.test(t))return '안내 NPC: 팔정도는 정견, 정사유, 정어, 정업, 정명, 정정진, 정념, 정정의 여덟 가지 바른 실천입니다.';if(/정각원|법당|절|명상/.test(t))return '안내 NPC: 정각원에서는 법당을 둘러보고 명상과 절하기 체험을 할 수 있습니다. 경전 독송은 마음경전서재에서 선택해 보세요.';if(/안녕|반가|고마/.test(t))return '안내 NPC: 반갑습니다. 오늘도 평안한 산책 되시길 바랍니다.';return '안내 NPC: 정각원, 팔정도, 명진관 또는 국어국문학과에 대해 질문해 주세요. 이 채팅은 정해진 안내문에 답하는 개인용 기능입니다.';}
-function setOpen(v){panel.classList.toggle('is-open',v);panel.setAttribute('aria-hidden',String(!v));toggle.setAttribute('aria-expanded',String(v));if(v){if(!log.children.length)line('시스템','실시간 채팅입니다. 연결된 이용자에게 메시지가 전달됩니다.');input.focus();}else input.blur();}
-window.addEventListener('dongguk:mpchat',e=>line(e.detail.name||'방문자',e.detail.text));window.addEventListener('dongguk:mpstatus',e=>{const d=e.detail;toggle.textContent=d.online?'💬 채팅 ('+d.count+'명)':'💬 연결 대기';});
-toggle.addEventListener('click',()=>setOpen(!panel.classList.contains('is-open')));document.getElementById('localChatClose').addEventListener('click',()=>setOpen(false));document.getElementById('localChatForm').addEventListener('submit',e=>{e.preventDefault();const t=input.value.trim();if(!t)return;if(window.__donggukMP?.sendChat(t)){line('나',t,true);}else{line('시스템','서버에 연결되지 않아 메시지를 전송하지 못했습니다.');}input.value='';input.focus();});
+function setOpen(v){panel.classList.toggle('is-open',v);panel.setAttribute('aria-hidden',String(!v));toggle.setAttribute('aria-expanded',String(v));if(v){unreadCount=0;updateUnread();if(!log.children.length)line('시스템','실시간 채팅입니다. 연결된 이용자에게 메시지가 전달됩니다.');input.focus();}else input.blur();}
+window.addEventListener('dongguk:mpchat',e=>{line(e.detail.name||'방문자',e.detail.text);if(!panel.classList.contains('is-open')){unreadCount++;updateUnread()}notifyIncoming()});window.addEventListener('dongguk:mpstatus',e=>{const d=e.detail;toggle.textContent=d.online?'💬 채팅 ('+d.count+'명)':'💬 연결 대기';});
+toggle.addEventListener('click',()=>setOpen(!panel.classList.contains('is-open')));document.getElementById('localChatClose').addEventListener('click',()=>setOpen(false));document.getElementById('localChatForm').addEventListener('submit',e=>{e.preventDefault();const t=input.value.trim();if(!t)return;if(window.__donggukMP?.sendChat(t)){line('나',t,true);window.dispatchEvent(new CustomEvent('dongguk:localchat',{detail:{text:t}}));}else{line('시스템','서버에 연결되지 않아 메시지를 전송하지 못했습니다.');}input.value='';input.focus();});
 input.addEventListener('keydown',e=>e.stopPropagation());panel.addEventListener('pointerdown',e=>e.stopPropagation());panel.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('is-open'))setOpen(false);});
 })();
 </script>
