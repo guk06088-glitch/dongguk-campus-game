@@ -1,37 +1,24 @@
-# 동국대학교 3D 산책 게임: 무료 실시간 멀티플레이 배포
+# 동국대학교 3D 힐링 캠퍼스 — 스마트폰 무료 배포형 멀티플레이
 
-이 프로젝트는 기존 게임 화면 `public/index.html`, 실시간 멀티플레이 서버 `src/index.js`, 서버 설정 `wrangler.toml`로 구성됩니다. 휴대폰/PC 웹브라우저 모두 사용 가능합니다.
+기존 단일 HTML 3D 게임과 Cloudflare Workers + Durable Objects(WebSocket) 실시간 서버를 한 주소에 배포합니다. GitHub Actions를 통해 `main` 브랜치에 파일을 올릴 때마다 자동 배포합니다. **Cloudflare Pages에 ZIP만 업로드하면 멀티플레이가 동작하는 구조가 아닙니다.**
 
-**이 ZIP은 GitHub + Cloudflare Workers Builds(직접 연결) 방식용입니다.** 기존 ZIP의 GitHub Actions 배포는 사용하지 않아 API 토큰을 직접 만들 필요가 없습니다.
+## 스마트폰만으로 최초 배포하기
 
-## 1. GitHub에 게임 올리기
+1. GitHub와 Cloudflare에 각각 가입합니다. GitHub에서 **비공개(private)** 새 저장소를 만들고 기본 브랜치를 `main`으로 둡니다.
+2. 스마트폰의 파일 앱에서 이 ZIP을 압축 해제합니다. 저장소에 `public/index.html`, `src/index.js`, `wrangler.toml`, `package.json`, `.github/workflows/deploy.yml`의 **폴더 경로를 유지**하여 업로드합니다. 모바일 GitHub 웹에서 폴더 업로드가 어렵다면 브라우저의 '데스크톱 사이트'를 켜거나 `github.dev` 웹 편집기를 이용하세요. 특히 숨김 폴더 `.github`가 누락되지 않도록 확인하세요.
+3. Cloudflare 대시보드 → 프로필 → API Tokens에서 Workers 배포 권한이 있는 **최소 권한 API 토큰**을 생성합니다. 토큰은 절대로 소스 코드나 채팅에 붙여 넣지 마세요. Cloudflare Account ID도 확인합니다.
+4. GitHub 저장소 → Settings → Secrets and variables → Actions → New repository secret에서 `CLOUDFLARE_API_TOKEN`과 `CLOUDFLARE_ACCOUNT_ID`를 각각 등록합니다.
+5. GitHub 저장소 → Actions → `Deploy Dongguk Multiplayer to Cloudflare` → `Run workflow`를 누르거나 `main`에 커밋을 올립니다. Actions 로그에서 배포 성공과 `workers.dev` 주소를 확인합니다. Cloudflare 계정에서 workers.dev 서브도메인이 활성화되어 있어야 합니다.
+6. 서로 다른 스마트폰에서 같은 URL에 접속해 이동·채팅을 시험합니다. 스마트폰 브라우저의 '홈 화면에 추가'를 사용하면 바로가기로 실행할 수 있습니다.
 
-1. https://github.com 로그인 → `New repository` 클릭. 이름은 `dongguk-campus-game` 등 원하는 이름, `Private` 권장, 기본 브랜치는 `main`.
-2. ZIP을 **압축 풀기**. 압축을 풀어 나온 폴더에서 `public`, `src`, `wrangler.toml`, `package.json`, `README.md`를 선택.
-3. 새 저장소 → `Add file` → `Upload files` → 위 5개 항목을 한꺼번에 끌어 놓거나 폴더·파일을 업로드 → `Commit changes`.
-4. GitHub 화면에서 `public/index.html`, `src/index.js`, `wrangler.toml`, `package.json`이 정확한 위치에 보이는지 확인. **ZIP 파일 자체만 올리면 안 됩니다.**
+## 수정 및 재배포
 
-## 2. Cloudflare에서 자동 배포하기
+GitHub의 `public/index.html` 등을 수정하여 `main`에 저장하면 Actions가 다시 배포합니다. `src/index.js`는 서버 코드, `wrangler.toml`은 서버 및 Durable Objects 설정입니다. Actions가 실패하면 GitHub Actions의 실패 단계 로그를 확인합니다.
 
-1. https://dash.cloudflare.com 에서 무료 계정 로그인.
-2. `Workers & Pages` → `Create application` → GitHub 저장소 연결(화면에 따라 `Connect Git` 또는 `GitHub`). GitHub 접근 권한을 승인하고 저장소 선택.
-3. Worker 이름은 **`dongguk-healing-multiplayer`** 로 설정(중요: `wrangler.toml`의 `name`과 일치).
-4. 브랜치 `main`, Root directory `/` 또는 기본값, Build command `없음(빈 칸)`, Deploy command `npx wrangler deploy` (기본값일 수 있음).
-5. `Save and Deploy` 또는 `Deploy` 클릭. 성공 시 `https://dongguk-healing-multiplayer.<내서브도메인>.workers.dev` 형식의 실제 주소가 제공됩니다. `<내서브도메인>`은 Cloudflare가 제공하는 값을 사용하세요.
-6. 게임 주소를 두 기기에서 동시에 열고 캐릭터와 채팅을 시험합니다.
+## 기능과 주의 사항
 
-## 3. 수정·운영
-
-- `public/index.html`을 GitHub에서 수정하면 Cloudflare가 새 커밋을 감지하여 다시 배포합니다.
-- 친구들에게는 **실제 배포된 workers.dev 주소**만 공유하면 됩니다.
-- **Cloudflare Pages에 HTML 한 개만 올리거나, 로컬 HTML 파일을 열면** 서버가 없으므로 멀티플레이 기능이 동작하지 않습니다.
-- GitHub 저장소를 Private으로 하더라도, 배포된 `workers.dev` 사이트는 따로 접근 제한을 만들지 않으면 공개됩니다.
-- 이 게임은 하나의 공용 방을 공유합니다. 접속 암호, 인증, 차단/신고, 개인정보 관리, 서버 측 인원 상한, 채팅 기록 보존은 구현되어 있지 않습니다.
-- 무료 요금제에는 요청/CPU/사용량 제한이 있습니다. **실제 19명 동시 실사용 부하 테스트는 진행하지 못했습니다.** 게임 코드는 가급적 이동 중에만 0.25초 간격으로 위치를 전송하도록 조정했습니다.
-- 실시간 채팅 UI의 기존 '개인용 채팅' 문구를 온라인 실시간 채팅 안내로 바로잡았습니다.
-- 3D 엔진은 외부 Three.js CDN을 사용하므로 첫 접속 때 인터넷이 필요합니다. 게임에 포함된 사진/음원은 공개 배포 권리를 확인해야 합니다.
-
-관련 공식 문서:
-- Cloudflare Workers Git integration: https://developers.cloudflare.com/workers/ci-cd/builds/
-- Cloudflare Durable Objects pricing: https://developers.cloudflare.com/durable-objects/platform/pricing/
-- GitHub 파일 업로드: https://docs.github.com/ko/repositories/working-with-files/managing-files/adding-a-file-to-a-repository
+- 같은 방에 접속한 다른 이용자 캐릭터와 닉네임, 이동, 실시간 채팅 및 접속자 수를 표시하는 **시범판**입니다.
+- 닉네임 기반이며 회원 인증, 운영자 제재, 신고, 부정 이동 방지, 영구 채팅 저장, 연령 보호 기능은 아직 없습니다. 공개 커뮤니티 운영 전에 추가하세요.
+- Cloudflare 및 GitHub 무료 요금제에는 사용량/실행 제한이 있으며, 무료를 무제한 보장하지 않습니다. 과금 설정과 이용량을 계정에서 확인하세요.
+- 게임 HTML은 약 9MB로 휴대폰 성능과 네트워크 환경에 따라 로딩이 느릴 수 있습니다. 실제 모바일 기기 및 Cloudflare 배포 통합 테스트는 수행하지 않았습니다.
+- 사진, 녹음된 독송 및 음악의 **공개 배포 권한**을 확인해야 합니다. 동국대학교 공식 서비스로 오인되지 않도록 비공식 프로젝트임을 명시하는 것도 권장합니다.
