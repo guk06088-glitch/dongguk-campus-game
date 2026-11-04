@@ -1,0 +1,15 @@
+name = "dongguk-healing-multiplayer"
+main = "src/index.js"
+compatibility_date = "2026-11-04"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+[[durable_objects.bindings]]
+name = "CAMPUS_ROOM"
+class_name = "CampusRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["CampusRoom"]
