@@ -2541,7 +2541,7 @@ function mpShowBubble(root,message){
  let old=mpBubbles.find(b=>b.root===root);
  if(old){root.remove(old.sprite);old.sprite.material.map?.dispose();old.sprite.material.dispose();mpBubbles.splice(mpBubbles.indexOf(old),1)}
  const text=String(message).slice(0,65);
- const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:labelTexture(text,{w:900,h:190,font:49,bg:'#ffffff'}),transparent:true,depthTest:false,depthWrite:false}));
+ const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:labelTexture(text,{w:900,h:190,font:49,bg:'#ffffff',fg:'#000000'}),transparent:true,depthTest:false,depthWrite:false}));
  sprite.scale.set(Math.min(5.1,Math.max(2.8,text.length*.105)),1.02,1);
  sprite.position.set(0,3.27,0);sprite.renderOrder=999;root.add(sprite);
  mpBubbles.push({root,sprite,expires:performance.now()+5200});
