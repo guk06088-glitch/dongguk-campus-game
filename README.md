@@ -1,61 +1,38 @@
-# 동국대학교 3D 힐링 캠퍼스 — 전체 업로드 패키지 (2026-11-05)
+# 동국대학교 3D 힐링 캠퍼스 R8
 
-이 프로젝트는 기존 3D 게임을 유지하고 GitHub Actions 배포 파일 및 모바일 진단 페이지를 포함합니다. **실제 스마트폰에서 3D 동작 검증을 완료한 버전은 아닙니다.**
+## 변경 사항 (2026-11-05)
 
-## ZIP 압축을 풀고 저장소 최상위에 업로드할 파일
-- `public/index.html`: 게임 본문
-- `public/diagnostics.html`: WebGL/Three.js 연결 확인
-- `src/index.js`: Cloudflare Worker + Durable Objects 실시간 채팅/이동 서버
-- `wrangler.toml`: Worker 이름과 정적 파일 설정
-- `package.json`: npm 설정
-- `.github/workflows/deploy.yml`: GitHub Actions 자동 배포
+1. **공유 소원연등:** 서버에 저장되는 최근 18개의 소원 문구(각 30자 이내)를 접속한 모든 이용자가 동일하게 봅니다. 새 접속자에게도 기존 18개 목록이 전송됩니다. 새 소원이 추가돼 18개를 초과하면 가장 오래된 문구부터 교체됩니다. 화면에 공개 여부를 안내합니다. 이름·전화번호 등 개인정보를 쓰지 않도록 안내하세요.
+2. **안전한 코끼리 하차:** 하차할 때 모든 코끼리에 같은 좌표를 쓰던 문제를 제거했습니다. 원래 탔던 안전한 위치로 돌아오거나, 충돌 판정으로 안전한 주변 위치를 탐색합니다. 하차가 끝난 뒤 서버에 탑승 해제 이벤트를 보냅니다.
+3. **기존 기능 유지:** WASD·방향키 / 모바일 조이스틱, 채팅, 알림, 선택형 합장, 원형 염주, 목탁 체험, 코끼리 1인 탑승 등.
 
-**중요: ZIP 파일 자체를 GitHub에 올리면 배포되지 않습니다.** 압축을 풀어 `public`, `src`, `.github` 폴더가 저장소 루트에 있도록 올리세요. `.github`는 숨김 폴더입니다.
+> 이전 R7에서 사용자가 만든 소원은 각 브라우저에만 표시되고 서버에 저장되지 않았습니다. 따라서 R8에서 자동으로 복원할 수 없습니다.
 
-## 기존 게임 주소를 유지하려면
-`wrangler.toml`의 `name`을 Cloudflare 대시보드에서 현재 사용 중인 Worker의 이름과 **정확히 동일하게** 설정하세요. 제공된 이름 `dongguk-healing-multiplayer`가 현재 Worker 이름과 다르면 새 주소에 배포될 수 있습니다.
+## 설치 (기존 GitHub 저장소에 적용)
 
-## GitHub Actions 자동 배포
-저장소 Settings → Secrets and variables → Actions → New repository secret 에서 아래 2개를 추가합니다.
-- `CLOUDFLARE_API_TOKEN`: Workers 배포 권한이 있는 Cloudflare API 토큰
-- `CLOUDFLARE_ACCOUNT_ID`: Cloudflare 계정 ID
+필수로 **두 파일을 동시에 교체**하세요.
+- `public/index.html`: 3D 게임/공유 소원등 UI/안전 하차
+- `src/index.js`: 실시간 멀티플레이/서버 소원 보관
 
-이후 Actions → Deploy Dongguk Multiplayer to Cloudflare → Run workflow. 배포가 성공하면 `https://<Worker이름>.<서브도메인>.workers.dev/diagnostics.html`에서 진단합니다.
+이미 존재하는 `.github/workflows/deploy.yml`, `wrangler.toml`, `package.json`은 정상 구성되어 있다면 다시 바꿀 필요가 없습니다.
+전체 저장소를 다시 만들 때는 ZIP의 폴더/파일을 저장소 **루트에 그대로** 올리세요. ZIP 파일 자체를 올리는 것이 아닙니다.
 
-## 진단
-3D 오류가 계속되면 배포된 사이트 주소 뒤에 `/diagnostics.html`을 붙여 WebGL 지원 여부와 Three.js 다운로드 성공/실패를 확인하세요. `DGU-20261105-R3` 버전이 보이지 않으면 최신 파일이 배포되지 않은 것입니다.
+## Cloudflare 자동 배포
 
-## 검증 한계
-압축 무결성 및 JavaScript 구문 검사만 수행. 브라우저/WebGL/Cloudflare 실제 배포와 실시간 멀티플레이 통합 동작은 검증되지 않았습니다.
+- `wrangler.toml`의 Worker 이름은 현재 `ame`로 설정되어 있습니다. 기존 주소가 `ame.guk68.workers.dev`일 때 맞는 값이며 다른 Worker를 이용한다면 실제 Worker 이름으로 변경하세요.
+- GitHub 저장소의 `Settings → Secrets and variables → Actions`에 `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`가 필요합니다.
+- GitHub의 `Actions`에서 배포가 완료됐는지 확인하세요. GitHub에 업로드하는 것과 Cloudflare에 새로 배포되는 것은 별개의 작업입니다.
+- HTTPS 사이트에서 작동합니다. 직접 다운로드한 HTML (`file://`)은 3D 엔진 CDN에 접속해야 하며, 공유 소원등이 아닌 1인용 미리보기로 동작합니다.
 
+## 재현 검사
 
-## 2026-11-05 코드 오류 정정 (R2)
-- 현상: 목탁·염주 활동 추가 후 `3D 엔진을 연결할 수 없습니다` 화면이 나타남.
-- 원인(소스 검증됨): HTML 요소 `id="beadSurface"`, `id="woodSurface"`를 JS가 잘못된 `#ritualBeadPad`, `#ritualWoodPad`로 선택하여 `null`을 생성함.
-- 실제 오류 발생 지점: `ritualBeadPad.innerHTML=...` (null에 속성 대입 시 TypeError).
-- 수정: JS 선택자를 실제 HTML id에 맞게 변경함. 실행 오류 상세 내용도 읽기 전용 화면 최상단에 표시함.
-- 검증: DOM id/선택자 정합성 검사, JS 구문 검사, ZIP 무결성 검사 통과. **실제 기기·실제 Cloudflare 배포 검증은 수행하지 못함.**
+1. PC와 휴대폰에서 같은 사이트에 서로 다른 이름으로 접속합니다.
+2. 한쪽에서 소원연등 작성 → 다른 화면에도 동일한 소원 문구가 표시되는지 확인합니다.
+3. 다른 화면을 새로고침한 뒤에도 같은 문구를 받는지 확인합니다.
+4. 코끼리 각 3마리에 올라갔다 내린 뒤 WASD/조이스틱 이동이 가능한지 확인합니다.
+5. 같은 코끼리 중복 탑승 제한과, 안전하게 하차한 뒤 탑승 해제가 되는지 확인합니다.
 
-게임에서 업데이트 버전 확인: 오류 화면의 `DGU-20261105-R3` 또는 브라우저의 페이지 소스 `meta[name=dgu-build]`.
+## 검증 범위
 
-## R3 - 염주알 하나씩 넘기기 (PC·모바일)
-- 구형 원형 회전 드래그를 제거하고 가로 밀기·마우스 드래그·터치·클릭·키보드 및 별도 버튼으로 한 알씩 넘기게 개선했습니다.
-- 염주알을 한 번 넘길 때마다 U자형 염주 줄을 따라 실제로 한 칸 이동하는 SVG 애니메이션이 표시됩니다.
-- 개별 알 수, 108알 단위 진행도를 표시하며 기존 목탁 체험은 유지합니다.
-- 설치: `public/index.html`을 서버에 배포하거나 전체 프로젝트 ZIP을 해당 디렉터리 구조 그대로 업로드합니다.
-- PC에서 `file://`로 HTML을 직접 여는 경우 외부 Three.js CDN 모듈은 브라우저 보안 제한으로 동작하지 않을 수 있습니다. 배포된 `https://` 주소를 권장합니다.
-- 검증: 모든 인라인 JS 구문 검사, HTML id 교차 확인, 독립 미니 브라우저 조작 테스트. 전체 게임 WebGL/Cloudflare 배포 테스트는 별도입니다.
-
-
-## R4 (2026-11-05) 수정 요약
-- 헤더 오른쪽 메뉴(☰) 안에서 '실제 공간 사진', '팔정도 뜻' 열기
-- PC 기본 성능 우선: DPR 0.92, 그림자 비활성, 안티앨리어싱 off, 최대 약 40fps / HD 메뉴에서 고품질 선택 가능
-- 채팅 버튼 화면 오른쪽 위(모바일), 가상 키보드 높이 변화에 따라 채팅 패널 재배치; 읽지 않은 메시지 배지 유지
-- 캐릭터 채팅 말풍선 축소(검은 글씨/흰색 배경 유지)
-- 목탁 체험: 앞서 제공된 '목탁소리.mp3' (장시간 녹음)에서 1회 타격음을 짧게 추출·음량·페이드 처리하여 HTML에 내장
-  - 이는 합성음이 아니라 기존 오디오파일에서 추출한 녹음음입니다. 정각원 현장 실녹음 여부 및 외부 배포 사용권은 확인되지 않았습니다.
-  - 프로젝트의 public/assets/moktak-from-user-recording.mp3 사본은 출처 확인·교체용이며, HTML은 단독 실행을 위해 음원 데이터를 내장했습니다.
-  - 공개 배포에 사용권 확인이 필요하면, 공유마당 김용배 '목탁2' (CC BY) 원음을 내려받아 교체하세요: https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?menuNo=200020&wrtSn=13253416
-- 기존 Worker URL 'ame.guk68.workers.dev' 기준으로 wrangler.toml name = 'ame' 설정; Cloudflare 실제 Worker 이름이 다르면 반드시 확인 후 변경
-- 배포 후 ZIP 파일 업로드가 아닌 파일/폴더를 압축 해제하여 GitHub 저장소 루트로 업로드
-- 검증: JS 구문 및 정적 구조, 채팅 UI 브라우저 테스트; 실제 Cloudflare 서버/모든 기기 하드웨어 성능까지는 미검증
+- JavaScript 구문 검사, 소원 공유 WebSocket·저장소 모의 시험, 새 접속자 수신, 18개 관리, 코끼리 충돌 후보 위치 검사, HTML 소원 목록 갱신 브라우저 부분 시험, ZIP 무결성 검사를 수행했습니다.
+- 실제 Cloudflare 서버에 배포하거나 두 대의 휴대폰으로 전체 3D 게임을 확인한 것은 아닙니다.
