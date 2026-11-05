@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <meta name="theme-color" content="#182927"><meta name="description" content="정각원·팔정도·명진관을 걷고, 절하고, 명상하는 비공식 가상 동국대학교 캠퍼스">
-<meta name="dgu-build" content="DGU-20261105-R10"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
+<meta name="dgu-build" content="DGU-20261105-R11"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
 <style>
   :root{color-scheme:dark;--glass:rgba(22,35,36,.77);--stroke:rgba(245,238,216,.24);--gold:#eccc91;--cream:#fff7e9}
   *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#b4a8a1;font-family:system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:var(--cream);touch-action:none;-webkit-user-select:none;user-select:none}
@@ -364,13 +364,27 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
 #wardrobePreviewHat,#wardrobePreviewBag{background:#fff9eccc;padding:4px 6px;border-radius:7px;font-size:12px}
 @media(max-width:390px){#wardrobePanel .lookOptions{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
+<style id="cheonR11OpeningStyles">
+/* R11 · 천수경 첫 진언의 실제 독송 문구를 순서대로 표시 */
+.cheonOpening{margin:15px 0 18px;padding:16px;border:1px solid #cbb991;border-radius:14px;background:#fffaf0;color:#293b31}
+.cheonOpening h5{font-size:17px;line-height:1.5;color:#354b3d;margin:0 0 6px;font-weight:900}
+.cheonOpening>p{font-size:12px;line-height:1.7;color:#626455;margin:0 0 12px}
+.cheonStanza{margin:12px 0;padding:12px 13px;border:1px solid #e6d8b9;border-radius:10px;background:#fffdf8}
+.cheonStanza h6{font-size:15px;line-height:1.45;margin:0 0 7px;font-weight:850;color:#2c473b}
+.cheonVerseRow{display:flex;gap:10px;align-items:flex-start;margin:7px 0;color:#17281f;font-size:clamp(13px,2.1vw,16px);line-height:1.7;font-weight:760;word-break:keep-all}
+.cheonVerseRow .num{font-size:11px;min-width:25px;color:#726346;font-weight:800;flex-shrink:0;margin-top:4px}
+.cheonStanza .cheonNote{display:block;font-size:11px;font-weight:550;color:#656b60;line-height:1.6;margin-top:7px}
+.cheonSource{margin:10px 0 4px;font-size:11px;line-height:1.7;color:#535c4f}
+.cheonSource a{color:#345c4e;text-decoration:underline;font-weight:750}
+@media(max-width:670px){.cheonOpening{padding:10px}.cheonStanza{padding:10px}.cheonVerseRow{font-size:14px;gap:6px}.cheonVerseRow .num{min-width:22px}}
+</style>
 </head>
 <body>
 <div id="loading">동국의 풍경을 준비하고 있습니다 ··· (최초 실행 시 인터넷 연결 필요)</div>
 <section id="offlineFallback" role="region" aria-label="3D 연결 실패 시 읽기 전용 캠퍼스 안내" hidden>
  <div class="fallbackCard">
   <div class="fallbackKicker">DONGGUK UNIVERSITY · READ-ONLY GUIDE</div>
-  <h2>3D 엔진을 연결할 수 없습니다</h2><p style="font-size:12px;font-weight:800;color:#ffdb91">진단 버전: DGU-20261105-R10 · <a href="/diagnostics.html" style="color:#fff;text-decoration:underline">3D 연결 진단 열기</a></p>
+  <h2>3D 엔진을 연결할 수 없습니다</h2><p style="font-size:12px;font-weight:800;color:#ffdb91">진단 버전: DGU-20261105-R11 · <a href="/diagnostics.html" style="color:#fff;text-decoration:underline">3D 연결 진단 열기</a></p>
   <p>Three.js 다운로드, WebGL 초기화 또는 게임 코드 실행 중 오류가 발생했습니다. 아래에 표시된 구체적인 오류 내용을 확인해 주세요. 휴대폰에서 다운로드한 HTML을 직접 열었다면, GitHub/Cloudflare에 배포된 https 주소로 접속해 주세요. Chrome에서 새로고침하고 인터넷 연결을 확인하세요. 아래는 <b>3D 이동이 아닌 읽기 전용 안내</b>입니다. 외부 공식 자료 링크를 열려면 인터넷 연결이 필요합니다.</p>
   <h3>팔정도 · 여덟 갈래의 수행</h3>
   <p>정견·정사유·정어·정업·정명·정정진·정념·정정의 수행을 상징하는 동국대학교 중앙 광장입니다.</p>
@@ -2430,7 +2444,34 @@ function showScripture(){const item=scripturePages[scriptureKey];
   $('#sutraSourceLink').href=item.link;
   $('#sutraSourceLink').textContent='📜 2013년 한글 천수경 전문 공개 기사 보기';
   const a=$('#sutraFullText');a.replaceChildren();
-  const notice=document.createElement('div');notice.className='jogyeBlock';notice.innerHTML='<b>조계종 표준본 확인</b><small>기존 전통 독송문은 공식 한글 표준본과 다르므로 이 화면에서 제외했습니다. 아래의 2013년 불교계 보도에서 당시 발표한 한글 천수경 전문을 확인할 수 있습니다. 한문 표제·한글 표준 의례문·독송 안내를 구분하며, 짧은 설명은 사이트 자체 해설입니다.</small>';a.appendChild(notice);
+  const notice=document.createElement('div');notice.className='jogyeBlock';notice.innerHTML='<b>조계종 표준본 확인</b><small>처음 네 구간의 독송 순서를 조계종 공개 「우리말 천수경」 자료로 대조했습니다. 아래에는 시작 부분의 진언과 반복 횟수를 표시하고, 이후 내용은 구성 안내와 종단 공개 원문 링크로 제공합니다. 해설은 이 웹사이트의 자체 설명입니다.</small>';a.appendChild(notice);
+  // R11: 조계종 공개 「우리말 천수경」의 시작 순서.
+  // 별도 음원 제어와 무관한 읽기 화면이며, 한글 본문을 임의 번역하지 않습니다.
+  const opening=document.createElement('section');opening.className='cheonOpening';opening.setAttribute('aria-label','천수경 시작 독송문');
+  const openingTitle=document.createElement('h5');openingTitle.textContent='천수경 시작 독송문 · 세 번 반복';opening.appendChild(openingTitle);
+  const openingIntro=document.createElement('p');openingIntro.textContent='정구업진언은 같은 진언을 세 차례 독송한 뒤 오방내외안위제신진언으로 넘어갑니다. 회차는 읽기 편하도록 표시한 것입니다.';opening.appendChild(openingIntro);
+  const openingParts=[
+    {title:'1. 정구업진언 · 淨口業眞言',lines:['수리수리 마하수리 수수리 사바하'],count:3},
+    {title:'2. 오방내외안위제신진언 · 五方內外安慰諸神眞言',lines:['나무 사만다 못다남 옴 도로 도로 지미 사바하'],count:3},
+    {title:'3. 개경게 · 開經偈',lines:[],note:'다음은 개경게입니다. 공식 우리말 게송 전체는 아래 조계종 원문 PDF에서 확인할 수 있습니다.'},
+    {title:'4. 개법장진언 · 開法藏眞言',lines:['옴 아라남 아라다'],count:3}
+  ];
+  for(const part of openingParts){
+    const stanza=document.createElement('div');stanza.className='cheonStanza';
+    const st=document.createElement('h6');st.textContent=part.title;stanza.appendChild(st);
+    if(part.count){for(let n=1;n<=part.count;n++){for(const line of part.lines){
+      const row=document.createElement('div');row.className='cheonVerseRow';
+      const counter=document.createElement('span');counter.className='num';counter.textContent=n+'회';
+      const verse=document.createElement('span');verse.textContent=line;row.append(counter,verse);stanza.appendChild(row);
+    }}}
+    if(part.note){const note=document.createElement('small');note.className='cheonNote';note.textContent=part.note;stanza.appendChild(note);}
+    opening.appendChild(stanza);
+  }
+  const citation=document.createElement('div');citation.className='cheonSource';
+  const clabel=document.createElement('span');clabel.textContent='대조 자료: 대한불교조계종 「우리말 천수경」 · ';citation.appendChild(clabel);
+  const cLink=document.createElement('a');cLink.href='https://www.buddhism.or.kr/resources/data/pogyo/mp/%EC%B2%9C%EC%88%98%EA%B2%BD.pdf';cLink.target='_blank';cLink.rel='noopener noreferrer';cLink.textContent='조계종 공개 원문 PDF';citation.appendChild(cLink);opening.appendChild(citation);
+  a.appendChild(opening);
+  const summaryTitle=document.createElement('p');summaryTitle.className='jogyeHeading';summaryTitle.textContent='천수경 구성과 간단 해설';a.appendChild(summaryTitle);
   const items=[
     ['정구업진언 · 淨口業眞言','말의 업을 맑히겠다는 마음으로 독송을 시작합니다.'],
     ['오방내외안위제신진언 · 五方內外安慰諸神眞言','도량 안팎의 여러 존재가 평안하기를 기원합니다.'],
