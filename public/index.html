@@ -2,9 +2,9 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <meta name="theme-color" content="#182927"><meta name="description" content="정각원·팔정도·명진관을 걷고, 절하고, 명상하는 비공식 가상 동국대학교 캠퍼스">
-<meta name="dgu-build" content="DGU-20261105-R3"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
+<meta name="dgu-build" content="DGU-20261105-R4"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
 <style>
   :root{color-scheme:dark;--glass:rgba(22,35,36,.77);--stroke:rgba(245,238,216,.24);--gold:#eccc91;--cream:#fff7e9}
   *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#b4a8a1;font-family:system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:var(--cream);touch-action:none;-webkit-user-select:none;user-select:none}
@@ -337,7 +337,7 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
 <section id="offlineFallback" role="region" aria-label="3D 연결 실패 시 읽기 전용 캠퍼스 안내" hidden>
  <div class="fallbackCard">
   <div class="fallbackKicker">DONGGUK UNIVERSITY · READ-ONLY GUIDE</div>
-  <h2>3D 엔진을 연결할 수 없습니다</h2><p style="font-size:12px;font-weight:800;color:#ffdb91">진단 버전: DGU-20261105-R3 · <a href="/diagnostics.html" style="color:#fff;text-decoration:underline">3D 연결 진단 열기</a></p>
+  <h2>3D 엔진을 연결할 수 없습니다</h2><p style="font-size:12px;font-weight:800;color:#ffdb91">진단 버전: DGU-20261105-R4 · <a href="/diagnostics.html" style="color:#fff;text-decoration:underline">3D 연결 진단 열기</a></p>
   <p>Three.js 다운로드, WebGL 초기화 또는 게임 코드 실행 중 오류가 발생했습니다. 아래에 표시된 구체적인 오류 내용을 확인해 주세요. 휴대폰에서 다운로드한 HTML을 직접 열었다면, GitHub/Cloudflare에 배포된 https 주소로 접속해 주세요. Chrome에서 새로고침하고 인터넷 연결을 확인하세요. 아래는 <b>3D 이동이 아닌 읽기 전용 안내</b>입니다. 외부 공식 자료 링크를 열려면 인터넷 연결이 필요합니다.</p>
   <h3>팔정도 · 여덟 갈래의 수행</h3>
   <p>정견·정사유·정어·정업·정명·정정진·정념·정정의 수행을 상징하는 동국대학교 중앙 광장입니다.</p>
@@ -368,7 +368,7 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
  <div class="menuGroup"><small>설정과 자료</small><div class="menuGrid">
   <button id="cameraModeBtn" title="실내 카메라 전환" type="button">◉ &nbsp;시점 전환</button>
   <button id="mixBtn" title="소리별 음량 조절" aria-expanded="false" type="button">♫ &nbsp;소리 설정</button>
-  <button id="pixelBtn" title="고화질·절전 보기" aria-pressed="true" type="button">HD &nbsp;화질</button>
+  <button id="pixelBtn" title="고화질·절전 보기" aria-pressed="false" type="button">절전 &nbsp;화질</button>
   <button id="guideBtn" title="조작 안내" type="button">ⓘ &nbsp;사용 안내</button>
  </div></div>
 <section id="quickControls" aria-label="이동 속도와 시점">
@@ -396,8 +396,8 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
  <a href="https://www.youtube.com/watch?v=c07aZ5GXiso" target="_blank" rel="noopener noreferrer">동국대학교 교육방송국 공식 영상</a>
  <small>사찰에서는 권수근 스님의 반야심경 녹음이 자동으로 열립니다. 별도로 DUBS 위스퍼링 영상을 선택할 수 있습니다. 영상은 유튜브 플레이어 자체 음량을 사용합니다.</small>
  </div><details class="soundAdvanced"><summary>다른 음원 · 파일 불러오기 · 이용조건</summary>실제 음원은 저작권과 이용조건을 확인하여 사용합니다. 한국저작권위원회 공유마당 등에서 이용조건을 확인한 파일을 직접 내려받아 선택하면 브라우저 저장 기능을 통해 다음 방문에도 사용할 수 있습니다. 불러온 파일은 서버로 전송하지 않습니다. 보안 설정에 따라 저장이 제한될 수 있습니다.
-<div class="samplePicker"><b>사찰 관련 효과음 파일 연결</b><label class="fileBtn" for="woodFile">🥁 목탁 원음 불러오기</label><input id="woodFile" type="file" accept="audio/*"><small id="woodFileName">기본: Web Audio 합성 목탁(실제 사찰 녹음 아님). 한국식 목탁 원음을 직접 연결하려면: <a href="https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?menuNo=200020&amp;wrtSn=13253416" target="_blank" rel="noopener noreferrer">한국저작권위원회 목탁2 (김용배 · CC BY)</a></small><label class="fileBtn" for="bellFile">🔔 범종 원음 불러오기</label><input id="bellFile" type="file" accept="audio/*"><small id="bellFileName">기본: Web Audio 합성 종(동국대학교 실제 타종 음원 아님) · <a href="https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?menuNo=200020&amp;wrtSn=13254523" target="_blank" rel="noopener noreferrer">절 법당 종소리 (김용배 · CC BY)</a></small><button id="testWood" type="button">목탁 미리 듣기</button><button id="testBell" type="button">종 미리 듣기</button></div>
-<div class="licenseReminder">기본 소리는 Web Audio로 합성한 체험용 효과음입니다. 실제 정각원·동국의 종 타종 녹음으로 표시하지 않습니다. 실제 목탁·범종 음원을 사용하려면 출처와 이용 허락을 확인하고 파일을 직접 선택하세요.</div>
+<div class="samplePicker"><b>사찰 관련 효과음 파일 연결</b><label class="fileBtn" for="woodFile">🥁 목탁 원음 불러오기</label><input id="woodFile" type="file" accept="audio/*"><small id="woodFileName">기본: 기존 제공된 ‘목탁소리.mp3’ 녹음에서 1회 타격 소리 추출·음량 조절(원음 권리 확인 필요). 별도로 이용조건이 명시된 음원을 선택하려면: <a href="https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?menuNo=200020&amp;wrtSn=13253416" target="_blank" rel="noopener noreferrer">한국저작권위원회 목탁2 (김용배 · CC BY)</a></small><label class="fileBtn" for="bellFile">🔔 범종 원음 불러오기</label><input id="bellFile" type="file" accept="audio/*"><small id="bellFileName">기본: Web Audio 합성 종(동국대학교 실제 타종 음원 아님) · <a href="https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?menuNo=200020&amp;wrtSn=13254523" target="_blank" rel="noopener noreferrer">절 법당 종소리 (김용배 · CC BY)</a></small><button id="testWood" type="button">목탁 미리 듣기</button><button id="testBell" type="button">종 미리 듣기</button></div>
+<div class="licenseReminder">목탁 체험 기본음은 사용자가 앞서 제공한 장시간 목탁 녹음에서 추출한 짧은 실제 타격음이며, 정각원 현장 녹음으로 확인된 자료는 아닙니다. 공유용 배포 시 원본 음원의 이용 허락을 확인하세요. 종·기타 환경음은 합성 효과음이며 실제 동국대학교 녹음이 아닙니다.</div>
 스님의 실제 독송은 경전 서재 안의 유튜브 영상 플레이어에서 들을 수 있습니다. 단순 음성파일로 추출하지 않습니다. 사찰 음원은 파일을 직접 선택해서도 들을 수 있습니다.<div class="fileChant"><label for="chantFile" class="fileBtn">📂 권리 확인된 한국어 음원 불러오기</label><input id="chantFile" type="file" accept="audio/*"><div class="chantManualActions"><button id="playLocalChant" type="button">▶ 불러온 독송 재생</button><button id="stopLocalChant" type="button">■ 독송 정지</button></div><small id="chantFileName">다운로드한 실녹음 음원만 선택하세요. 브라우저에만 저장되며 서버로 업로드되지 않습니다.</small><a href="https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?menuNo=200275&amp;wrtSn=13254274" target="_blank" rel="noopener noreferrer">한국저작권위원회 「염불소리1」 · 김용배 · CC BY · 출처 보기</a></div></details></div></section>
 <aside id="templeSoundDock" hidden style="display:none!important" aria-label="정각원 실제 독송 플레이어">
  <div class="templeSoundHead"><strong>🪷 정각원 · 스님 독송</strong><button id="templeSoundHide" type="button" title="플레이어 접기">−</button></div>
@@ -481,15 +481,15 @@ const THREE = await (async () => {
 const $=s=>document.querySelector(s);
 const isMobile=matchMedia('(pointer:coarse)').matches || innerWidth<680;
 const scene=new THREE.Scene();scene.background=new THREE.Color(0xc7d0d2);scene.fog=new THREE.FogExp2(0xc5b7ab,.0052);
-const renderer=new THREE.WebGLRenderer({antialias:!isMobile,powerPreference:'default',alpha:false,failIfMajorPerformanceCaveat:false});renderer.domElement.id='three';renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.43;renderer.shadowMap.enabled=!isMobile;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.prepend(renderer.domElement);
+const renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:'low-power',alpha:false,failIfMajorPerformanceCaveat:false});renderer.domElement.id='three';renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.43;renderer.shadowMap.enabled=false;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.prepend(renderer.domElement);
 // 고화질 기본, 저사양 휴대폰용 ECO 토글. 의도적인 픽셀화 없음.
-let highQuality=true;
-function updateResolution(){const cap=highQuality?(isMobile?1.0:1.4):0.85;renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,cap));renderer.setSize(innerWidth,innerHeight,false);renderer.domElement.style.width='100vw';renderer.domElement.style.height='100dvh';renderer.domElement.style.imageRendering='auto';}
+let highQuality=false;
+function updateResolution(){const cap=highQuality?(isMobile?1.0:1.3):(isMobile?0.90:0.92);renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,cap));renderer.setSize(innerWidth,innerHeight,false);renderer.domElement.style.width='100vw';renderer.domElement.style.height='100dvh';renderer.domElement.style.imageRendering='auto';}
 updateResolution();
-$('#pixelBtn').addEventListener('click',()=>{highQuality=!highQuality;updateResolution();renderer.shadowMap.enabled=highQuality&&!isMobile;$('#pixelBtn').textContent=highQuality?'HD':'ECO';$('#pixelBtn').setAttribute('aria-pressed',String(highQuality));});
+$('#pixelBtn').addEventListener('click',()=>{highQuality=!highQuality;updateResolution();renderer.shadowMap.enabled=highQuality&&!isMobile;$('#pixelBtn').textContent=highQuality?'HD':'절전';$('#pixelBtn').setAttribute('aria-pressed',String(highQuality));});
 const camera=new THREE.PerspectiveCamera(isMobile?66:60,innerWidth/innerHeight,.1,240);camera.position.set(0,7,35);
 const ambientLight=new THREE.HemisphereLight(0xfff1e3,0x6b7476,1.35);scene.add(ambientLight);
-const sun=new THREE.DirectionalLight(0xffead6,2.5);sun.position.set(-45,75,38);sun.castShadow=!isMobile;sun.shadow.mapSize.set(isMobile?1024:2048,isMobile?1024:2048);sun.shadow.camera.left=-61;sun.shadow.camera.right=61;sun.shadow.camera.top=61;sun.shadow.camera.bottom=-61;sun.shadow.camera.near=.5;sun.shadow.camera.far=170;sun.shadow.bias=-.00023;sun.shadow.normalBias=.018;sun.shadow.radius=2.0;scene.add(sun);
+const sun=new THREE.DirectionalLight(0xffead6,2.5);sun.position.set(-45,75,38);sun.castShadow=!isMobile;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-61;sun.shadow.camera.right=61;sun.shadow.camera.top=61;sun.shadow.camera.bottom=-61;sun.shadow.camera.near=.5;sun.shadow.camera.far=170;sun.shadow.bias=-.00023;sun.shadow.normalBias=.018;sun.shadow.radius=2.0;scene.add(sun);
 const skyPresets={
  morning:{sky:'#beced3',fog:'#c9cecb',ambient:'#f9ebd5',sun:'#ffe0a7',ambientPower:1.30,sunPower:2.20,exposure:1.22,light:false},
  day:{sky:'#bad4de',fog:'#c9d4d1',ambient:'#f1efe8',sun:'#fff6e5',ambientPower:1.55,sunPower:2.7,exposure:1.28,light:false},
@@ -1900,7 +1900,10 @@ function updateZoneBus(fade=.4){if(!audio.ready)return;const factor=zoneMix[audi
 
 const chantRecording=$('#chantRecording');let chantFailed=false,chantRequested=false,chantNeedsGesture=false,localChantUrl=null;
 const realSamples={wood:$('#realWoodRecording'),bell:$('#realBellRecording')};
-const sampleStatus={wood:false,bell:false}; // Default sound is Web Audio synthesis; only user-selected recordings enable real samples.
+const sampleStatus={wood:true,bell:false}; // R4: one short REAL recorded hit extracted from previously supplied moktak audio.
+realSamples.wood.src='data:audio/mpeg;base64,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';
+realSamples.wood.preload='auto'; // A custom uploaded sample, if present, overrides this default.
+
 const sampleLocalUrls={wood:null,bell:null};
 let lastRealWoodAt=0;const activeRealSamples=new Set();
 // A user-selected, verified recording stays in this browser, never on a server.
@@ -2681,7 +2684,11 @@ function updateElephantRide(now,dt){
    monk.position.y=THREE.MathUtils.lerp(monk.position.y,-.22*seatedAmount,Math.min(1,dt*8));
  }
 }
-function animate(time){requestAnimationFrame(animate);const dt=Math.min((time-prev)/1000,.05);prev=time;
+let desktopLastFrameTime=0;
+function animate(time){requestAnimationFrame(animate);
+ if(document.hidden)return;
+ if(!isMobile && !highQuality && time-desktopLastFrameTime<24)return; // up to ~40fps on desktop to reduce GPU/CPU pressure
+ desktopLastFrameTime=time;const dt=Math.min((time-prev)/1000,.05);prev=time;
  if(started){if(!document.getElementById('realPhotoPanel').hidden){keys.clear();joy.x=0;joy.y=0;}let forward=0,strafe=0;if(document.activeElement?.matches('input,textarea,[contenteditable=true]'))keys.clear();if(keys.has('KeyW')||keys.has('ArrowUp'))forward++;if(keys.has('KeyS')||keys.has('ArrowDown'))forward--;if(keys.has('KeyA')||keys.has('ArrowLeft'))strafe--;if(keys.has('KeyD')||keys.has('ArrowRight'))strafe++;
   forward+=joy.y;strafe+=joy.x;const len=Math.hypot(forward,strafe);
   if($('#scriptureModal').hidden&&$('#miniModal').hidden&&$('#travelPanel').hidden&&$('#dialogue').hidden&&$('#koreanDeptModal').hidden&&$('#wishModal').hidden&&$('#mixPanel').hidden&&mainMenu.hidden&&ritualActivity.hidden&&document.getElementById('realPhotoPanel').hidden&&!$('#guide').classList.contains('open')&&!seated&&!ridingElephant&&len>.08){forward/=Math.max(1,len);strafe/=Math.max(1,len);const vx=-Math.sin(camYaw)*forward+Math.cos(camYaw)*strafe;const vz=-Math.cos(camYaw)*forward-Math.sin(camYaw)*strafe;
@@ -2801,22 +2808,22 @@ const mpBubbles=[];
 // Dedicated high-contrast multiline chat texture: no tiny single-line text.
 function mpBubbleTexture(message){
  const text=String(message).replace(/\s+/g,' ').trim().slice(0,90);
- const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=448;
+ const canvas=document.createElement('canvas');canvas.width=768;canvas.height=336;
  const ctx=canvas.getContext('2d');
- ctx.fillStyle='#ffffff';ctx.fillRect(0,0,1024,448);
- ctx.strokeStyle='#151515';ctx.lineWidth=13;ctx.strokeRect(7,7,1010,434);
- ctx.font="900 84px 'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif";
+ ctx.fillStyle='#ffffff';ctx.fillRect(0,0,768,336);
+ ctx.strokeStyle='#151515';ctx.lineWidth=10;ctx.strokeRect(5,5,758,326);
+ ctx.font="900 66px 'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif";
  ctx.textAlign='center';ctx.textBaseline='middle';
  const lines=[];let line='';
- for(const ch of text){const next=line+ch;if(ctx.measureText(next).width>890&&line){lines.push(line);line=ch}else{line=next}}
+ for(const ch of text){const next=line+ch;if(ctx.measureText(next).width>672&&line){lines.push(line);line=ch}else{line=next}}
  if(line)lines.push(line);
  const shown=lines.slice(0,4);
  if(lines.length>4)shown[3]=shown[3].slice(0,-1)+'…';
- const font=shown.length>=4?67:shown.length===3?72:82;
+ const font=shown.length>=4?49:shown.length===3?53:60;
  ctx.font=`900 ${font}px 'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif`;
  ctx.lineJoin='round';ctx.strokeStyle='#ffffff';ctx.lineWidth=7;ctx.fillStyle='#050505';
- const lineHeight=font*1.25;const top=224-(shown.length-1)*lineHeight/2;
- shown.forEach((part,i)=>{const y=top+i*lineHeight;ctx.strokeText(part,512,y,925);ctx.fillText(part,512,y,925)});
+ const lineHeight=font*1.25;const top=168-(shown.length-1)*lineHeight/2;
+ shown.forEach((part,i)=>{const y=top+i*lineHeight;ctx.strokeText(part,384,y,688);ctx.fillText(part,384,y,688)});
  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
  texture.minFilter=THREE.LinearFilter;texture.magFilter=THREE.LinearFilter;
  texture.generateMipmaps=false;texture.needsUpdate=true;return texture;
@@ -2826,7 +2833,7 @@ function mpShowBubble(root,message){
  const old=mpBubbles.find(b=>b.root===root);
  if(old){root.remove(old.sprite);old.sprite.material.map?.dispose();old.sprite.material.dispose();mpBubbles.splice(mpBubbles.indexOf(old),1)}
  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:mpBubbleTexture(message),transparent:true,depthTest:false,depthWrite:false}));
- sprite.scale.set(4.9,2.14,1);sprite.position.set(0,3.65,0);sprite.renderOrder=999;root.add(sprite);
+ sprite.scale.set(isMobile?2.2:3.15,isMobile?.97:1.38,1);sprite.position.set(0,isMobile?3.05:3.35,0);sprite.renderOrder=999;root.add(sprite);
  mpBubbles.push({root,sprite,expires:performance.now()+6500});
 }
 function mpExpireBubbles(now){for(let i=mpBubbles.length-1;i>=0;i--){const b=mpBubbles[i];if(now>=b.expires||(!b.root.parent&&b.root!==player)){b.root.remove(b.sprite);b.sprite.material.map?.dispose();b.sprite.material.dispose();mpBubbles.splice(i,1)}}}
@@ -3029,11 +3036,89 @@ function notifyIncoming(){
 }
 document.addEventListener('pointerdown',()=>{if(notificationsOn&&audioCtx?.state==='suspended')audioCtx.resume().catch(()=>{})},{passive:true});
 function reply(t){if(/명진관|국어국문|학과|전공|도담/.test(t))return '도담: 명진관은 동국대학교의 역사적인 건물입니다. 대학원 국어국문학과는 고전문학·국어학·외국어로서의 한국어교육·현대문학·문예창작 전공을 소개합니다.';if(/팔정도|정견|정념|정정진/.test(t))return '안내 NPC: 팔정도는 정견, 정사유, 정어, 정업, 정명, 정정진, 정념, 정정의 여덟 가지 바른 실천입니다.';if(/정각원|법당|절|명상/.test(t))return '안내 NPC: 정각원에서는 법당을 둘러보고 명상과 절하기 체험을 할 수 있습니다. 경전 독송은 마음경전서재에서 선택해 보세요.';if(/안녕|반가|고마/.test(t))return '안내 NPC: 반갑습니다. 오늘도 평안한 산책 되시길 바랍니다.';return '안내 NPC: 정각원, 팔정도, 명진관 또는 국어국문학과에 대해 질문해 주세요. 이 채팅은 정해진 안내문에 답하는 개인용 기능입니다.';}
-function setOpen(v){panel.classList.toggle('is-open',v);panel.setAttribute('aria-hidden',String(!v));toggle.setAttribute('aria-expanded',String(v));if(v){unreadCount=0;updateUnread();if(!log.children.length)line('시스템','실시간 채팅입니다. 연결된 이용자에게 메시지가 전달됩니다.');input.focus();}else input.blur();}
-window.addEventListener('dongguk:mpchat',e=>{line(e.detail.name||'방문자',e.detail.text);if(!panel.classList.contains('is-open')){unreadCount++;updateUnread()}notifyIncoming()});window.addEventListener('dongguk:mpstatus',e=>{const d=e.detail;toggle.textContent=d.online?'💬 채팅 ('+d.count+'명)':'💬 연결 대기';});
+function syncChatViewport(){
+ if(!panel.classList.contains('is-open') || window.innerWidth>700){panel.style.removeProperty('top');panel.style.removeProperty('height');return;}
+ const vv=window.visualViewport;
+ const visibleTop=vv?vv.offsetTop:0;
+ const usableHeight=vv?vv.height:window.innerHeight;
+ const top=visibleTop+Math.max(53,Math.min(72,usableHeight*.12));
+ panel.style.setProperty('top',Math.round(top)+'px','important');
+ panel.style.height=Math.max(175,Math.floor(usableHeight-(top-visibleTop)-10))+'px';
+ log.scrollTop=log.scrollHeight;
+}
+function setOpen(v){panel.classList.toggle('is-open',v);panel.setAttribute('aria-hidden',String(!v));toggle.setAttribute('aria-expanded',String(v));
+ if(v){unreadCount=0;updateUnread();if(!log.children.length)line('시스템','실시간 채팅입니다. 연결된 이용자에게 메시지가 전달됩니다.');
+ syncChatViewport();input.focus({preventScroll:true});requestAnimationFrame(syncChatViewport);
+ }else{input.blur();panel.style.removeProperty('top');panel.style.removeProperty('height');}}
+(window.visualViewport||window).addEventListener('resize',syncChatViewport,{passive:true});
+if(window.visualViewport)window.visualViewport.addEventListener('scroll',syncChatViewport,{passive:true});
+window.addEventListener('orientationchange',()=>setTimeout(syncChatViewport,100),{passive:true});
+input.addEventListener('focus',()=>requestAnimationFrame(syncChatViewport));
+input.addEventListener('blur',()=>setTimeout(syncChatViewport,80));
+window.addEventListener('dongguk:mpchat',e=>{line(e.detail.name||'방문자',e.detail.text);if(!panel.classList.contains('is-open')){unreadCount++;updateUnread()}notifyIncoming()});window.addEventListener('dongguk:mpstatus',e=>{const d=e.detail;if(toggle.firstChild?.nodeType===Node.TEXT_NODE)toggle.firstChild.textContent=d.online?'💬 채팅 ('+d.count+'명)':'💬 연결 대기';});
 toggle.addEventListener('click',()=>setOpen(!panel.classList.contains('is-open')));document.getElementById('localChatClose').addEventListener('click',()=>setOpen(false));document.getElementById('localChatForm').addEventListener('submit',e=>{e.preventDefault();const t=input.value.trim();if(!t)return;if(window.__donggukMP?.sendChat(t)){line('나',t,true);window.dispatchEvent(new CustomEvent('dongguk:localchat',{detail:{text:t}}));}else{line('시스템','서버에 연결되지 않아 메시지를 전송하지 못했습니다.');}input.value='';input.focus();});
 input.addEventListener('keydown',e=>e.stopPropagation());panel.addEventListener('pointerdown',e=>e.stopPropagation());panel.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('is-open'))setOpen(false);});
 })();
 </script>
-<script>if(!sessionStorage.getItem("dgName")){const name=prompt("멀티플레이 닉네임을 입력하세요 (최대 12자)","방문자");sessionStorage.setItem("dgName",(name||"방문자").trim().slice(0,12)||"방문자");}</script></body>
+<script>if(!sessionStorage.getItem("dgName")){const name=prompt("멀티플레이 닉네임을 입력하세요 (최대 12자)","방문자");sessionStorage.setItem("dgName",(name||"방문자").trim().slice(0,12)||"방문자");}</script>
+<style id="dguR4LayoutFix">
+/* R4: these two existing controls belong in hamburger menu, not on top of the scene. */
+#mainMenu #realPhotoBtn,#mainMenu #openEightfold{
+ position:static!important;inset:auto!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+ display:block!important;width:100%!important;max-width:none!important;transform:none!important;
+ padding:13px 14px!important;border-radius:11px!important;margin:5px 0!important;
+ background:#f3dfb8!important;color:#182e29!important;font:800 13px/1.4 system-ui,sans-serif!important;
+ text-align:left!important;box-shadow:none!important;white-space:normal!important;min-height:44px!important;
+}
+#eightfoldGuide{position:fixed!important;left:50%!important;top:50%!important;bottom:auto!important;
+ transform:translate(-50%,-50%)!important;max-height:75dvh!important;z-index:120!important;}
+/* R4: fix previous position:relative selector which caused chat button to collide with joystick. */
+#localChatToggle{position:fixed!important;left:auto!important;right:16px!important;
+ top:auto!important;bottom:calc(24px + env(safe-area-inset-bottom,0px))!important;z-index:71!important;
+ min-height:44px!important;white-space:nowrap!important}
+#localChatPanel{box-sizing:border-box!important;min-height:0!important}
+#localChatForm{flex-shrink:0!important;background:#19332e!important;padding:12px!important;
+ padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))!important}
+#localChatInput{font-size:16px!important;min-height:48px!important;line-height:1.35!important;
+ background:#ffffff!important;color:#050505!important;font-weight:650!important;outline-offset:-2px!important}
+#localChatSend{min-width:72px!important;min-height:48px!important;font-size:15px!important;
+ background:#ebd29e!important;color:#14251f!important;font-weight:850!important}
+#localChatLog{min-height:40px!important;flex:1 1 auto!important;overflow-y:auto!important}
+#localChatHeader{flex:0 0 auto!important;gap:7px!important;min-height:59px!important}
+#localChatHeader b{font-size:14px!important}
+#localChatNotify{padding:7px!important;font-size:11px!important;min-height:36px!important}
+#localChatClose{width:42px!important;min-width:42px!important;min-height:42px!important}
+@media(max-width:700px){
+ #localChatToggle{left:auto!important;right:10px!important;top:calc(61px + env(safe-area-inset-top,0px))!important;
+ bottom:auto!important;padding:10px 14px!important;box-shadow:0 6px 20px #10201caa!important}
+ #localChatPanel{left:7px!important;right:7px!important;bottom:auto!important;
+ top:calc(62px + env(safe-area-inset-top,0px))!important;width:calc(100vw - 14px)!important;
+ height:min(470px,calc(100dvh - 75px));max-height:none!important;border-radius:14px!important}
+ #localChatForm{padding:9px!important;padding-bottom:9px!important;gap:7px!important}
+ #localChatInput{padding:10px!important}
+ #localChatSend{min-width:68px!important;padding:0 9px!important}
+ #localChatHeader{padding:7px 9px!important}
+ #localChatHeader b{font-size:12px!important}
+ #localChatHeader div div{font-size:9px!important}
+ .local-chat-line{background:#f4ead4!important;color:#050505!important;font-weight:750!important}
+ .local-chat-line.me{background:#d8bd83!important;color:#050505!important}
+ #localChatNotify{font-size:10px!important;padding:5px!important}
+}
+</style>
+<script id="dguR4MenuSetup">
+(()=>{
+ const menu=document.getElementById('mainMenu');
+ const photo=document.getElementById('realPhotoBtn');
+ const eight=document.getElementById('openEightfold');
+ const close=document.getElementById('menuCloseBtn');
+ if(!menu||!photo||!eight)return;
+ const group=document.createElement('div');group.className='menuGroup';group.id='r4ExploreMenu';
+ const heading=document.createElement('small');heading.textContent='캠퍼스 안내 자료';group.appendChild(heading);
+ group.append(photo,eight);
+ const anchor=menu.querySelector('#quickControls');
+ if(anchor)menu.insertBefore(group,anchor);else menu.appendChild(group);
+ for(const btn of [photo,eight])btn.addEventListener('click',()=>{if(close)close.click();});
+})();
+</script>
+</body>
 </html>
