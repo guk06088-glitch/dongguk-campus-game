@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <meta name="theme-color" content="#182927"><meta name="description" content="정각원·팔정도·명진관을 걷고, 절하고, 명상하는 비공식 가상 동국대학교 캠퍼스">
-<meta name="dgu-build" content="DGU-20261105-R7"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
+<meta name="dgu-build" content="DGU-20261105-R8"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
 <style>
   :root{color-scheme:dark;--glass:rgba(22,35,36,.77);--stroke:rgba(245,238,216,.24);--gold:#eccc91;--cream:#fff7e9}
   *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#b4a8a1;font-family:system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:var(--cream);touch-action:none;-webkit-user-select:none;user-select:none}
@@ -337,7 +337,7 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
 <section id="offlineFallback" role="region" aria-label="3D 연결 실패 시 읽기 전용 캠퍼스 안내" hidden>
  <div class="fallbackCard">
   <div class="fallbackKicker">DONGGUK UNIVERSITY · READ-ONLY GUIDE</div>
-  <h2>3D 엔진을 연결할 수 없습니다</h2><p style="font-size:12px;font-weight:800;color:#ffdb91">진단 버전: DGU-20261105-R7 · <a href="/diagnostics.html" style="color:#fff;text-decoration:underline">3D 연결 진단 열기</a></p>
+  <h2>3D 엔진을 연결할 수 없습니다</h2><p style="font-size:12px;font-weight:800;color:#ffdb91">진단 버전: DGU-20261105-R8 · <a href="/diagnostics.html" style="color:#fff;text-decoration:underline">3D 연결 진단 열기</a></p>
   <p>Three.js 다운로드, WebGL 초기화 또는 게임 코드 실행 중 오류가 발생했습니다. 아래에 표시된 구체적인 오류 내용을 확인해 주세요. 휴대폰에서 다운로드한 HTML을 직접 열었다면, GitHub/Cloudflare에 배포된 https 주소로 접속해 주세요. Chrome에서 새로고침하고 인터넷 연결을 확인하세요. 아래는 <b>3D 이동이 아닌 읽기 전용 안내</b>입니다. 외부 공식 자료 링크를 열려면 인터넷 연결이 필요합니다.</p>
   <h3>팔정도 · 여덟 갈래의 수행</h3>
   <p>정견·정사유·정어·정업·정명·정정진·정념·정정의 수행을 상징하는 동국대학교 중앙 광장입니다.</p>
@@ -424,7 +424,7 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
 <div id="experienceButtons"><button id="journalBtn" title="동국대 건축 이야기">🏛️ 건물 이야기 <span id="stampTotal" aria-label="탐험 기록 진행률">0/8</span></button></div>
 <div id="sceneAction" hidden><button id="contextBtn">체험하기</button></div>
 <div id="dialogue" role="dialog" aria-label="캠퍼스 안내" hidden><button class="closeDialog" id="closeDialogue" aria-label="닫기">×</button><div class="dialogueKicker" id="talkRole">CAMPUS GUIDE</div><h3 id="talkName"></h3><p id="talkText"></p><div id="talkAnswers"></div><p class="talkResult" id="talkResult" role="status" aria-live="polite"></p></div>
-<div id="wishModal" role="dialog" aria-label="소원등 만들기" hidden><button class="closeDialog" id="closeWish" aria-label="닫기">×</button><div class="dialogueKicker">연등축제 체험</div><h3>오늘의 마음을 적어보세요</h3><p>나와 소중한 사람을 위한 짧은 소원을 연등에 걸어요.</p><textarea id="wishMessage" maxlength="30" rows="3" placeholder="예: 오늘도 모두 무탈하고 평안하기를"></textarea><button class="wishSubmit" id="submitWish">🏮 소원등 밝히기</button></div>
+<div id="wishModal" role="dialog" aria-label="소원등 만들기" hidden><button class="closeDialog" id="closeWish" aria-label="닫기">×</button><div class="dialogueKicker">연등축제 체험</div><h3>오늘의 마음을 적어보세요</h3><p>나와 소중한 사람을 위한 짧은 소원을 연등에 걸어요. <strong>작성한 내용은 다른 접속자에게 공개되며, 최근 18개 소원은 서버에 보관됩니다.</strong> 개인정보는 적지 마세요.</p><textarea id="wishMessage" maxlength="30" rows="3" placeholder="예: 오늘도 모두 무탈하고 평안하기를"></textarea><button class="wishSubmit" id="submitWish">🏮 소원등 밝히기</button></div>
 <div id="ritualDock" aria-label="정각원 마음 수행"><strong>✦ 정각원 마음 수행</strong><div class="ritualBtns"><button id="prayBtn">🙏 합장</button><button id="woodHitBtn">🥁 목탁 체험</button><button id="lampOfferBtn">🏮 마음등 올리기</button><button id="templeReadBtn">📖 경전 살펴보기</button></div></div><div id="ritualToast" role="status" aria-live="polite"></div>
 <div id="info" class="hud" aria-live="polite"><div class="eyebrow" id="spotTag">NOW EXPLORING</div><div class="spotname" id="spotName">팔정도</div><div class="spotdesc" id="spotDesc">여덟 갈래 길이 이어지는 동국대학교의 중심 광장입니다.</div><div id="keyHint">WASD/방향키 이동 · 드래그 회전 · ◉ 카메라 3단계 · F 역사 안내 · M 지도 · L 경전</div></div>
 <div id="interaction"><div class="hint" id="actionHint">법당 방석으로 다가오세요</div><div id="practiceButtons"><button class="actbtn" id="actionBtn">🧘 명상하기</button><button class="actbtn alt" id="bowBtn">📿 염주알 넘기기</button><button class="actbtn alt" id="bow108Btn">🌸 108배</button><button class="actbtn alt" id="stopBowsBtn" style="display:none">■ 절 중단</button><button class="actbtn alt" id="leaveBtn" style="display:none">일어나기</button></div></div>
@@ -2452,17 +2452,58 @@ function strikeBell(){if(!audio.ready)initAudio();const now=performance.now();if
  if(bellCount===1)stamp('범종 타종');
  ritualToast('🔔 나의 '+bellCount+'번째 타종 · 마음을 밝히는 울림');
 }
+// Shared wishes live in Durable Object storage, not in each visitor's browser.
+// The newest 18 are displayed in the same order on every connected client.
 const wishObjects=[];
-function submitWish(){let txt=$('#wishMessage').value.trim().replace(/\s+/g,' ');if(!txt){$('#wishMessage').focus();return;}
- txt=txt.slice(0,30);const idx=wishObjects.length;
- if(idx>=18){ritualToast('마음등 공간이 가득 찼어요');$('#wishModal').hidden=true;return;}
- const x=-16+(idx%9)*4,z=15+Math.floor(idx/9)*2.9;
- const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);festivalLotus(0,4.05,0,idx,g,.40);
- const canvas=document.createElement('canvas');canvas.width=512;canvas.height=160;const ctx=canvas.getContext('2d');ctx.fillStyle='#fff3d4';ctx.fillRect(0,0,512,160);
- ctx.fillStyle='#694e39';ctx.font='bold 25px sans-serif';ctx.textAlign='center';ctx.fillText(txt,256,90,474);
+let wishPendingText=null,wishPendingTimer=null,mpWishEnabled=false;
+function wishCoordinates(index){return {x:-16+(index%9)*4,z:15+Math.floor(index/9)*2.9};}
+function createWishObject(entry,index){
+ const {x,z}=wishCoordinates(index),g=new THREE.Group();g.position.set(x,0,z);scene.add(g);
+ festivalLotus(0,4.05,0,index,g,.40);
+ const canvas=document.createElement('canvas');canvas.width=512;canvas.height=160;
+ const ctx=canvas.getContext('2d');ctx.fillStyle='#fff3d4';ctx.fillRect(0,0,512,160);
+ ctx.fillStyle='#161616';ctx.font="900 27px 'Malgun Gothic','Apple SD Gothic Neo',sans-serif";ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(entry.text,256,84,474);
  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
  const note=new THREE.Mesh(new THREE.PlaneGeometry(2.35,.73),new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide}));note.position.y=3.25;g.add(note);
- wishObjects.push({g,note});$('#wishModal').hidden=true;$('#wishMessage').value='';stamp('소원등 밝히기');ritualToast('🏮 소원을 연등에 담았어요');
+ return {id:entry.id,text:entry.text,g,note};
+}
+function removeWishObject(item){
+ scene.remove(item.g);
+ item.g.traverse(obj=>{if(obj.geometry)obj.geometry.dispose();});
+ item.note.material.map?.dispose();item.note.material.dispose();
+}
+function applyWishSnapshot(entries){
+ if(!Array.isArray(entries))return;
+ const normalized=entries.slice(-18).filter(w=>w&&typeof w.id==='string'&&typeof w.text==='string');
+ const old=new Map(wishObjects.map(w=>[w.id,w]));const next=[];
+ for(const [index,entry] of normalized.entries()){
+  let item=old.get(entry.id);if(item)old.delete(entry.id);
+  else item=createWishObject(entry,index);
+  const {x,z}=wishCoordinates(index);item.g.position.set(x,0,z);next.push(item);
+ }
+ for(const obsolete of old.values())removeWishObject(obsolete);
+ wishObjects.splice(0,wishObjects.length,...next);
+}
+function clearWishPending(){
+ clearTimeout(wishPendingTimer);wishPendingTimer=null;wishPendingText=null;
+ const btn=$('#submitWish');btn.disabled=false;btn.textContent='🏮 소원등 밝히기';
+}
+function submitWish(){
+ const text=$('#wishMessage').value.trim().replace(/\s+/g,' ').slice(0,30);
+ if(!text){$('#wishMessage').focus();return;}
+ if(wishPendingText!==null)return;
+ if(location.protocol==='file:'){
+  // Single-file demo has no shared server. The next visit cannot see this lamp.
+  // Keep a source text for previews to support subsequent additions.
+  applyWishSnapshot([...wishObjects.map(w=>({id:w.id,text:w.text||''})),{id:'preview-'+Date.now(),text}]);
+  $('#wishModal').hidden=true;$('#wishMessage').value='';stamp('소원등 밝히기');ritualToast('🏮 미리보기: 이 소원은 다른 사람에게 공유되지 않습니다');return;
+ }
+ if(mpSocket?.readyState!==WebSocket.OPEN||!mpSelf){ritualToast('실시간 서버 연결 후 소원등을 만들 수 있습니다');return;}
+ if(!mpWishEnabled){ritualToast('서버가 이전 버전입니다. src/index.js도 R8으로 배포해 주세요');return;}
+ wishPendingText=text;$('#submitWish').disabled=true;$('#submitWish').textContent='🏮 소원등 공유 중…';
+ try{mpSocket.send(JSON.stringify({type:'wish',text}));}
+ catch(err){clearWishPending();ritualToast('소원 전송에 실패했습니다. 다시 시도해 주세요');return;}
+ wishPendingTimer=setTimeout(()=>{if(wishPendingText!==null){clearWishPending();ritualToast('소원 저장 확인이 지연되고 있습니다. 서버 연결을 확인해 주세요');}},10000);
 }
 $('#submitWish').onclick=submitWish;
 function openJournal(){haltMovement();$('#dialogue').hidden=false;$('#wishModal').hidden=true;$('#talkName').textContent='동국대학교 건물 이야기';$('#talkRole').textContent='HERITAGE WALK · DOCUMENTED FACTS';
@@ -2761,10 +2802,44 @@ function updateSocialUI(now,dt){
 greetBtn.addEventListener('click',()=>startSocialGreeting(closestPeer));
 // Elephant sculptures remain stationary. The rider eases onto the back; movement is locked until dismount.
 let rideTransition=0, rideFromY=0, rideToY=0, rideFromX=0, rideFromZ=0, ridePhase='none';
+let rideBoardX=0,rideBoardZ=0,rideExitX=0,rideExitY=0,rideExitZ=0;
+function safeElephantExit(elephant){
+ // The original boarding spot was walkable, so prefer returning there.
+ const ground=floorHeight(rideBoardX,rideBoardZ);
+ if(!blocked(rideBoardX,rideBoardZ))return {x:rideBoardX,y:ground,z:rideBoardZ};
+ // A fixed +X/+Z offset can land inside the next elephant's collision circle.
+ // Search actual world colliders in all directions, including neighbouring elephants.
+ let best=null,bestScore=Infinity;
+ for(const r of [2.3,2.7,3.2,3.8,4.5,5.3,6.4,8.0,10.0]){
+  for(let i=0;i<48;i++){
+   const a=Math.PI*2*i/48,x=elephant.position.x+Math.cos(a)*r,z=elephant.position.z+Math.sin(a)*r;
+   if(blocked(x,z))continue;
+   const y=floorHeight(x,z),heightDelta=Math.abs(y-ground);
+   if(heightDelta>.5)continue;
+   const score=Math.hypot(x-rideBoardX,z-rideBoardZ)+r*.02;
+   if(score<bestScore){best={x,y,z};bestScore=score;}
+  }
+  if(best&&bestScore<1.5)break;
+ }
+ // A valid known spawn point is safer than leaving the player inside a sculpture.
+ return best||{x:1,y:floorHeight(1,28),z:28};
+}
+function finishElephantRide(){
+ if(!ridingElephant)return;
+ const landing=safeElephantExit(ridingElephant);
+ player.position.set(landing.x,landing.y,landing.z);
+ ridingElephant=null;ridePhase='none';monk.position.y=0;
+ for(const a of limbs.arms){a.rotation.x=0;a.rotation.z=0;}
+ for(const leg of limbs.legs)leg.rotation.x=0;
+ if(mpSocket?.readyState===WebSocket.OPEN&&mpSelf){
+  try{mpSocket.send(JSON.stringify({type:'rideLeave'}));}catch(e){console.warn('ride release',e)}
+ }
+}
 function startElephantRide(e){
  if(!e||ridingElephant||seated)return;
  ridingElephant=e;ridePendingId=null;ridePhase='mount';rideTransition=performance.now();
  rideFromX=player.position.x;rideFromZ=player.position.z;rideFromY=player.position.y;
+ rideBoardX=rideFromX;rideBoardZ=rideFromZ;
  rideToY=e.position.y+e.scale.x*2.05;
  keys.clear();joy.x=joy.y=0;
  ritualToast('🐘 코끼리상에 천천히 올라갑니다 · 코끼리상은 움직이지 않습니다');
@@ -2782,14 +2857,13 @@ rideBtn.addEventListener('click',()=>{
  }else ritualToast('멀티플레이 서버 연결을 확인한 뒤 탑승할 수 있습니다');
 });
 leaveRideBtn.addEventListener('click',()=>{
- if(!ridingElephant||ridePhase==='dismount')return;
- if(mpSocket?.readyState===WebSocket.OPEN&&mpSelf){
-  try{mpSocket.send(JSON.stringify({type:'rideLeave'}))}catch(err){console.warn('ride release',err)}
- }
- const e=ridingElephant;ridePhase='dismount';rideTransition=performance.now();
+ if(!ridingElephant||ridePhase!=='sitting')return;
+ const landing=safeElephantExit(ridingElephant);
+ rideExitX=landing.x;rideExitZ=landing.z;rideExitY=landing.y;
+ ridePhase='dismount';rideTransition=performance.now();
  rideFromX=player.position.x;rideFromZ=player.position.z;rideFromY=player.position.y;
- rideToY=floorHeight(e.position.x+2.45,e.position.z+1.6);
  keys.clear();joy.x=joy.y=0;
+ // Keep the server's seat reserved until the dismount finishes.
 });
 function smoothRide(t){return t*t*(3-2*t)}
 function updateElephantRide(now,dt){
@@ -2800,8 +2874,8 @@ function updateElephantRide(now,dt){
    player.position.set(THREE.MathUtils.lerp(rideFromX,targetX,ease),THREE.MathUtils.lerp(rideFromY,rideToY,ease)+Math.sin(Math.PI*ease)*.28,THREE.MathUtils.lerp(rideFromZ,targetZ,ease));
    if(t===1)ridePhase='sitting';
  }else if(ridePhase==='dismount'){
-   player.position.set(THREE.MathUtils.lerp(rideFromX,e.position.x+2.45,ease),THREE.MathUtils.lerp(rideFromY,rideToY,ease)+Math.sin(Math.PI*ease)*.2,THREE.MathUtils.lerp(rideFromZ,e.position.z+1.6,ease));
-   if(t===1){ridingElephant=null;ridePhase='none';}
+   player.position.set(THREE.MathUtils.lerp(rideFromX,rideExitX,ease),THREE.MathUtils.lerp(rideFromY,rideExitY,ease)+Math.sin(Math.PI*ease)*.35,THREE.MathUtils.lerp(rideFromZ,rideExitZ,ease));
+   if(t===1)finishElephantRide();
  }else{
    player.position.set(targetX,rideToY,targetZ);
  }
@@ -2986,6 +3060,8 @@ function mpRemovePeer(id){const p=mpPeers.get(id);if(!p)return;scene.remove(p.ro
 function mpReceive(data){
  if(data.type==='welcome'){
   mpSelf=data.id;mpRideOwners.clear();
+  mpWishEnabled=data.wishFeature===true;
+  if(mpWishEnabled)applyWishSnapshot(data.wishes||[]);
   for(const [id,owner] of Object.entries(data.rides||{}))if(Number.isInteger(+id))mpRideOwners.set(+id,owner);
   for(const p of data.peers||[])mpReceive({type:'join',...p});
   window.dispatchEvent(new CustomEvent('dongguk:mpstatus',{detail:{online:true,count:mpPeers.size+1}}));
@@ -3018,7 +3094,15 @@ function mpReceive(data){
   if(ridePendingId===data.elephantId)ridePendingId=null;
   ritualToast(data.reason==='occupied'?'🐘 이 코끼리에는 이미 다른 이용자가 타고 있습니다':'🐘 코끼리 가까이에서 다시 시도하세요');
  }
- else if(data.type==='chat'){const peer=mpPeers.get(data.id);if(peer)mpShowBubble(peer.root,data.text);window.dispatchEvent(new CustomEvent('dongguk:mpchat',{detail:data}));}
+ else if(data.type==='wishSync'){
+  applyWishSnapshot(data.wishes||[]);
+  if(data.createdBy===mpSelf&&wishPendingText!==null){
+   clearWishPending();$('#wishModal').hidden=true;$('#wishMessage').value='';
+   stamp('소원등 밝히기');ritualToast('🏮 소원이 공유되었습니다. 다른 방문객에게도 보입니다');
+  }
+ }else if(data.type==='wishDenied'){
+  clearWishPending();ritualToast(data.reason==='rate'?'잠시 후 다시 소원등을 만들어 주세요':'소원 저장에 실패했습니다. 다시 시도해 주세요');
+ }else if(data.type==='chat'){const peer=mpPeers.get(data.id);if(peer)mpShowBubble(peer.root,data.text);window.dispatchEvent(new CustomEvent('dongguk:mpchat',{detail:data}));}
  else if(data.type==='greet'&&data.id!==mpSelf){
   const peer=mpPeers.get(data.id);if(peer){peer.greetStart=performance.now();peer.greetUntil=peer.greetStart+GREETING_DURATION;}
  }
@@ -3029,8 +3113,8 @@ function mpConnect(){
  const url=new URL('/ws',location.href);url.protocol=location.protocol==='https:'?'wss:':'ws:';
  try{mpSocket=new WebSocket(url);mpSocket.onopen=()=>{mpRetry=0;mpSocket.send(JSON.stringify({type:'hello',name:window.__donggukIdentityName||sessionStorage.getItem('dgName')||'방문자'}))};
  mpSocket.onmessage=e=>{try{mpReceive(JSON.parse(e.data))}catch(err){console.warn('multiplayer message',err)}};
- mpSocket.onclose=()=>{mpSelf=null;ridePendingId=null;mpRideOwners.clear();
- if(ridingElephant){const e=ridingElephant;ridingElephant=null;ridePhase='none';player.position.set(e.position.x+2.45,floorHeight(e.position.x+2.45,e.position.z+1.6),e.position.z+1.6);monk.position.y=0;}
+ mpSocket.onclose=()=>{mpSelf=null;mpWishEnabled=false;ridePendingId=null;mpRideOwners.clear();if(wishPendingText!==null){clearWishPending();ritualToast('소원 공유 서버 연결이 끊겼습니다. 다시 시도해 주세요');}
+ if(ridingElephant){const exit=safeElephantExit(ridingElephant);ridingElephant=null;ridePhase='none';player.position.set(exit.x,exit.y,exit.z);monk.position.y=0;for(const a of limbs.arms){a.rotation.x=0;a.rotation.z=0;}for(const leg of limbs.legs)leg.rotation.x=0;}
  for(const id of [...mpPeers.keys()])mpRemovePeer(id);window.dispatchEvent(new CustomEvent('dongguk:mpstatus',{detail:{online:false,count:0}}));setTimeout(mpConnect,Math.min(20000,1000*Math.pow(1.7,Math.min(6,mpRetry++))))};
  mpSocket.onerror=()=>{};
  }catch(err){console.warn('multiplayer connection',err)}
