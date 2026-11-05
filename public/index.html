@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <meta name="theme-color" content="#182927"><meta name="description" content="정각원·팔정도·명진관을 걷고, 절하고, 명상하는 비공식 가상 동국대학교 캠퍼스">
-<meta name="dgu-build" content="DGU-20261105-R8"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
+<meta name="dgu-build" content="DGU-20261105-R10"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
 <style>
   :root{color-scheme:dark;--glass:rgba(22,35,36,.77);--stroke:rgba(245,238,216,.24);--gold:#eccc91;--cream:#fff7e9}
   *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#b4a8a1;font-family:system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:var(--cream);touch-action:none;-webkit-user-select:none;user-select:none}
@@ -331,13 +331,46 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
 #beadSurface svg{width:100%;height:100%;pointer-events:none;display:block}#ritualActivityHint{font-size:14px;line-height:1.7;color:#111;font-weight:750}#ritualCount{display:block;margin:7px auto 9px}#beadControls[hidden]{display:none!important}#beadControls{display:grid;justify-items:center;gap:6px}#beadStepButton{border:2px solid #593617;background:#f2c988;color:#1d1710;font:900 15px system-ui,sans-serif;border-radius:11px;min-height:49px;width:min(240px,95%);cursor:pointer;touch-action:manipulation}#beadStepButton:active{transform:scale(.98)}#beadControls small{color:#342519;font-size:11px;font-weight:800;line-height:1.5}#ritualActivityCard{touch-action:pan-y}
 #ritualCount{font-size:24px;color:#000;font-weight:900}
 #ritualReset{background:#fff;color:#111;border:2px solid #111;border-radius:10px;min-height:43px;padding:8px 15px;font-weight:900}
-</style></head>
+</style><style id="wardrobeR9Styles">
+/* R9 wardrobe · choose a look without leaving the 3D scene */
+#wardrobePanel[hidden]{display:none!important}
+#wardrobePanel{position:fixed;z-index:220;right:clamp(10px,3vw,40px);top:72px;width:min(372px,calc(100vw - 20px));max-height:calc(100dvh - 86px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y;background:#fff9ee;color:#161f1b;border:2px solid #31483c;border-radius:19px;box-shadow:0 16px 65px #0a1f19a8;padding:15px;font-family:system-ui,'Apple SD Gothic Neo','Malgun Gothic',sans-serif}
+#wardrobePanel .wardrobeTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:18px;font-weight:900;color:#1c3a30}
+#wardrobeClose{border:0;border-radius:9px;background:#e5e5db;color:#18251f;min-width:41px;min-height:41px;font-size:22px;cursor:pointer}
+#wardrobePanel .wardrobeHint{font-size:11px;line-height:1.6;color:#42594d;margin:5px 0 11px}
+#wardrobePanel .lookPreview{display:flex;justify-content:center;align-items:center;background:linear-gradient(#e4efe7,#d3e3d6);border-radius:14px;height:105px;overflow:hidden;position:relative}
+#wardrobePreviewSvg{height:112px;width:124px;filter:drop-shadow(0px 4px 3px #13332335)}
+#wardrobePreviewHat,#wardrobePreviewBag{font-size:13px;position:absolute;font-weight:800;color:#234439}
+#wardrobePreviewHat{left:16px;top:15px}#wardrobePreviewBag{right:15px;bottom:12px}
+#wardrobePanel fieldset{border:0;margin:12px 0 8px;padding:0;min-width:0}
+#wardrobePanel legend{color:#1c3228;font-weight:900;font-size:13px;margin-bottom:8px}
+#wardrobePanel .lookOptions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+#wardrobePanel .lookButton{border:2px solid #c6cbbf;background:#fff;color:#111b15;border-radius:11px;min-height:42px;padding:9px 4px;font-size:12px;font-weight:850;line-height:1.35;cursor:pointer;touch-action:manipulation}
+#wardrobePanel .lookButton[aria-pressed="true"]{border-color:#173d31;background:#d8eedb;box-shadow:inset 0 0 0 1px #25593e}
+#wardrobePanel .lookButton:focus-visible,#wardrobeClose:focus-visible{outline:3px solid #b36d1f;outline-offset:2px}
+#wardrobePanel .lookColor{display:inline-block;width:13px;height:13px;vertical-align:-2px;border-radius:50%;margin-right:4px;border:1px solid #314a3b55}
+#wardrobeSaveNote{font-size:11px;color:#355448;font-weight:750;margin:9px 0 0;min-height:18px}
+@media(max-width:700px){#wardrobePanel{top:calc(57px + env(safe-area-inset-top,0px));right:8px;left:8px;width:auto;max-height:calc(100dvh - 72px - env(safe-area-inset-top,0px));padding:12px}#wardrobePanel .lookOptions{gap:6px}#wardrobePanel .lookButton{min-height:43px;font-size:12px}}
+
+/* R10 palette/accessory expansion */
+#wardrobePanel .lookOptions{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#wardrobePanel .lookButton{font-size:11px;min-height:43px;overflow-wrap:anywhere}
+#wardrobePanel fieldset{padding:9px 0 4px;margin:7px 0;border-bottom:1px solid #d9decf}
+#wardrobePanel legend{font-size:13px;padding:0 0 3px}
+#wardrobePanel .lookColor{width:17px;height:17px;vertical-align:-4px;border:1px solid #18261a55}
+#wardrobePanel .lookPreview{height:126px}
+#wardrobePreviewSvg{width:142px;height:125px}
+#wardrobePanel .wardrobeTitle{position:sticky;top:-15px;z-index:3;background:#fff9ee;padding:10px 0 7px}
+#wardrobePreviewHat,#wardrobePreviewBag{background:#fff9eccc;padding:4px 6px;border-radius:7px;font-size:12px}
+@media(max-width:390px){#wardrobePanel .lookOptions{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
 <body>
 <div id="loading">동국의 풍경을 준비하고 있습니다 ··· (최초 실행 시 인터넷 연결 필요)</div>
 <section id="offlineFallback" role="region" aria-label="3D 연결 실패 시 읽기 전용 캠퍼스 안내" hidden>
  <div class="fallbackCard">
   <div class="fallbackKicker">DONGGUK UNIVERSITY · READ-ONLY GUIDE</div>
-  <h2>3D 엔진을 연결할 수 없습니다</h2><p style="font-size:12px;font-weight:800;color:#ffdb91">진단 버전: DGU-20261105-R8 · <a href="/diagnostics.html" style="color:#fff;text-decoration:underline">3D 연결 진단 열기</a></p>
+  <h2>3D 엔진을 연결할 수 없습니다</h2><p style="font-size:12px;font-weight:800;color:#ffdb91">진단 버전: DGU-20261105-R10 · <a href="/diagnostics.html" style="color:#fff;text-decoration:underline">3D 연결 진단 열기</a></p>
   <p>Three.js 다운로드, WebGL 초기화 또는 게임 코드 실행 중 오류가 발생했습니다. 아래에 표시된 구체적인 오류 내용을 확인해 주세요. 휴대폰에서 다운로드한 HTML을 직접 열었다면, GitHub/Cloudflare에 배포된 https 주소로 접속해 주세요. Chrome에서 새로고침하고 인터넷 연결을 확인하세요. 아래는 <b>3D 이동이 아닌 읽기 전용 안내</b>입니다. 외부 공식 자료 링크를 열려면 인터넷 연결이 필요합니다.</p>
   <h3>팔정도 · 여덟 갈래의 수행</h3>
   <p>정견·정사유·정어·정업·정명·정정진·정념·정정의 수행을 상징하는 동국대학교 중앙 광장입니다.</p>
@@ -362,6 +395,7 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
 <aside id="mainMenu" aria-label="산책 메뉴" hidden>
  <div class="mainMenuHead"><strong>산책 메뉴</strong><button id="menuCloseBtn" aria-label="메뉴 닫기" type="button">✕</button></div>
  <div class="menuGroup"><small>산책</small><button class="menuBig" id="mapBtn" type="button" aria-expanded="false">⌖ &nbsp; 원하는 장소로 이동</button></div>
+ <div class="menuGroup"><small>나만의 캐릭터</small><button class="menuBig" id="wardrobeOpen" type="button">👘 승복 · 모자 · 가방 꾸미기 (확장)</button></div>
  <div class="menuGroup"><small>시간대</small>
 <div id="timeToolbar" role="group" aria-label="하늘의 시간대 바꾸기"><button data-time="morning">🌤 아침</button><button data-time="day">☀ 낮</button><button data-time="sunset" class="active">🌇 노을</button><button data-time="night">🌙 밤</button></div>
  </div>
@@ -379,6 +413,30 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
  <p class="menuFooter">WASD / 방향키 이동 · 마우스 드래그로 시점 회전<br>휴대폰은 왼쪽 조이스틱을 이용하세요.<br>탐험 기록: 안내 퀴즈 6개 + 타종 + 소원등 = 총 8개</p>
 </aside>
 <input type="range" data-volume="music" id="legacyMusicVolume" min="0" max="100" value="0" hidden aria-hidden="true"><output id="vmusic" hidden>0%</output>
+
+<section id="wardrobePanel" aria-label="캐릭터 꾸미기" role="dialog" aria-modal="false" hidden>
+ <div class="wardrobeTitle"><span>👘 캐릭터 꾸미기</span><button id="wardrobeClose" type="button" aria-label="꾸미기 닫기">×</button></div>
+ <p class="wardrobeHint">승복 18색 · 모자 11종 · 가방 10종. 모자와 가방의 색상도 개별 선택할 수 있어요. 실제 종단 복식의 정밀 복원은 아닌 게임용 창작 디자인입니다.</p>
+ <div class="lookPreview" aria-hidden="true">
+   <svg id="wardrobePreviewSvg" viewBox="0 0 124 124" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="62" cy="117" rx="34" ry="5" fill="#31503a" opacity=".20"/>
+    <path id="wardrobePreviewRobe" d="M31 105 Q31 68 61 67 Q94 67 94 105 Z" fill="#a9afb9" stroke="#36463b" stroke-width="2"/>
+    <ellipse cx="62" cy="43" rx="32" ry="35" fill="#f4cba9" stroke="#b58e74" stroke-width="2"/>
+    <path d="M42 45 Q47 40 52 45 M72 45 Q77 40 82 45" stroke="#3d3c39" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M55 57 Q63 63 70 57" stroke="#915b59" fill="none" stroke-width="2" stroke-linecap="round"/>
+    <g id="wardrobePreviewHatSlot"></g>
+    <g id="wardrobePreviewBagSlot"></g>
+   </svg>
+   <span id="wardrobePreviewHat">맨머리</span><span id="wardrobePreviewBag">주머니</span>
+ </div>
+<fieldset><legend>승복 색상 · 18가지</legend><div class="lookOptions"><button type="button" class="lookButton" data-look-robe="gray" aria-pressed="false"><span class="lookColor" style="background:#a9afb9"></span>구름 회색</button><button type="button" class="lookButton" data-look-robe="charcoal" aria-pressed="false"><span class="lookColor" style="background:#585e67"></span>먹색</button><button type="button" class="lookButton" data-look-robe="brown" aria-pressed="false"><span class="lookColor" style="background:#9e7e64"></span>갈색</button><button type="button" class="lookButton" data-look-robe="ochre" aria-pressed="false"><span class="lookColor" style="background:#c5a06c"></span>황토색</button><button type="button" class="lookButton" data-look-robe="plum" aria-pressed="false"><span class="lookColor" style="background:#8e617c"></span>자주색</button><button type="button" class="lookButton" data-look-robe="sage" aria-pressed="false"><span class="lookColor" style="background:#93a590"></span>연두 회색</button><button type="button" class="lookButton" data-look-robe="ivory" aria-pressed="false"><span class="lookColor" style="background:#e6dfc9"></span>상아색</button><button type="button" class="lookButton" data-look-robe="sand" aria-pressed="false"><span class="lookColor" style="background:#cfb896"></span>모래색</button><button type="button" class="lookButton" data-look-robe="amber" aria-pressed="false"><span class="lookColor" style="background:#ddaa66"></span>호박색</button><button type="button" class="lookButton" data-look-robe="navy" aria-pressed="false"><span class="lookColor" style="background:#41536f"></span>남색</button><button type="button" class="lookButton" data-look-robe="indigo" aria-pressed="false"><span class="lookColor" style="background:#607ea4"></span>쪽빛</button><button type="button" class="lookButton" data-look-robe="teal" aria-pressed="false"><span class="lookColor" style="background:#48958d"></span>청록색</button><button type="button" class="lookButton" data-look-robe="forest" aria-pressed="false"><span class="lookColor" style="background:#51765b"></span>진녹색</button><button type="button" class="lookButton" data-look-robe="burgundy" aria-pressed="false"><span class="lookColor" style="background:#853c50"></span>와인색</button><button type="button" class="lookButton" data-look-robe="rose" aria-pressed="false"><span class="lookColor" style="background:#d999a6"></span>장밋빛</button><button type="button" class="lookButton" data-look-robe="lavender" aria-pressed="false"><span class="lookColor" style="background:#a99ac8"></span>연보라색</button><button type="button" class="lookButton" data-look-robe="sky" aria-pressed="false"><span class="lookColor" style="background:#99c0d1"></span>하늘색</button><button type="button" class="lookButton" data-look-robe="black" aria-pressed="false"><span class="lookColor" style="background:#35393e"></span>검정</button></div></fieldset>
+<fieldset><legend>모자 · 머리 장식 · 11가지</legend><div class="lookOptions"><button type="button" class="lookButton" data-look-hat="none" aria-pressed="false">착용 안 함</button><button type="button" class="lookButton" data-look-hat="cap" aria-pressed="false">천모자</button><button type="button" class="lookButton" data-look-hat="straw" aria-pressed="false">삿갓</button><button type="button" class="lookButton" data-look-hat="hood" aria-pressed="false">방한 두건</button><button type="button" class="lookButton" data-look-hat="beanie" aria-pressed="false">니트모자</button><button type="button" class="lookButton" data-look-hat="bucket" aria-pressed="false">벙거지</button><button type="button" class="lookButton" data-look-hat="wrap" aria-pressed="false">천 두건</button><button type="button" class="lookButton" data-look-hat="band" aria-pressed="false">머리띠</button><button type="button" class="lookButton" data-look-hat="travel" aria-pressed="false">여행모자</button><button type="button" class="lookButton" data-look-hat="beret" aria-pressed="false">베레모</button><button type="button" class="lookButton" data-look-hat="lotus" aria-pressed="false">연꽃 장식</button></div></fieldset>
+<fieldset><legend>모자 색상 · 12가지</legend><div class="lookOptions"><button type="button" class="lookButton" data-look-hatColor="sand" aria-pressed="false"><span class="lookColor" style="background:#ae9071"></span>모래색</button><button type="button" class="lookButton" data-look-hatColor="cream" aria-pressed="false"><span class="lookColor" style="background:#e5d5b5"></span>크림색</button><button type="button" class="lookButton" data-look-hatColor="charcoal" aria-pressed="false"><span class="lookColor" style="background:#4b5053"></span>먹색</button><button type="button" class="lookButton" data-look-hatColor="brown" aria-pressed="false"><span class="lookColor" style="background:#806044"></span>갈색</button><button type="button" class="lookButton" data-look-hatColor="white" aria-pressed="false"><span class="lookColor" style="background:#f1f1eb"></span>흰색</button><button type="button" class="lookButton" data-look-hatColor="indigo" aria-pressed="false"><span class="lookColor" style="background:#587493"></span>쪽빛</button><button type="button" class="lookButton" data-look-hatColor="teal" aria-pressed="false"><span class="lookColor" style="background:#468d85"></span>청록색</button><button type="button" class="lookButton" data-look-hatColor="forest" aria-pressed="false"><span class="lookColor" style="background:#607c60"></span>녹색</button><button type="button" class="lookButton" data-look-hatColor="plum" aria-pressed="false"><span class="lookColor" style="background:#925d76"></span>자주색</button><button type="button" class="lookButton" data-look-hatColor="pink" aria-pressed="false"><span class="lookColor" style="background:#d89ca6"></span>분홍색</button><button type="button" class="lookButton" data-look-hatColor="orange" aria-pressed="false"><span class="lookColor" style="background:#cd8f50"></span>주황색</button><button type="button" class="lookButton" data-look-hatColor="navy" aria-pressed="false"><span class="lookColor" style="background:#354d6b"></span>남색</button></div></fieldset>
+<fieldset><legend>가방 · 소품 · 10가지</legend><div class="lookOptions"><button type="button" class="lookButton" data-look-bag="none" aria-pressed="false">착용 안 함</button><button type="button" class="lookButton" data-look-bag="pouch" aria-pressed="false">허리 주머니</button><button type="button" class="lookButton" data-look-bag="shoulder" aria-pressed="false">천 가방</button><button type="button" class="lookButton" data-look-bag="satchel" aria-pressed="false">등짐 가방</button><button type="button" class="lookButton" data-look-bag="backpack" aria-pressed="false">작은 배낭</button><button type="button" class="lookButton" data-look-bag="tote" aria-pressed="false">손가방</button><button type="button" class="lookButton" data-look-bag="crossbody" aria-pressed="false">크로스백</button><button type="button" class="lookButton" data-look-bag="basket" aria-pressed="false">소품 바구니</button><button type="button" class="lookButton" data-look-bag="scroll" aria-pressed="false">경전 보관통</button><button type="button" class="lookButton" data-look-bag="bookbag" aria-pressed="false">책가방</button></div></fieldset>
+<fieldset><legend>가방 색상 · 12가지</legend><div class="lookOptions"><button type="button" class="lookButton" data-look-bagColor="sand" aria-pressed="false"><span class="lookColor" style="background:#ae9071"></span>모래색</button><button type="button" class="lookButton" data-look-bagColor="cream" aria-pressed="false"><span class="lookColor" style="background:#e5d5b5"></span>크림색</button><button type="button" class="lookButton" data-look-bagColor="charcoal" aria-pressed="false"><span class="lookColor" style="background:#4b5053"></span>먹색</button><button type="button" class="lookButton" data-look-bagColor="brown" aria-pressed="false"><span class="lookColor" style="background:#806044"></span>갈색</button><button type="button" class="lookButton" data-look-bagColor="white" aria-pressed="false"><span class="lookColor" style="background:#f1f1eb"></span>흰색</button><button type="button" class="lookButton" data-look-bagColor="indigo" aria-pressed="false"><span class="lookColor" style="background:#587493"></span>쪽빛</button><button type="button" class="lookButton" data-look-bagColor="teal" aria-pressed="false"><span class="lookColor" style="background:#468d85"></span>청록색</button><button type="button" class="lookButton" data-look-bagColor="forest" aria-pressed="false"><span class="lookColor" style="background:#607c60"></span>녹색</button><button type="button" class="lookButton" data-look-bagColor="plum" aria-pressed="false"><span class="lookColor" style="background:#925d76"></span>자주색</button><button type="button" class="lookButton" data-look-bagColor="pink" aria-pressed="false"><span class="lookColor" style="background:#d89ca6"></span>분홍색</button><button type="button" class="lookButton" data-look-bagColor="orange" aria-pressed="false"><span class="lookColor" style="background:#cd8f50"></span>주황색</button><button type="button" class="lookButton" data-look-bagColor="navy" aria-pressed="false"><span class="lookColor" style="background:#354d6b"></span>남색</button></div></fieldset>
+ <p id="wardrobeSaveNote" role="status">이 브라우저에 꾸미기 설정이 저장됩니다.</p>
+</section>
+
 <section id="mixPanel" aria-label="소리별 음량 설정" hidden><div class="mixHead"><b>소리의 풍경</b><button id="closeMix" aria-label="설정 닫기">×</button></div><p>공간에 따라 음악이 자동으로 바뀝니다. 정각원에서는 첨부된 로컬 MP3를 재생합니다. 자동재생이 차단되면 화면을 한 번 터치해 주세요.</p>
 <label>🍃 바람 <output id="vwind">38%</output><input aria-label="바람 음량" type="range" data-volume="wind" min="0" max="100" value="38"></label>
 <label>🐦 새소리 <output id="vbirds">24%</output><input aria-label="새소리 음량" type="range" data-volume="birds" min="0" max="100" value="24"></label>
@@ -2733,6 +2791,131 @@ for(const part of [...monk.children]){
  if(part===greetingUpperBody||greetingGrounded.has(part)||part.position.y<.49)continue;
  monk.remove(part);part.position.y-=.70;greetingUpperBody.add(part);
 }
+
+// R10 avatar customization: whitelist values before using them in materials, SVG and network.
+const LOOK_COLORS={ gray:['#a9afb9','#848f9e'], charcoal:['#585e67','#41464e'], brown:['#9e7e64','#765b47'], ochre:['#c5a06c','#987748'], plum:['#8e617c','#6f465f'], sage:['#93a590','#6b816d'], ivory:['#e6dfc9','#c4b99d'], sand:['#cfb896','#9e886d'], amber:['#ddaa66','#b98043'], navy:['#41536f','#293a55'], indigo:['#607ea4','#3e587c'], teal:['#48958d','#2a7067'], forest:['#51765b','#36543f'], burgundy:['#853c50','#682c41'], rose:['#d999a6','#b97288'], lavender:['#a99ac8','#7f719e'], sky:['#99c0d1','#7298ad'], black:['#35393e','#25292e']};
+const ACC_COLORS={ sand:'#ae9071', cream:'#e5d5b5', charcoal:'#4b5053', brown:'#806044', white:'#f1f1eb', indigo:'#587493', teal:'#468d85', forest:'#607c60', plum:'#925d76', pink:'#d89ca6', orange:'#cd8f50', navy:'#354d6b'};
+const LOOK_HATS=['none', 'cap', 'straw', 'hood', 'beanie', 'bucket', 'wrap', 'band', 'travel', 'beret', 'lotus'],LOOK_BAGS=['none', 'pouch', 'shoulder', 'satchel', 'backpack', 'tote', 'crossbody', 'basket', 'scroll', 'bookbag'];
+const LOOK_DEFAULT={robe:'gray',hat:'none',hatColor:'sand',bag:'pouch',bagColor:'sand'};
+function cleanLook(data){
+ const x=data&&typeof data==='object'?data:{};
+ return {robe:Object.hasOwn(LOOK_COLORS,x.robe)?x.robe:LOOK_DEFAULT.robe,
+   hat:LOOK_HATS.includes(x.hat)?x.hat:LOOK_DEFAULT.hat,
+   hatColor:Object.hasOwn(ACC_COLORS,x.hatColor)?x.hatColor:LOOK_DEFAULT.hatColor,
+   bag:LOOK_BAGS.includes(x.bag)?x.bag:LOOK_DEFAULT.bag,
+   bagColor:Object.hasOwn(ACC_COLORS,x.bagColor)?x.bagColor:LOOK_DEFAULT.bagColor};
+}
+let myLook=(()=>{try{return cleanLook(JSON.parse(localStorage.getItem('dguWardrobeR9')||'null'))}catch(e){return {...LOOK_DEFAULT}}})();
+// Each avatar carries only its currently selected accessories. Old geometries/materials are disposed.
+function outfitMesh(parent,geo,color,x,y,z,sx=1,sy=1,sz=1,tone='main'){
+ const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color,roughness:.92}));
+ mesh.position.set(x,y,z);mesh.scale.set(sx,sy,sz);mesh.userData.outfitTone=tone;
+ mesh.castShadow=false;mesh.receiveShadow=false;parent.add(mesh);return mesh;
+}
+function createOutfitProps(headParent,bodyParent,headY,bagY,size=1){
+ const hatRoot=new THREE.Group(),bagRoot=new THREE.Group();
+ hatRoot.position.y=headY;bagRoot.position.y=bagY;hatRoot.scale.setScalar(size);bagRoot.scale.setScalar(size);
+ headParent.add(hatRoot);bodyParent.add(bagRoot);
+ return {hatRoot,bagRoot,hat:null,bag:null,hatKey:'none',bagKey:'none'};
+}
+function disposeOutfitGroup(g){
+ if(!g)return;
+ g.parent?.remove(g);
+ g.traverse(node=>{if(!node.isMesh)return;node.geometry?.dispose();node.material?.dispose()});
+}
+function makeHat(kind,root){
+ const g=new THREE.Group();root.add(g);
+ const s=(r,x,y,z,sx=1,sy=1,sz=1,tone='main')=>outfitMesh(g,new THREE.SphereGeometry(r,12,8),'#9b8674',x,y,z,sx,sy,sz,tone);
+ const c=(rt,rb,h,x,y,z,seg=16,tone='main')=>outfitMesh(g,new THREE.CylinderGeometry(rt,rb,h,seg),'#9b8674',x,y,z,1,1,1,tone);
+ if(kind==='cap'){s(.65,0,-.12,0,1,.37,1);s(.39,0,-.26,-.43,1,.17,.85,'accent')}
+ else if(kind==='straw'){c(.94,1,.06,0,-.03,0,24);outfitMesh(g,new THREE.ConeGeometry(.66,.50,20),'#9b8674',0,.26,0);c(.59,.59,.08,0,.06,0,18,'accent')}
+ else if(kind==='hood'){s(.68,0,-.02,.05,1,.55,.98);c(.66,.66,.09,0,-.28,0,20,'accent')}
+ else if(kind==='beanie'){s(.63,0,-.04,0,1,.48,1);c(.63,.63,.16,0,-.29,0,18,'accent');s(.12,0,.29,0)}
+ else if(kind==='bucket'){c(.57,.66,.42,0,-.06,0,20);c(.92,.88,.06,0,-.30,0,20,'accent')}
+ else if(kind==='wrap'){s(.64,0,-.12,0,1,.26,1);c(.62,.64,.12,0,-.19,0,20,'accent');s(.17,.53,-.23,.33,1,.50,.6)}
+ else if(kind==='band'){const ring=outfitMesh(g,new THREE.TorusGeometry(.61,.095,7,28),'#9b8674',0,-.20,0);ring.rotation.x=Math.PI/2;s(.19,.41,-.17,-.36,1,.58,.65,'accent')}
+ else if(kind==='travel'){c(1.02,1.08,.07,0,-.30,0,24,'accent');c(.61,.67,.38,0,-.08,0,20);c(.62,.63,.06,0,-.22,0,18,'accent')}
+ else if(kind==='beret'){s(.75,.13,-.04,0,1,.29,.95);s(.17,.15,.16,0,1,.22,1,'accent')}
+ else if(kind==='lotus'){for(let i=0;i<5;i++){let a=i/5*Math.PI*2;s(.14,.37+Math.cos(a)*.16,-.16+Math.sin(a)*.12,-.48,1,.65,.62)}s(.08,.37,-.16,-.53,1,1,1,'accent')}
+ return g;
+}
+function makeBag(kind,root){
+ const g=new THREE.Group();root.add(g);
+ const s=(r,x,y,z,sx=1,sy=1,sz=1,tone='main')=>outfitMesh(g,new THREE.SphereGeometry(r,12,8),'#a88e72',x,y,z,sx,sy,sz,tone);
+ const b=(x,y,z,px,py,pz,tone='main')=>outfitMesh(g,new THREE.BoxGeometry(x,y,z),'#a88e72',px,py,pz,1,1,1,tone);
+ const c=(r,h,px,py,pz,tone='main')=>outfitMesh(g,new THREE.CylinderGeometry(r,r,h,14),'#a88e72',px,py,pz,1,1,1,tone);
+ if(kind==='pouch'){s(.23,.44,-.07,.26,1,.90,.63);s(.08,.44,.14,.29,1,.70,.70,'accent')}
+ else if(kind==='shoulder'){s(.31,.49,-.07,.15,1,.9,.64);const m=c(.047,1,.17,.42,-.33,'accent');m.rotation.z=-.54}
+ else if(kind==='satchel'){b(.65,.60,.28,0,-.05,.50);b(.68,.16,.31,0,.21,.49,'accent');c(.040,.82,-.19,.44,.41,'accent');c(.040,.82,.19,.44,.41,'accent')}
+ else if(kind==='backpack'){b(.63,.73,.32,0,-.02,.51);b(.55,.18,.34,0,.26,.52,'accent');s(.06,.18,-.27,.70)}
+ else if(kind==='tote'){b(.57,.48,.26,.42,-.16,-.12);const m=c(.045,.50,.42,.22,-.12,'accent');m.rotation.x=Math.PI/2}
+ else if(kind==='crossbody'){b(.44,.39,.27,-.44,-.11,-.37);const m=c(.04,1.10,-.10,.36,-.33,'accent');m.rotation.z=.55}
+ else if(kind==='basket'){c(.28,.44,.43,-.13,.17);const ring=outfitMesh(g,new THREE.TorusGeometry(.28,.042,7,16),'#a88e72',.43,.08,.17,1,1,1,'accent');ring.rotation.x=Math.PI/2}
+ else if(kind==='scroll'){const m=c(.16,.76,.39,.04,.30);m.rotation.z=Math.PI/2;s(.13,.04,.04,.30,1,.50,1,'accent');b(.12,.12,.14,.38,.05,.30,'accent')}
+ else if(kind==='bookbag'){b(.55,.60,.21,0,-.08,.47);b(.50,.12,.24,0,.17,.45,'accent');b(.35,.09,.10,0,-.25,.35,'accent')}
+ return g;
+}
+function tintGroup(root,color){
+ if(!root)return;
+ const main=new THREE.Color(color),accent=main.clone().multiplyScalar(.70);
+ root.traverse(o=>{if(o.isMesh&&o.userData.outfitTone){o.material.color.copy(o.userData.outfitTone==='accent'?accent:main)}});
+}
+function visibleProps(props,look){
+ if(props.hatKey!==look.hat){disposeOutfitGroup(props.hat);props.hat=null;props.hatKey=look.hat;if(look.hat!=='none')props.hat=makeHat(look.hat,props.hatRoot)}
+ if(props.bagKey!==look.bag){disposeOutfitGroup(props.bag);props.bag=null;props.bagKey=look.bag;if(look.bag!=='none')props.bag=makeBag(look.bag,props.bagRoot)}
+ tintGroup(props.hat,ACC_COLORS[look.hatColor]);tintGroup(props.bag,ACC_COLORS[look.bagColor]);
+}
+const localOutfitProps=createOutfitProps(greetingUpperBody,monk,2.5-.70,.85,1);
+function paintLocalLook(look){
+ const safe=cleanLook(look);robeSoft.color.set(LOOK_COLORS[safe.robe][0]);robeShade.color.set(LOOK_COLORS[safe.robe][1]);
+ pouch.visible=false;visibleProps(localOutfitProps,safe);
+}
+function paintPeerLook(peer,look){
+ if(!peer||!peer.wardrobe)return;
+ const safe=cleanLook(look);peer.robeMaterial.color.set(LOOK_COLORS[safe.robe][0]);
+ visibleProps(peer.wardrobe,safe);peer.look=safe;
+}
+const HAT_NAMES={ none:'착용 안 함', cap:'천모자', straw:'삿갓', hood:'방한 두건', beanie:'니트모자', bucket:'벙거지', wrap:'천 두건', band:'머리띠', travel:'여행모자', beret:'베레모', lotus:'연꽃 장식'},BAG_NAMES={ none:'착용 안 함', pouch:'허리 주머니', shoulder:'천 가방', satchel:'등짐 가방', backpack:'작은 배낭', tote:'손가방', crossbody:'크로스백', basket:'소품 바구니', scroll:'경전 보관통', bookbag:'책가방'};
+function updateWardrobeButtons(){
+ for(const field of ['robe','hat','hatColor','bag','bagColor'])document.querySelectorAll('[data-look-'+field+']').forEach(b=>b.setAttribute('aria-pressed',String(b.getAttribute('data-look-'+field)===myLook[field])));
+ $('#wardrobePreviewRobe').setAttribute('fill',LOOK_COLORS[myLook.robe][0]);
+ $('#wardrobePreviewHat').textContent=HAT_NAMES[myLook.hat];$('#wardrobePreviewBag').textContent=BAG_NAMES[myLook.bag];
+ const hc=ACC_COLORS[myLook.hatColor],bc=ACC_COLORS[myLook.bagColor];
+ const slots={cap:`<ellipse cx="62" cy="18" rx="34" ry="12" fill="${hc}"/><ellipse cx="70" cy="24" rx="32" ry="7" fill="${hc}"/>`,
+ straw:`<ellipse cx="62" cy="19" rx="55" ry="10" fill="${hc}"/><path d="M33 18 L62 -8 L91 18Z" fill="${hc}"/>`,
+ hood:`<path d="M30 23 Q33 -6 62 -5 Q92 -6 95 23Z" fill="${hc}"/>`,
+ beanie:`<path d="M32 24 Q31 -9 62 -8 Q93 -9 92 24Z" fill="${hc}"/><rect x="31" y="16" width="62" height="10" rx="5" fill="${hc}"/>`,
+ bucket:`<path d="M36 -3 H88 L92 17 H32Z" fill="${hc}"/><ellipse cx="62" cy="20" rx="48" ry="10" fill="${hc}"/>`,
+ wrap:`<ellipse cx="62" cy="17" rx="32" ry="14" fill="${hc}"/><path d="M35 19 Q62 5 92 19" stroke="#50443b" fill="none" stroke-width="4"/>`,
+ band:`<path d="M31 30 Q60 15 93 30" stroke="${hc}" stroke-width="11" fill="none"/>`,
+ travel:`<ellipse cx="62" cy="22" rx="52" ry="9" fill="${hc}"/><path d="M36 18 V-5 H88 V18Z" fill="${hc}"/>`,
+ beret:`<ellipse cx="68" cy="11" rx="40" ry="18" fill="${hc}"/>`,
+ lotus:`<text x="62" y="25" text-anchor="middle" font-size="27" fill="${hc}">✿</text>`};
+ const bags={pouch:`<ellipse cx="95" cy="92" rx="11" ry="16" fill="${bc}"/>`,
+ shoulder:`<path d="M40 73 L97 100" stroke="${bc}" stroke-width="8"/><ellipse cx="96" cy="97" rx="14" ry="17" fill="${bc}"/>`,
+ satchel:`<rect x="70" y="82" width="33" height="29" rx="6" fill="${bc}"/>`,
+ backpack:`<rect x="71" y="78" width="32" height="38" rx="6" fill="${bc}"/>`,
+ tote:`<path d="M77 86 H107 L105 111 H79Z" fill="${bc}"/><path d="M83 87 Q92 71 102 87" stroke="${bc}" fill="none" stroke-width="5"/>`,
+ crossbody:`<path d="M34 78 L102 109" stroke="${bc}" stroke-width="5"/><rect x="84" y="94" width="26" height="20" rx="5" fill="${bc}"/>`,
+ basket:`<path d="M79 92 H110 L104 116 H85Z" fill="${bc}"/><path d="M83 94 Q93 76 107 94" stroke="${bc}" stroke-width="4" fill="none"/>`,
+ scroll:`<rect x="76" y="91" width="36" height="11" rx="5" fill="${bc}" transform="rotate(-25 94 97)"/>`,
+ bookbag:`<rect x="75" y="77" width="30" height="39" rx="5" fill="${bc}"/>`};
+ $('#wardrobePreviewHatSlot').innerHTML=slots[myLook.hat]||'';
+ $('#wardrobePreviewBagSlot').innerHTML=bags[myLook.bag]||'';
+}
+function setMyLook(update){
+ myLook=cleanLook({...myLook,...update});paintLocalLook(myLook);updateWardrobeButtons();
+ let persisted=true;try{localStorage.setItem('dguWardrobeR9',JSON.stringify(myLook))}catch(e){persisted=false}
+ $('#wardrobeSaveNote').textContent=persisted?'✅ 꾸미기 저장됨 · 다른 접속자에게도 표시됩니다':'꾸미기 적용됨 · 이 브라우저에서는 저장이 제한됩니다';
+ if(mpSocket?.readyState===WebSocket.OPEN&&mpSelf)mpSocket.send(JSON.stringify({type:'look',look:myLook}));
+}
+paintLocalLook(myLook);updateWardrobeButtons();
+$('#wardrobeOpen').addEventListener('click',()=>{closeMainMenu();haltMovement();$('#wardrobePanel').hidden=false;updateWardrobeButtons();$('#wardrobeClose').focus()});
+$('#wardrobeClose').addEventListener('click',()=>{$('#wardrobePanel').hidden=true});
+for(const field of ['robe','hat','hatColor','bag','bagColor'])for(const button of document.querySelectorAll('[data-look-'+field+']'))button.addEventListener('click',()=>setMyLook({[field]:button.getAttribute('data-look-'+field)}));
+window.addEventListener('keydown',e=>{if(e.key==='Escape')$('#wardrobePanel').hidden=true});
+window.__dguWardrobe={get:()=>({...myLook}),set:setMyLook};
+
 const localAnjaliRig=createAnjaliRig(greetingUpperBody,skinSoft,robeSoft);
 localAnjaliRig.root.position.y=-.70;
 const rideUI=document.createElement('div');rideUI.id='rideGreetingUI';
@@ -3002,16 +3185,19 @@ const mpMaterial=new THREE.MeshStandardMaterial({color:0x9eacba,roughness:.85});
 const mpHeadMaterial=new THREE.MeshStandardMaterial({color:0xf4cba9,roughness:.9});
 function mpCreatePeer(id,name){
  const root=new THREE.Group();scene.add(root);
- const body=new THREE.Mesh(new THREE.ConeGeometry(.49,1.05,12),mpMaterial);body.position.y=.68;root.add(body);
+ const robeMaterial=mpMaterial.clone();
+ const body=new THREE.Mesh(new THREE.ConeGeometry(.49,1.05,12),robeMaterial);body.position.y=.68;root.add(body);
  const head=new THREE.Mesh(new THREE.SphereGeometry(.48,12,9),mpHeadMaterial);head.position.y=1.48;root.add(head);
  const nose=new THREE.Mesh(new THREE.SphereGeometry(.065,8,6),new THREE.MeshBasicMaterial({color:0x56453b}));nose.position.set(0,1.48,-.46);root.add(nose);
  const label=new THREE.Sprite(new THREE.SpriteMaterial({map:labelTexture(name,{w:480,h:112,font:54,bg:'#234b4a'}),transparent:true,depthTest:false}));label.scale.set(2.7,.64,1);label.position.y=2.35;root.add(label);
  // Animate the torso and head around the waist, leaving the name plate upright.
  const bowPivot=new THREE.Group();bowPivot.position.y=.48;root.add(bowPivot);
  for(const part of [body,head,nose]){root.remove(part);part.position.y-=.48;bowPivot.add(part)}
- const anjaliRig=createAnjaliRig(bowPivot,mpHeadMaterial,mpMaterial);
+ const anjaliRig=createAnjaliRig(bowPivot,mpHeadMaterial,robeMaterial);
  anjaliRig.root.position.y=-.48;anjaliRig.root.scale.setScalar(.83);
- const peer={root,label,name,target:new THREE.Vector3(),angle:0,bowPivot,anjaliRig,greetStart:-Infinity,greetUntil:0};
+ const wardrobe=createOutfitProps(bowPivot,bowPivot,1.96-.48,.85-.48,.79);
+ const peer={root,label,name,target:new THREE.Vector3(),angle:0,bowPivot,anjaliRig,robeMaterial,wardrobe,look:null,greetStart:-Infinity,greetUntil:0};
+ paintPeerLook(peer,LOOK_DEFAULT);
  mpPeers.set(id,peer);return peer;
 }
 function mpSetPeerName(peer,name){
@@ -3073,11 +3259,15 @@ function mpReceive(data){
   let p=mpPeers.get(data.id)||mpCreatePeer(data.id,data.name||'방문자');
   mpSetPeerName(p,data.name||'방문자');
   p.target.set(data.x||0,data.y||0,data.z||0);p.root.position.copy(p.target);p.angle=data.r||0;
+  paintPeerLook(p,data.look);
   if(Number.isInteger(data.rideId))mpRideOwners.set(data.rideId,data.id);
  }else if(data.type==='move'&&data.id!==mpSelf){
   let p=mpPeers.get(data.id)||mpCreatePeer(data.id,data.name||'방문자');
   if(data.name)mpSetPeerName(p,data.name);
+  if(data.look)paintPeerLook(p,data.look);
   p.target.set(data.x||0,data.y||0,data.z||0);p.angle=data.r||0;
+ }else if(data.type==='look'&&data.id!==mpSelf){
+  const peer=mpPeers.get(data.id);if(peer)paintPeerLook(peer,data.look);
  }else if(data.type==='leave'){
   mpRemovePeer(data.id);
   for(const [i,owner] of [...mpRideOwners.entries()])if(owner===data.id)mpRideOwners.delete(i);
@@ -3111,7 +3301,7 @@ function mpReceive(data){
 function mpConnect(){
  if(!/^https?:$/.test(location.protocol))return;
  const url=new URL('/ws',location.href);url.protocol=location.protocol==='https:'?'wss:':'ws:';
- try{mpSocket=new WebSocket(url);mpSocket.onopen=()=>{mpRetry=0;mpSocket.send(JSON.stringify({type:'hello',name:window.__donggukIdentityName||sessionStorage.getItem('dgName')||'방문자'}))};
+ try{mpSocket=new WebSocket(url);mpSocket.onopen=()=>{mpRetry=0;mpSocket.send(JSON.stringify({type:'hello',name:window.__donggukIdentityName||sessionStorage.getItem('dgName')||'방문자',look:myLook}))};
  mpSocket.onmessage=e=>{try{mpReceive(JSON.parse(e.data))}catch(err){console.warn('multiplayer message',err)}};
  mpSocket.onclose=()=>{mpSelf=null;mpWishEnabled=false;ridePendingId=null;mpRideOwners.clear();if(wishPendingText!==null){clearWishPending();ritualToast('소원 공유 서버 연결이 끊겼습니다. 다시 시도해 주세요');}
  if(ridingElephant){const exit=safeElephantExit(ridingElephant);ridingElephant=null;ridePhase='none';player.position.set(exit.x,exit.y,exit.z);monk.position.y=0;for(const a of limbs.arms){a.rotation.x=0;a.rotation.z=0;}for(const leg of limbs.legs)leg.rotation.x=0;}
