@@ -6,6 +6,17 @@ const ELEPHANTS=[{x:-9.6,z:2.8},{x:-6.5,z:4.1},{x:-8,z:7.6}];
 const rideIndex=v=>Number.isInteger(v)&&v>=0&&v<ELEPHANTS.length?v:null;
 const MAX_WISHES=18;
 const WISH_STORAGE_KEY='public-wishes-v1';
+const LOOK_ROBES=new Set(['gray', 'charcoal', 'brown', 'ochre', 'plum', 'sage', 'ivory', 'sand', 'amber', 'navy', 'indigo', 'teal', 'forest', 'burgundy', 'rose', 'lavender', 'sky', 'black']);
+const LOOK_HATS=new Set(['none', 'cap', 'straw', 'hood', 'beanie', 'bucket', 'wrap', 'band', 'travel', 'beret', 'lotus']);
+const LOOK_BAGS=new Set(['none', 'pouch', 'shoulder', 'satchel', 'backpack', 'tote', 'crossbody', 'basket', 'scroll', 'bookbag']);
+const LOOK_ACCESSORY_COLORS=new Set(['sand', 'cream', 'charcoal', 'brown', 'white', 'indigo', 'teal', 'forest', 'plum', 'pink', 'orange', 'navy']);
+const cleanLook=v=>({
+ robe:LOOK_ROBES.has(v?.robe)?v.robe:'gray',
+ hat:LOOK_HATS.has(v?.hat)?v.hat:'none',
+ hatColor:LOOK_ACCESSORY_COLORS.has(v?.hatColor)?v.hatColor:'sand',
+ bag:LOOK_BAGS.has(v?.bag)?v.bag:'pouch',
+ bagColor:LOOK_ACCESSORY_COLORS.has(v?.bagColor)?v.bagColor:'sand'
+});
 const cleanWish=v=>String(v||'').replace(/[\x00-\x1F\x7F<>]/g,'').replace(/\s+/g,' ').trim().slice(0,30);
 export default {
  async fetch(request,env){
@@ -19,7 +30,7 @@ export default {
  }
 };
 export class CampusRoom extends DurableObject{
- constructor(ctx,env){super(ctx,env);this.lastChat=new WeakMap();this.lastMove=new WeakMap();this.lastGreet=new WeakMap();this.lastWish=new WeakMap();}
+ constructor(ctx,env){super(ctx,env);this.lastChat=new WeakMap();this.lastMove=new WeakMap();this.lastGreet=new WeakMap();this.lastWish=new WeakMap();this.lastLook=new WeakMap();}
  peers(){return this.ctx.getWebSockets().map(ws=>({ws,state:ws.deserializeAttachment()})).filter(p=>p.state);}
  send(ws,data){try{ws.send(JSON.stringify(data))}catch{}}
  broadcast(data,except){const str=JSON.stringify(data);for(const ws of this.ctx.getWebSockets()){if(ws!==except){try{ws.send(str)}catch{}}}}
@@ -28,7 +39,7 @@ export class CampusRoom extends DurableObject{
  async fetch(request){
   const pair=new WebSocketPair();const [client,server]=Object.values(pair);
   this.ctx.acceptWebSocket(server);
-  const id=crypto.randomUUID();const state={id,name:'방문자',x:1,y:0,z:28,r:0,ready:false,rideId:null};server.serializeAttachment(state);
+  const id=crypto.randomUUID();const state={id,name:'방문자',x:1,y:0,z:28,r:0,ready:false,rideId:null,look:cleanLook(null)};server.serializeAttachment(state);
   const peers=this.peers().filter(p=>p.ws!==server&&p.state.ready).map(p=>p.state);
   const wishes=await this.ctx.storage.get(WISH_STORAGE_KEY)||[];
   this.send(server,{type:'welcome',id,peers,rides:this.rides(),wishFeature:true,wishes:Array.isArray(wishes)?wishes:[]});
@@ -39,7 +50,7 @@ export class CampusRoom extends DurableObject{
   let data;try{data=JSON.parse(raw)}catch{return}
   const state=ws.deserializeAttachment();if(!state)return;
   if(data.type==='hello'){
-   state.name=cleanName(data.name);state.ready=true;ws.serializeAttachment(state);
+   state.name=cleanName(data.name);state.look=cleanLook(data.look);state.ready=true;ws.serializeAttachment(state);
    this.send(ws,{type:'identity',id:state.id,name:state.name});
    this.broadcast({type:'join',...state},ws);this.count();
   }else if(!state.ready){return;
@@ -47,6 +58,9 @@ export class CampusRoom extends DurableObject{
    const now=Date.now();if(now-(this.lastMove.get(ws)||0)<100)return;this.lastMove.set(ws,now);
    state.x=finite(data.x,-200,200);state.y=finite(data.y,-10,40);state.z=finite(data.z,-200,200);state.r=finite(data.r,-7,7);
    ws.serializeAttachment(state);this.broadcast({type:'move',...state},ws);
+  }else if(data.type==='look'){
+   state.look=cleanLook(data.look);ws.serializeAttachment(state);
+   this.broadcast({type:'look',id:state.id,look:state.look},ws);
   }else if(data.type==='rideRequest'){
    const id=rideIndex(data.elephantId),pos=id===null?null:ELEPHANTS[id];
    if(id===null||state.rideId!==null||Math.hypot(state.x-pos.x,state.z-pos.z)>5.2){
