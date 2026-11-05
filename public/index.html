@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <meta name="theme-color" content="#182927"><meta name="description" content="정각원·팔정도·명진관을 걷고, 절하고, 명상하는 비공식 가상 동국대학교 캠퍼스">
-<meta name="dgu-build" content="DGU-20261105-R6"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
+<meta name="dgu-build" content="DGU-20261105-R7"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
 <style>
   :root{color-scheme:dark;--glass:rgba(22,35,36,.77);--stroke:rgba(245,238,216,.24);--gold:#eccc91;--cream:#fff7e9}
   *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#b4a8a1;font-family:system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:var(--cream);touch-action:none;-webkit-user-select:none;user-select:none}
@@ -337,7 +337,7 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
 <section id="offlineFallback" role="region" aria-label="3D 연결 실패 시 읽기 전용 캠퍼스 안내" hidden>
  <div class="fallbackCard">
   <div class="fallbackKicker">DONGGUK UNIVERSITY · READ-ONLY GUIDE</div>
-  <h2>3D 엔진을 연결할 수 없습니다</h2><p style="font-size:12px;font-weight:800;color:#ffdb91">진단 버전: DGU-20261105-R6 · <a href="/diagnostics.html" style="color:#fff;text-decoration:underline">3D 연결 진단 열기</a></p>
+  <h2>3D 엔진을 연결할 수 없습니다</h2><p style="font-size:12px;font-weight:800;color:#ffdb91">진단 버전: DGU-20261105-R7 · <a href="/diagnostics.html" style="color:#fff;text-decoration:underline">3D 연결 진단 열기</a></p>
   <p>Three.js 다운로드, WebGL 초기화 또는 게임 코드 실행 중 오류가 발생했습니다. 아래에 표시된 구체적인 오류 내용을 확인해 주세요. 휴대폰에서 다운로드한 HTML을 직접 열었다면, GitHub/Cloudflare에 배포된 https 주소로 접속해 주세요. Chrome에서 새로고침하고 인터넷 연결을 확인하세요. 아래는 <b>3D 이동이 아닌 읽기 전용 안내</b>입니다. 외부 공식 자료 링크를 열려면 인터넷 연결이 필요합니다.</p>
   <h3>팔정도 · 여덟 갈래의 수행</h3>
   <p>정견·정사유·정어·정업·정명·정정진·정념·정정의 수행을 상징하는 동국대학교 중앙 광장입니다.</p>
@@ -1625,31 +1625,6 @@ function showPracticeControls(){
  if(stair){meditateButton.disabled=false;meditateButton.textContent=mjFloor===5?'↓ 아래층으로 가기':'↑ 다음 층으로 가기';$('#actionHint').textContent='명진관 · 층 이동';}
 }
 const keys=new Set(),joy={x:0,y:0};let drag=null;const charRadius=.34;
-// R6: the chat window overlays the mobile joystick. This independent thumb pad
-// moves the same local avatar while the user keeps the keyboard open.
-const chatMovePad=document.getElementById('chatMovePad');
-let chatMovePointer=null,chatMoveDirection=null;
-const chatDirections={left:[-1,0],right:[1,0],up:[0,1],down:[0,-1]};
-function chatMoveStop(){chatMovePointer=null;chatMoveDirection=null;joy.x=joy.y=0;
- if(chatMovePad)chatMovePad.querySelectorAll('button').forEach(b=>b.classList.remove('held'));}
-if(chatMovePad){
- chatMovePad.addEventListener('pointerdown',e=>{
-  const btn=e.target.closest('button[data-chat-dir]');if(!btn||chatMovePointer!==null)return;
-  e.preventDefault();e.stopPropagation();
-  chatMovePointer=e.pointerId;chatMoveDirection=btn.dataset.chatDir;
-  const direction=chatDirections[chatMoveDirection];joy.x=direction[0];joy.y=direction[1];
-  btn.classList.add('held');try{btn.setPointerCapture(e.pointerId)}catch(_e){}
- });
- for(const type of ['pointerup','pointercancel','lostpointercapture'])chatMovePad.addEventListener(type,e=>{
-  if(e.pointerId===chatMovePointer)chatMoveStop();
- });
- document.getElementById('localChatClose')?.addEventListener('click',chatMoveStop);
- document.getElementById('localChatToggle')?.addEventListener('click',()=>{
-  if(document.getElementById('localChatPanel')?.classList.contains('is-open'))chatMoveStop();
- });
- window.addEventListener('blur',chatMoveStop);
-}
-
 function inMyeongjin(x,z){return Math.abs(x-MJX)<19.12*MJ_SCALE && z>MJ_BACK_WORLD+.43 && z<MJ_FRONT_WORLD-.38;}
 function floorHeight(x,z){
  if(inMyeongjin(x,z)) return (mjFloor-1)*MJ_FH_WORLD;
@@ -2844,7 +2819,8 @@ function animate(time){requestAnimationFrame(animate);
  if(document.hidden)return;
  if(!isMobile && !highQuality && time-desktopLastFrameTime<24)return; // up to ~40fps on desktop to reduce GPU/CPU pressure
  desktopLastFrameTime=time;const dt=Math.min((time-prev)/1000,.05);prev=time;
- if(started){if(!document.getElementById('realPhotoPanel').hidden){keys.clear();joy.x=0;joy.y=0;}let forward=0,strafe=0;if(document.activeElement?.matches('input,textarea,[contenteditable=true]'))keys.clear(); // the chat movement pad drives joy independentlyif(keys.has('KeyW')||keys.has('ArrowUp'))forward++;if(keys.has('KeyS')||keys.has('ArrowDown'))forward--;if(keys.has('KeyA')||keys.has('ArrowLeft'))strafe--;if(keys.has('KeyD')||keys.has('ArrowRight'))strafe++;
+ if(started){if(!document.getElementById('realPhotoPanel').hidden){keys.clear();joy.x=0;joy.y=0;}let forward=0,strafe=0;if(document.activeElement?.matches('input,textarea,[contenteditable=true]'))keys.clear();
+  if(keys.has('KeyW')||keys.has('ArrowUp'))forward++;if(keys.has('KeyS')||keys.has('ArrowDown'))forward--;if(keys.has('KeyA')||keys.has('ArrowLeft'))strafe--;if(keys.has('KeyD')||keys.has('ArrowRight'))strafe++;
   forward+=joy.y;strafe+=joy.x;const len=Math.hypot(forward,strafe);
   if($('#scriptureModal').hidden&&$('#miniModal').hidden&&$('#travelPanel').hidden&&$('#dialogue').hidden&&$('#koreanDeptModal').hidden&&$('#wishModal').hidden&&$('#mixPanel').hidden&&mainMenu.hidden&&ritualActivity.hidden&&document.getElementById('realPhotoPanel').hidden&&!$('#guide').classList.contains('open')&&!seated&&!ridingElephant&&len>.08){forward/=Math.max(1,len);strafe/=Math.max(1,len);const vx=-Math.sin(camYaw)*forward+Math.cos(camYaw)*strafe;const vz=-Math.cos(camYaw)*forward-Math.sin(camYaw)*strafe;
     const speed=(isMobile?4.35:5.1)*movementMultiplier;tryMove(vx*speed*dt,vz*speed*dt);face=Math.atan2(-vx,-vz);const diff=Math.atan2(Math.sin(face-player.rotation.y),Math.cos(face-player.rotation.y));player.rotation.y+=diff*Math.min(1,dt*9);
@@ -3219,7 +3195,6 @@ for(const id of ['chantFrame','templeSoundVideo']){const el=document.getElementB
 <section id="localChatPanel" role="dialog" aria-label="개인용 채팅" aria-hidden="true">
  <div id="localChatHeader"><div><b>💬 힐링 캠퍼스 채팅</b><div id="chatSelfName">내 이름: 방문자</div><div style="font-size:11px;opacity:.8">실시간 멀티플레이 채팅</div></div><button id="localChatNotify" type="button" aria-pressed="true">🔔 알림 켜짐</button><button id="localChatClose" type="button" aria-label="채팅 닫기">×</button></div>
  <div id="localChatLog" role="log" aria-live="polite"></div>
- <div id="chatMovePad" role="group" aria-label="채팅 중 캐릭터 이동" title="키보드를 연 상태에서도 버튼을 길게 눌러 이동할 수 있습니다"><span>이동하면서 채팅</span><button type="button" data-chat-dir="left" aria-label="왼쪽으로 걷기">◀</button><button type="button" data-chat-dir="up" aria-label="앞으로 걷기">▲</button><button type="button" data-chat-dir="down" aria-label="뒤로 걷기">▼</button><button type="button" data-chat-dir="right" aria-label="오른쪽으로 걷기">▶</button></div>
  <form id="localChatForm"><input id="localChatInput" type="text" enterkeyhint="send" inputmode="text" maxlength="240" placeholder="정각원, 팔정도, 명진관에 대해 물어보세요" autocomplete="off" aria-label="채팅 내용"><button id="localChatSend" type="submit">전송</button></form>
 </section>
 <script>
@@ -3326,12 +3301,7 @@ window.dispatchEvent(new CustomEvent('dongguk:identity',{detail:{name}}));
 }
 </style>
 <style id="dguR6Layout">
-#chatMovePad{display:flex;flex:0 0 auto;align-items:center;gap:5px;justify-content:center;padding:5px 7px;background:#233c35;color:#fff;font:800 11px/1.3 system-ui,sans-serif;touch-action:none;user-select:none}
-#chatMovePad span{margin-right:auto;white-space:nowrap;font-size:10px}
-#chatMovePad button{display:grid;place-items:center;min-width:40px;min-height:40px;border:1px solid #ad9667;border-radius:9px;background:#fff4dc;color:#161616;font-size:18px;font-weight:900;touch-action:none;cursor:pointer}
-#chatMovePad button.held{background:#dfb65a;transform:scale(.95)}
 #localChatHeader #chatSelfName{font-size:11px;color:#fff4ca;font-weight:850;letter-spacing:0}
-@media(max-width:380px){#chatMovePad{gap:3px}#chatMovePad span{font-size:9px}#chatMovePad button{min-width:36px;min-height:38px}}
 #beadSurface{width:min(330px,80vw)!important;height:auto!important;aspect-ratio:1/1!important;border-radius:50%!important;background:radial-gradient(circle,#fff9e9,#ead4a6)!important;border:3px solid #714829!important}
 #woodSurface{background:transparent!important;border:0!important;box-shadow:none!important;width:min(310px,82vw)!important;height:auto!important;aspect-ratio:1/1!important;border-radius:16px!important;overflow:visible}
 #woodSurface svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 13px 15px #0005);pointer-events:none}
