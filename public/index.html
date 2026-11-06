@@ -378,6 +378,19 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
 .cheonSource a{color:#345c4e;text-decoration:underline;font-weight:750}
 @media(max-width:670px){.cheonOpening{padding:10px}.cheonStanza{padding:10px}.cheonVerseRow{font-size:14px;gap:6px}.cheonVerseRow .num{min-width:22px}}
 </style>
+
+<style id="r13_8_camera_layout">
+/* Camera zoom controls stay separate from movement joystick, chat and event banners. */
+#zoomDock{position:fixed;z-index:11;right:16px;bottom:132px;display:none;flex-direction:column;align-items:center;gap:6px;padding:7px 5px 8px;border:1px solid rgba(242,217,169,.62);border-radius:18px;background:rgba(31,52,47,.84);box-shadow:0 8px 28px rgba(0,0,0,.24);color:#f8e9ce;backdrop-filter:blur(12px);touch-action:manipulation}
+#zoomDock.active{display:flex}
+#zoomDock button{width:40px;height:40px;border:1px solid rgba(255,242,215,.56);border-radius:12px;background:#e9d4a9;color:#293c32;font-size:26px;font-weight:800;line-height:1;cursor:pointer;touch-action:manipulation}
+#zoomDock button:active{transform:scale(.95);background:#fff0cc}
+#zoomDock output{font-size:10px;font-weight:800;min-width:40px;text-align:center;font-variant-numeric:tabular-nums}
+#zoomDock .zoomHelp{display:none;font-size:9px;text-align:center;line-height:1.3;color:#f8e9ce;max-width:90px}
+@media(hover:none),(pointer:coarse){#zoomDock{right:9px;bottom:195px;gap:5px;padding:6px 5px}#zoomDock button{width:37px;height:37px}#zoomDock .zoomHelp{display:none}}
+@media(max-width:390px){#zoomDock{right:6px;bottom:210px}#zoomDock button{width:33px;height:33px}}
+body.chatTyping #zoomDock{pointer-events:none;opacity:.28}
+</style>
 </head>
 <body>
 <div id="loading">동국의 풍경을 준비하고 있습니다 ··· (최초 실행 시 인터넷 연결 필요)</div>
@@ -520,6 +533,12 @@ document.addEventListener('focusout',e=>{if(e.target===input()){document.body.cl
 </div>
 <div id="joystick" aria-label="이동용 가상 조이스틱"><div id="joyKnob"></div></div>
 <div id="viewHint">화면을 드래그하면 시점이 회전합니다</div><div id="camHint" hidden>실내: 가까운 3인칭</div>
+<div id="zoomDock" role="group" aria-label="카메라 확대 축소 조절">
+ <button id="zoomOut" type="button" title="화면을 넓게 보기 · 줌아웃" aria-label="화면 넓게 보기">−</button>
+ <output id="zoomAmount" aria-label="현재 카메라 거리">100%</output>
+ <button id="zoomIn" type="button" title="화면을 가깝게 보기 · 줌인" aria-label="화면 가깝게 보기">+</button>
+ <span class="zoomHelp">두 손가락 벌리기·모으기</span>
+</div>
 <div id="guide"><button id="closeGuide" aria-label="닫기">×</button><b>동국대학교 3D 힐링 산책 안내</b><p>팔정도에서 명진관과 정각원을 둘러보세요. 정각원과 범종각 체험을 구현했으며 명진관은 외부 안내 NPC를 통해 건물 역사와 국어국문학과를 소개합니다. 건물별 역사 해설 NPC도 있습니다.</p><p><b>PC</b> · WASD / 방향키 이동, 드래그로 시점 회전, E 명상 · B 염주알 넘기기 · R 108배 · X 일어나기<br><b>휴대폰</b> · 왼쪽 조이스틱 이동, 오른쪽 화면 드래그로 시점 회전, 화면 버튼으로 체험<br><b>소리</b> · 첫 시작 버튼을 누르면 합성 바람·풍경이 울립니다. 정각원에서는 목탁이 들립니다. 우측 상단 ☰ 메뉴 → 소리 설정에서 바람·목탁·풍경·범종·독송을 조절하세요. 동국대학교 공식 ASMR 영상도 재생할 수 있습니다. 독송 영상은 정각원에 들어가면 열리지만 자동재생은 브라우저 정책에 따라 제한됩니다. 직접 이용 권한을 확인한 한국어 녹음도 파일 선택으로 연결할 수 있습니다.</p><p style="opacity:.7">정각원은 실제 숭정전의 5칸×4칸, 팔작지붕을 참고했으며, 명진관은 1956년 준공 당시 3층이었다는 동국대학교 공식 연혁과 외관 자료를 참고했으며, 게임 속 5개 층은 가상 체험입니다. 교실과 복도·계단·승강기 위치는 공식 평면도가 아닌 가상 구성입니다. 실제 건물의 출입 규정과는 무관합니다.</p><p><b>빠른 이동과 독서</b><br>우측 상단 ☰ 메뉴 → 장소 이동에서 6개 목적지를 선택할 수 있습니다. 산책 속도를 느리게/보통/빠르게 변경하고, ◉ 버튼으로 실내 가까운 3인칭·넓은 3인칭·1인칭을 전환합니다. 경전 서재에서 반야심경 원문과 자체 해설, 조계종 표준 한글 천수경 안내 및 당시 전문을 게재한 기사 링크를 확인하고 스님 독송 영상을 볼 수 있습니다.<br><b>정각원 방석 체험</b><br>실내 방석 60개를 각각 독립된 자리(01~60번)로 지정했습니다. 원하는 방석 가까이 다가가거나 방석을 터치하면 <b>명상하기 / 염주알 넘기기 / 108배</b>가 나타납니다. E = 명상, B = 염주알 넘기기, R = 108배, X = 일어나기입니다. 108배는 108회를 마치면 자동으로 종료됩니다. 중간에 언제든 중단할 수 있습니다. 실물 절 동작의 정확한 교육 자료는 아닙니다. 음성·종교 의식의 정확한 재현이 아닌 휴식용 인터랙션입니다.</p>
 <p><b>실제 사찰 음원과 이용조건</b><br>목탁과 범종의 기본 효과음은 Web Audio 합성음으로, 동국대학교나 대한불교조계종의 실제 의례 음원을 재현한 것이 아닙니다. 이용 권한을 확인한 녹음 파일은 소리 설정에서 직접 연결할 수 있습니다.<br>한국저작권위원회 공유마당에서 김용배의 <a href="https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?menuNo=200275&amp;wrtSn=13254274" target="_blank" rel="noopener noreferrer">《염불소리1》</a>, <a href="https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?menuNo=200020&amp;wrtSn=13253415" target="_blank" rel="noopener noreferrer">《목탁1》</a>, <a href="https://gongu.copyright.or.kr/gongu/wrt/wrt/view.do?menuNo=200020&amp;wrtSn=13254523" target="_blank" rel="noopener noreferrer">《절 법당 종소리》</a>를 CC BY 조건으로 확인했습니다. 해당 음원 파일은 자동 포함하지 않았으며, 이용자가 직접 내려받은 뒤 음향 설정에서 연결할 수 있습니다. 상업 재배포 시 저작자·출처·라이선스를 표시해야 합니다.</p><p><b>하루 네 가지 풍경</b><br>화면 위에서 아침·낮·노을·밤을 바꾸세요. 밤에는 법당과 팔정도 연등이 밝아지고 하늘에 별이 나타납니다. HD 버튼으로 고화질/절전 모드를 전환합니다.</p>
 <p><b>온라인 운영 안내</b><br>HTML만 열면 1인 체험이며, R13 Cloudflare Worker와 Durable Object를 함께 배포하면 온라인 방석 점유·수계법회 호명·신규 입장 제한이 서버를 통해 동기화됩니다. 실제 종교행사가 아닌 비공식 게임 체험입니다. 각 방석 ID와 동작 이벤트는 코드 안에서 구분되어 있습니다.</p>
@@ -1648,6 +1667,7 @@ for(const sd of [-1,1]){sphere(.205,mat('#77716a'),sd*.20,.13,-.20,monk,1,.32,1.
 const avatarShadow=make(new THREE.CircleGeometry(.59,22),new THREE.MeshBasicMaterial({color:0x1b2621,transparent:true,opacity:.17,depthWrite:false}),0,.03,0,player);avatarShadow.rotation.x=-Math.PI/2;
 // 움직임과 3인칭 카메라
 let started=false,seated=false,camYaw=0,camPitch=.34,camDistance=isMobile?9.5:10.8,face=0,stepPhase=0;let lastCameraDrag=0;
+let cameraZoomFactor=isMobile?1.18:1; // 1=default, larger values show a wider 3D view (including indoors)
 let movementMultiplier=1,indoorTopView=false,indoorCameraMode=0;
 const indoorModes=['가까운 3인칭','넓은 3인칭','1인칭'];
 function updateCameraModeUI(){const btn=$('#cameraModeBtn');btn.textContent=['◉','◎','◌'][indoorCameraMode];btn.title='실내 시점: '+indoorModes[indoorCameraMode]+' (클릭하여 전환)';btn.setAttribute('aria-label',btn.title);$('#camHint').textContent='실내 시점 · '+indoorModes[indoorCameraMode];}
@@ -1657,6 +1677,11 @@ const LOCAL_ACTOR_ID='local-visitor',remotePlayers=new Map(),occupiedSeats=new M
 const bowButton=$('#bowBtn'),bow108Button=$('#bow108Btn'),stopBowsButton=$('#stopBowsBtn'),meditateButton=$('#actionBtn'),leaveButton=$('#leaveBtn');
 $('#speedSelect').addEventListener('change',e=>{movementMultiplier=Number(e.target.value)||1});
 $('#cameraModeBtn').addEventListener('click',()=>{indoorCameraMode=(indoorCameraMode+1)%3;updateCameraModeUI();ritualToast('📷 '+indoorModes[indoorCameraMode]);});updateCameraModeUI();
+function updateZoomUI(){document.getElementById('zoomAmount').textContent=Math.round(cameraZoomFactor*100)+'%';}
+function changeCameraZoom(multiplier){cameraZoomFactor=THREE.MathUtils.clamp(cameraZoomFactor*multiplier,.73,1.95);updateZoomUI();}
+document.getElementById('zoomOut').addEventListener('click',()=>changeCameraZoom(1.18));
+document.getElementById('zoomIn').addEventListener('click',()=>changeCameraZoom(1/1.18));
+updateZoomUI();
 function insideHallAt(x,z){return Math.abs(x-hx)<12.12 && z>hz-8.22 && z<hz+8.25;}
 function seatById(id){return seatLocations.find(s=>s.id===Number(id))||null}
 function nearestSeat(x,z,maxDist=1.55){
@@ -1682,7 +1707,7 @@ function showPracticeControls(){
  bowButton.style.display=seat?'':'none';bow108Button.style.display=seat?'':'none';
  meditateButton.style.display=(seat||stair)?'':'none';leaveButton.style.display=seated?'':'none';stopBowsButton.style.display=bowing?'':'none';
  if(seated){
-   $('#actionHint').textContent=`${String(activeSeat.id).padStart(2,'0')}번 방석 · ${practiceMode==='bow108'?'108배':practiceMode==='bow'?'반복 절하기':'명상'} 중`;
+   $('#actionHint').textContent=`${String(activeSeat.id).padStart(2,'0')}번 방석 · ${practiceMode==='sit'?'착석 중':practiceMode==='bow108'?'108배':practiceMode==='bow'?'반복 절하기':'명상'}${practiceMode==='sit'?'':' 중'}`;
    meditateButton.textContent='🧘 명상하기';meditateButton.disabled=practiceMode==='meditate'&&!practiceFinished;
    bowButton.textContent='📿 염주알 넘기기';bowButton.disabled=false;
    bow108Button.textContent='🌸 108배 시작';bow108Button.disabled=practiceMode==='bow108';
@@ -1754,7 +1779,7 @@ function enterPractice(mode,seat){
  player.position.set(seat.x,level,seat.z);
  player.rotation.y=0;face=0;
  poseForPractice(true);
- $('#practicePanel').classList.add('open');$('#practiceCount').classList.toggle('show',mode!=='meditate');$('#practiceCount').textContent=mode==='bow108'?'0 / 108':'0 배';
+ $('#practicePanel').classList.toggle('open',mode!=='sit');$('#practiceCount').classList.toggle('show',mode!=='meditate'&&mode!=='sit');$('#practiceCount').textContent=mode==='bow108'?'0 / 108':'0 배';
  $('#practiceTitle').textContent=`정각원 · ${String(seat.id).padStart(2,'0')}번 방석`;
  $('#practiceText').textContent=mode==='meditate'?'내 호흡을 천천히 느껴보세요':mode==='bow108'?'108배를 시작합니다':'멈출 때까지 편안하게 절합니다';
  $('#practiceTiny').textContent=mode==='meditate'?'호흡은 자연스럽고 편안한 속도로 조절하세요.':mode==='bow108'?'108회가 완료되면 자동으로 끝납니다.':'절 중단 버튼을 누를 때까지 반복됩니다.';
@@ -1771,6 +1796,7 @@ function takeAction(mode='meditate'){
  if(!started)return;
  if(seated){
    practiceMode=mode;practiceStarted=performance.now();bowElapsed=0;practiceElapsed=0;bowCount=0;practiceFinished=false;
+   $('#practicePanel').classList.add('open');
    monk.rotation.x=0;
    $('#practiceTitle').textContent=`정각원 · ${String(activeSeat.id).padStart(2,'0')}번 방석`;
    $('#practiceText').textContent=mode==='meditate'?'내 호흡을 천천히 느껴보세요':mode==='bow108'?'108배를 시작합니다':'멈출 때까지 편안하게 절합니다';
@@ -1825,6 +1851,7 @@ function updatePracticePose(time,dt){
    $('#breathFill').style.width=`${practiceMode==='bow108'?(bowCount/108*100):(c/bowCycleSeconds*100)}%`;
  }else{
    prayer.position.set(0,0,0);knees.scale.set(1,1,1);avatarShadow.scale.setScalar(1);robe.scale.y=.76;
+   if(practiceMode==='sit'){monk.rotation.x=0;monk.position.y=.08;return;} // sitting for a ceremony: no breath timer or meditation text
    monk.rotation.x=-.06+Math.sin(t)*.015;
    monk.position.y=.08+Math.sin(t*1.4)*.011;
    const cycle=t%10,inhale=cycle<4;
@@ -1862,16 +1889,41 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)haltMovemen
 const stick=$('#joystick'),knob=$('#joyKnob');let stickId=null;
 function stickUpdate(e){const b=stick.getBoundingClientRect();const dx=e.clientX-(b.left+b.width/2),dy=e.clientY-(b.top+b.height/2),max=b.width*.31;const len=Math.hypot(dx,dy),scale=len>max?max/len:1;let xx=dx*scale,yy=dy*scale;joy.x=xx/max;joy.y=-yy/max;knob.style.transform=`translate(calc(-50% + ${xx}px),calc(-50% + ${yy}px))`}
 stick.addEventListener('pointerdown',e=>{if(stickId!==null&&e.pointerId!==stickId)return;e.preventDefault();stickId=e.pointerId;stick.setPointerCapture(e.pointerId);stickUpdate(e);initAudio()});stick.addEventListener('pointermove',e=>{if(e.pointerId===stickId)stickUpdate(e)});function stopStick(e){if(e.pointerId===stickId){stickId=null;joy.x=0;joy.y=0;knob.style.transform='translate(-50%,-50%)'}}stick.addEventListener('pointerup',stopStick);stick.addEventListener('pointercancel',stopStick);stick.addEventListener('lostpointercapture',stopStick);
-renderer.domElement.addEventListener('pointerdown',e=>{if(!started)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY};renderer.domElement.setPointerCapture(e.pointerId);initAudio()});renderer.domElement.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;lastCameraDrag=performance.now();camYaw-=(e.clientX-drag.x)*.0045;camPitch=THREE.MathUtils.clamp(camPitch+(e.clientY-drag.y)*.0032,.12,.73);drag.x=e.clientX;drag.y=e.clientY});function endDrag(e){if(drag?.id===e.pointerId)drag=null}renderer.domElement.addEventListener('pointerup',endDrag);renderer.domElement.addEventListener('pointercancel',endDrag);renderer.domElement.addEventListener('lostpointercapture',e=>{endDrag(e);if(seatClickStart?.id===e.pointerId)seatClickStart=null;});
+// Two-finger pinch adjusts the same distance factor as the +/- buttons; one finger rotates camera.
+const viewTouches=new Map();let lastPinchDistance=0,pinchSuppressSeatUntil=0;
+function spanOfTouches(){const pts=[...viewTouches.values()];return pts.length<2?0:Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y)}
+renderer.domElement.addEventListener('pointerdown',e=>{
+ if(!started)return;
+ if(e.pointerType==='touch'){
+  viewTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(viewTouches.size>=2){drag=null;lastPinchDistance=spanOfTouches();pinchSuppressSeatUntil=performance.now()+650;}
+  else drag={id:e.pointerId,x:e.clientX,y:e.clientY};
+ }else drag={id:e.pointerId,x:e.clientX,y:e.clientY};
+ try{renderer.domElement.setPointerCapture(e.pointerId)}catch{}initAudio();
+});
+renderer.domElement.addEventListener('pointermove',e=>{
+ if(viewTouches.has(e.pointerId)){
+  viewTouches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(viewTouches.size>=2){
+   const current=spanOfTouches();if(lastPinchDistance>20&&current>20)changeCameraZoom(lastPinchDistance/current);
+   lastPinchDistance=current;pinchSuppressSeatUntil=performance.now()+650;return;
+  }
+ }
+ if(!drag||drag.id!==e.pointerId)return;
+ lastCameraDrag=performance.now();camYaw-=(e.clientX-drag.x)*.0045;camPitch=THREE.MathUtils.clamp(camPitch+(e.clientY-drag.y)*.0032,.12,.73);drag.x=e.clientX;drag.y=e.clientY;
+});
+function endDrag(e){if(drag?.id===e.pointerId)drag=null;viewTouches.delete(e.pointerId);if(viewTouches.size<2)lastPinchDistance=0;}
+renderer.domElement.addEventListener('pointerup',endDrag);renderer.domElement.addEventListener('pointercancel',endDrag);
+renderer.domElement.addEventListener('lostpointercapture',e=>{endDrag(e);if(seatClickStart?.id===e.pointerId)seatClickStart=null;});
 // 개별 방석 클릭/탭: InstancedMesh.instanceId를 실제 좌석 고유번호로 사용
 const seatRaycaster=new THREE.Raycaster(),seatPoint=new THREE.Vector2();
 let seatClickStart=null;
-renderer.domElement.addEventListener('pointerdown',e=>{seatClickStart={x:e.clientX,y:e.clientY,id:e.pointerId}}, {passive:true});
+renderer.domElement.addEventListener('pointerdown',e=>{seatClickStart=viewTouches.size>=2?null:{x:e.clientX,y:e.clientY,id:e.pointerId}}, {passive:true});
 renderer.domElement.addEventListener('pointerup',e=>{
  const tapStart=seatClickStart;
  if(!tapStart||e.pointerId!==tapStart.id)return;
  seatClickStart=null; // A completed tap must not be reused by a later pointer event.
- if(!started||seated)return;
+ if(!started||seated||performance.now()<pinchSuppressSeatUntil)return;
  if(Math.hypot(e.clientX-tapStart.x,e.clientY-tapStart.y)>7)return;
  // Use the rendered canvas rectangle, not innerWidth/innerHeight: mobile dynamic
  // browser bars can make the canvas CSS viewport differ from the window viewport.
@@ -1938,7 +1990,7 @@ function syncRemoteActors(snapshots){
   const actor=remoteActor(entry.id);if(!actor)continue;
   actor.target.set(x,Math.max(0,Math.min(35,y)),z);
   if(actor.root.position.lengthSq()===0)actor.root.position.copy(actor.target);
-  actor.angle=yaw;actor.mode=['walk','meditate','bow','bow108'].includes(mode)?mode:'walk';actor.seatId=seatId;
+  actor.angle=yaw;actor.mode=['walk','sit','meditate','bow','bow108'].includes(mode)?(mode==='sit'?'meditate':mode):'walk';actor.seatId=seatId;
   actor.lastSeen=performance.now();seen.add(entry.id);
  }
  for(const [id,a] of remotePlayers)if(!seen.has(id)){scene.remove(a.root);remotePlayers.delete(id)}
@@ -1950,7 +2002,7 @@ window.DonggukWorld={
  setSeatOccupants:(entries)=>{if(!Array.isArray(entries))return;occupiedSeats.clear();for(const e of entries){if(e&&Number.isInteger(e.seatId)&&e.seatId>=1&&e.seatId<=100&&typeof e.actorId==='string'){occupiedSeats.set(e.seatId,e.actorId)}}if(activeSeat)occupiedSeats.set(activeSeat.id,LOCAL_ACTOR_ID)},
  syncRemoteActors
 };
-renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();camDistance=THREE.MathUtils.clamp(camDistance+Math.sign(e.deltaY)*.75,6.2,17)},{passive:false});
+renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();changeCameraZoom(e.deltaY>0?1.10:1/1.10)},{passive:false});
 $('#guideBtn').onclick=()=>{$('#guide').classList.toggle('open');haltMovement();};$('#closeGuide').onclick=()=>$('#guide').classList.remove('open');
 // Minimal top bar: advanced controls live in a single collapsible menu.
 const mainMenu=$('#mainMenu');
@@ -3121,6 +3173,7 @@ function animate(time){requestAnimationFrame(animate);
  if(document.hidden)return;
  if(!isMobile && !highQuality && time-desktopLastFrameTime<24)return; // up to ~40fps on desktop to reduce GPU/CPU pressure
  desktopLastFrameTime=time;const dt=Math.min((time-prev)/1000,.05);prev=time;
+ document.getElementById('zoomDock').classList.toggle('active',started);
  if(started){sugyeTick(time);if(!document.getElementById('realPhotoPanel').hidden){keys.clear();joy.x=0;joy.y=0;}let forward=0,strafe=0;if(document.activeElement?.matches('input,textarea,[contenteditable=true]'))keys.clear();
   if(keys.has('KeyW')||keys.has('ArrowUp'))forward++;if(keys.has('KeyS')||keys.has('ArrowDown'))forward--;if(keys.has('KeyA')||keys.has('ArrowLeft'))strafe--;if(keys.has('KeyD')||keys.has('ArrowRight'))strafe++;
   forward+=joy.y;strafe+=joy.x;const len=Math.hypot(forward,strafe);
@@ -3144,13 +3197,18 @@ function animate(time){requestAnimationFrame(animate);
  const insideHall=insideHallAt(player.position.x,player.position.z);
  const insideMJ=inMyeongjin(player.position.x,player.position.z);
  const indoors=insideHall||insideMJ;
- roofGroup.visible=!insideHall; // 건물 안에서 지붕을 가리는 단면 보기
+// Hide the eaves while walking THROUGH the temple entrance, not only once fully indoors.
+ // Otherwise a camera just outside the threshold passes through opaque tiles on exit/entry.
+ const templeRoofCutaway=Math.abs(player.position.x-hx)<14.15&&player.position.z>hz-10.0&&player.position.z<hz+14.2;
+ roofGroup.visible=!templeRoofCutaway;
  if(typeof ceilingCells!=='undefined')ceilingCells.visible=true;
  const firstPerson=indoors&&indoorCameraMode===2&&!seated&&!localGreetingBusy;
  monk.visible=!firstPerson;player.visible=true;
  $('#camHint').hidden=!indoors;
- const desiredDist=!indoors?camDistance:(seated?4.7:(indoorCameraMode===1?4.0:(insideMJ?3.55:3.8)));
- const desiredPitch=indoors?(indoorCameraMode===1?.20:.10):camPitch;
+const nearTempleDoor=Math.abs(player.position.x-hx)<5.0&&Math.abs(player.position.z-(hz+8.25))<5.4;
+ const baseDistance=!indoors?(nearTempleDoor?5.8:camDistance):(seated?4.7:(indoorCameraMode===1?4.8:(insideMJ?3.55:3.8)));
+ const desiredDist=Math.min(19,baseDistance*cameraZoomFactor);
+ const desiredPitch=indoors?(indoorCameraMode===1?.23:.15):(nearTempleDoor?Math.max(.25,camPitch):camPitch);
  const aimY=player.position.y+(seated?1.20:1.55);
  lookVec.set(player.position.x,aimY,player.position.z);
  const offset=firstPerson?0.07:desiredDist;
@@ -3195,6 +3253,8 @@ function animate(time){requestAnimationFrame(animate);
    camera.position.set(player.position.x,player.position.y+1.65,player.position.z);
    camera.lookAt(camera.position.clone().add(heading));
  }else camera.lookAt(smoothedLook);
+ // Prevent enormous clipped head when the camera has to move within the avatar at doors.
+ if(!firstPerson)monk.visible=camera.position.distanceTo(smoothedLook)>2.05;
  const _npcParentQuat=new THREE.Quaternion();
  // NPC signboards always face the viewer; the bronze striker swings briefly after a strike.
  for(const actor of guideActors){actor.root.visible=!actor.root.userData.indoorType||(actor.root.userData.indoorType==='temple'?insideHall:(insideMJ&&mjFloor===1));// Sign is a child of the rotating NPC: compensate for parent rotation below.
@@ -3370,8 +3430,9 @@ const sugyeCSS=document.createElement('style');sugyeCSS.id='sugyeR13FixedStyle';
 #sugyeBanner{position:fixed;z-index:710;left:50%;top:125px;transform:translateX(-50%);width:min(600px,calc(100vw - 24px));box-sizing:border-box;border:1px solid #e6ca91;border-radius:15px;background:rgba(25,54,44,.97);color:#fff9e5;box-shadow:0 14px 28px #0006;padding:9px 14px;text-align:center;display:none;font-size:12px;line-height:1.5;pointer-events:auto}
 #sugyeBanner.on{display:block}#sugyeBanner strong{font-size:15px;color:#ffe9ac}#sugyeBanner .sgMinor{opacity:.84;font-size:11px}
 #sugyeBanner button{margin:3px 4px;padding:6px 11px;background:#f5dcab;color:#273c32;border:0;border-radius:9px;font-weight:800;cursor:pointer}
-#sugyeDock{position:fixed;z-index:720;left:12px;right:auto;bottom:170px;display:flex;flex-direction:column;align-items:stretch;gap:6px;width:min(232px,46vw);max-height:38vh;overflow:auto;padding:8px;border:1px solid #d0ad72aa;border-radius:15px;background:#233d35eb;box-shadow:0 7px 20px #0005}
-#sugyeDock button{font-size:12px;line-height:1.35;text-align:center;white-space:normal;min-height:36px;border-radius:10px;border:1px solid #d4bc86;background:#efddb5;color:#1e3931;font-weight:800;cursor:pointer;padding:7px}
+#sugyeDock{position:fixed;z-index:720;left:12px;right:auto;bottom:170px;display:none;flex-direction:column;align-items:stretch;gap:6px;width:min(232px,46vw);max-height:38vh;overflow:auto;padding:8px;border:1px solid #d0ad72aa;border-radius:15px;background:#233d35eb;box-shadow:0 7px 20px #0005}
+#sugyeDock.on{display:flex}
+ #sugyeDock button{font-size:12px;line-height:1.35;text-align:center;white-space:normal;min-height:36px;border-radius:10px;border:1px solid #d4bc86;background:#efddb5;color:#1e3931;font-weight:800;cursor:pointer;padding:7px}
 #sugyeDock button.sgAlt{color:#f2ead6;background:#526b5c}#sugyeDock button:disabled{opacity:.55;cursor:default}
 #sugyeDock .sgInfo{font-weight:700;font-size:11px;color:#ffecd4;text-align:center;line-height:1.5}
 #sugyeDock [hidden],#sugyeBanner [hidden],#sugyeModal [hidden],#sugyeSitAction[hidden]{display:none!important}
@@ -3384,13 +3445,11 @@ const sugyeCSS=document.createElement('style');sugyeCSS.id='sugyeR13FixedStyle';
 @media(max-width:700px){#sugyeBanner{top:108px;padding:6px 8px;font-size:11px;max-height:23vh;overflow:auto}#sugyeBanner strong{font-size:12px}#sugyeDock{left:6px;right:auto;bottom:125px;max-height:31vh;width:min(184px,49vw);padding:5px;gap:5px}#sugyeDock button{min-height:34px;font-size:11px;padding:6px}#sugyeDock .sgInfo{font-size:10px}#sugyeSeatRibbon{bottom:7px;font-size:11px}}
 `;document.head.appendChild(sugyeCSS);
 const sugyeBanner=document.createElement('div');sugyeBanner.id='sugyeBanner';sugyeBanner.setAttribute('role','status');sugyeBanner.setAttribute('aria-live','polite');document.body.appendChild(sugyeBanner);
-const sugyeDock=document.createElement('div');sugyeDock.id='sugyeDock';sugyeDock.innerHTML=`<div class="sgInfo" id="sugyeGuideText">🙏 정각원 · 수계법회 체험</div>
+const sugyeDock=document.createElement('div');sugyeDock.id='sugyeDock';sugyeDock.setAttribute('aria-label','수계법회 진행 중 이용할 수 있는 동작');sugyeDock.innerHTML=`<div class="sgInfo" id="sugyeGuideText">🔔 수계법회 참여 안내</div>
 <button id="sugyeSeatButton" hidden>🧎 방석 앉기 (C)</button>
 <button id="sugyeJoin" hidden>🙏 수계법회 참석 신청</button>
 <button id="sugyeGo" hidden>🔔 내 번호 호명 · 일어나 앞으로 이동</button>
-<button id="sugyeReceive" hidden>🌸 스님 앞에서 수계 받기</button>
-<button id="sugyeDemo" class="sgAlt">🎐 수계법회 체험 시작</button>
-<button id="sugyeInfo" class="sgAlt">법회 안내 · 상태 확인</button>`;document.body.appendChild(sugyeDock);
+<button id="sugyeReceive" hidden>🌸 큰스님 앞에서 수계 받기</button>`;document.body.appendChild(sugyeDock);
 const sugyeModal=document.createElement('div');sugyeModal.id='sugyeModal';sugyeModal.setAttribute('role','dialog');sugyeModal.setAttribute('aria-modal','true');sugyeModal.innerHTML=`<div class="sgCard"><h2>🙏 큰스님 수계법회 체험</h2><p id="sugyeDesc"></p><div class="sgActions"><button type="button" id="sugyeYes">참석하겠습니다</button><button type="button" class="sgCancel" id="sugyeNo">불참 · 정각원 밖으로</button></div></div>`;document.body.appendChild(sugyeModal);
 const sugyeBlessingStyle=document.createElement('style');sugyeBlessingStyle.textContent=`#sugyeBlessingModal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 50% 25%,rgba(255,233,188,.13),rgba(22,14,8,.84));backdrop-filter:blur(10px);z-index:58}#sugyeBlessingModal.on{display:flex}#sugyeBlessingModal .sgBlessCard{width:min(760px,calc(100vw - 24px));max-height:min(88vh,960px);overflow:auto;background:linear-gradient(180deg,#fffdf8 0%,#fff8ee 42%,#f6ebd8 100%);border-radius:30px;box-shadow:0 32px 90px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.92);padding:0;color:#4d3119;position:relative;border:1px solid rgba(122,85,48,.12)}#sugyeBlessingModal .sgBlessClose{position:absolute;right:18px;top:16px;border:none;background:#6d4526;color:#fff;border-radius:999px;padding:9px 14px;font-weight:800;cursor:pointer;box-shadow:0 8px 18px rgba(109,69,38,.25)}#sugyeBlessingModal .sgBlessHead{padding:22px 24px 14px;background:linear-gradient(180deg,rgba(160,110,63,.10),rgba(255,255,255,0))}#sugyeBlessingModal .sgBlessKick{font-size:12px;letter-spacing:.18em;font-weight:900;color:#8c5a31;margin-bottom:6px}#sugyeBlessingModal h2{margin:0 72px 8px 0;font-size:31px;line-height:1.18;color:#5f3517}#sugyeBlessingModal .sgBlessSub{margin:0;font-size:15px;line-height:1.6;color:#6f5134}#sugyeBlessingModal .sgBlessDivider{height:1px;margin:0 24px;background:linear-gradient(90deg,rgba(163,120,77,0),rgba(163,120,77,.55),rgba(163,120,77,0))}#sugyeBlessingModal .sgBlessBody{padding:18px 22px 22px}#sugyeBlessingModal .sgBlessScene{background:linear-gradient(180deg,#704224 0,#8e5936 20%,#f2dec0 20.1%,#f9f1df 100%);border-radius:26px;padding:22px 18px 18px;display:grid;grid-template-columns:1fr 220px 1fr;align-items:end;gap:14px;box-shadow:inset 0 2px 0 rgba(255,255,255,.44),0 18px 38px rgba(118,79,43,.12);border:1px solid rgba(136,95,52,.14)}#sugyeBlessingModal .sgFigure{height:236px;position:relative;display:flex;align-items:flex-end;justify-content:center}#sugyeBlessingModal .sgFigure .sgHead{position:absolute;top:18px;width:68px;height:68px;border-radius:50%;background:#e8c19c;box-shadow:inset 0 -6px 0 rgba(0,0,0,.05)}#sugyeBlessingModal .sgFigure.monk .sgHead:before,#sugyeBlessingModal .sgFigure.user .sgHead:before{content:'';position:absolute;left:18px;top:27px;width:7px;height:7px;border-radius:50%;background:#4a3424;box-shadow:24px 0 0 #4a3424}#sugyeBlessingModal .sgFigure.monk .sgHead:after{content:'';position:absolute;left:24px;top:42px;width:20px;height:8px;border-bottom:3px solid #8e5f3b;border-radius:0 0 16px 16px}#sugyeBlessingModal .sgFigure .sgBody{position:absolute;top:78px;width:138px;height:136px;border-radius:48px 48px 26px 26px;background:#f7f5f0;box-shadow:inset 0 -10px 0 rgba(0,0,0,.03)}#sugyeBlessingModal .sgFigure .sgBody.grey{background:#d7d7dc}#sugyeBlessingModal .sgFigure .sgBody.orange{background:#b96940;clip-path:polygon(15% 0,100% 0,100% 100%,0 100%,0 28%)}#sugyeBlessingModal .sgFigure .sgArm{position:absolute;width:96px;height:28px;border-radius:999px;background:#e8c19c;top:148px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.04)}#sugyeBlessingModal .sgFigure.monk .sgArm{right:28px;transform:rotate(8deg)}#sugyeBlessingModal .sgFigure.user .sgArm{left:28px;top:162px;transform:rotate(-12deg)}#sugyeBlessingModal .sgFigure .sgSleeve{position:absolute;width:102px;height:46px;border-radius:999px;top:136px;background:#b96940;box-shadow:inset 0 -4px 0 rgba(0,0,0,.04)}#sugyeBlessingModal .sgFigure.user .sgSleeve{background:#74849b;left:18px;top:151px;transform:rotate(-12deg)}#sugyeBlessingModal .sgFigure.monk .sgSleeve{right:18px;transform:rotate(10deg)}#sugyeBlessingModal .sgFigure .sgNameTag{position:absolute;bottom:0;padding:8px 14px;background:rgba(255,255,255,.94);border-radius:999px;font-weight:800;font-size:14px;box-shadow:0 10px 20px rgba(0,0,0,.08);border:1px solid rgba(130,94,58,.12)}#sugyeBlessingModal .sgCenter{height:236px;position:relative;display:flex;justify-content:center;align-items:flex-end}#sugyeBlessingModal .sgLotus{position:absolute;bottom:0;width:188px;height:58px}#sugyeBlessingModal .sgLotus span{position:absolute;bottom:0;width:38px;height:28px;background:#f08aa1;border-radius:72% 72% 4px 4px;transform-origin:center bottom;box-shadow:inset 0 -3px 0 rgba(0,0,0,.05)}#sugyeBlessingModal .sgLotus span:nth-child(1){left:18px;transform:rotate(-30deg)}#sugyeBlessingModal .sgLotus span:nth-child(2){left:50px;transform:rotate(-14deg)}#sugyeBlessingModal .sgLotus span:nth-child(3){left:80px;height:34px;background:#f3a2b4}#sugyeBlessingModal .sgLotus span:nth-child(4){left:112px;transform:rotate(14deg)}#sugyeBlessingModal .sgLotus span:nth-child(5){left:144px;transform:rotate(30deg)}#sugyeBlessingModal .sgCandle{position:absolute;bottom:18px;width:62px;height:136px;background:linear-gradient(180deg,#fff7cb,#f0d98a);border-radius:20px 20px 12px 12px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.5),0 12px 24px rgba(255,215,130,.22)}#sugyeBlessingModal .sgCandle:before{content:'';position:absolute;left:50%;transform:translateX(-50%);top:-14px;width:5px;height:19px;background:#7a5a22;border-radius:999px}#sugyeBlessingModal .sgFlame{position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:24px;height:36px;background:radial-gradient(circle at 50% 60%,#fff8bf 0 22%,#ffcf5b 36%,#ff9045 70%,rgba(255,135,48,.1) 100%);clip-path:polygon(50% 0,72% 22%,88% 52%,68% 86%,50% 100%,32% 86%,12% 52%,28% 22%);animation:sgFlame 1.4s ease-in-out infinite alternate}#sugyeBlessingModal .sgIncenseWrap{position:absolute;bottom:124px;display:flex;gap:18px}#sugyeBlessingModal .sgIncense{width:3px;height:78px;background:#7e5738;position:relative;transform-origin:bottom center}#sugyeBlessingModal .sgIncense:nth-child(1){transform:rotate(-12deg)}#sugyeBlessingModal .sgIncense:nth-child(2){transform:rotate(8deg)}#sugyeBlessingModal .sgIncense:before{content:'';position:absolute;top:-4px;left:-2px;width:7px;height:7px;border-radius:50%;background:#ff8d5c;box-shadow:0 0 12px #ffb18c}#sugyeBlessingModal .sgIncense:after{content:'';position:absolute;top:-42px;left:-14px;width:34px;height:46px;background:radial-gradient(circle at 45% 70%,rgba(255,255,255,.65),rgba(255,255,255,0) 70%);filter:blur(2px);animation:sgSmoke 2.8s linear infinite}#sugyeBlessingModal .sgNamePanel{margin-top:18px;background:linear-gradient(180deg,#fffefb,#fbf4e8);border:1px solid rgba(120,80,40,.12);border-radius:24px;padding:18px 18px 16px;box-shadow:0 12px 28px rgba(114,83,41,.08)}#sugyeBlessingModal .sgNameTop{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:8px;flex-wrap:wrap}#sugyeBlessingModal .sgLawTitle{font-size:13px;font-weight:900;letter-spacing:.11em;color:#9b6a40}#sugyeBlessingModal .sgLawSeat{font-size:13px;font-weight:800;color:#8c5c2e;background:#fff7ea;border:1px solid rgba(150,111,66,.16);padding:6px 10px;border-radius:999px}#sugyeBlessingModal .sgLawName{font-size:42px;font-weight:900;line-height:1.08;color:#633817}#sugyeBlessingModal .sgLawMeaning{margin-top:10px;font-size:17px;font-weight:700;line-height:1.58;color:#704927}#sugyeBlessingModal .sgLawBless{margin:14px 0 0;font-size:15px;line-height:1.75;color:#6f5034}#sugyeBlessingModal .sgBlessFooter{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}#sugyeBlessingModal .sgBlessInfo{background:#fffaf1;border:1px solid rgba(140,97,55,.10);border-radius:18px;padding:12px 14px}#sugyeBlessingModal .sgBlessInfo b{display:block;font-size:13px;color:#8a5b33;margin-bottom:4px}#sugyeBlessingModal .sgBlessInfo span{font-size:14px;color:#5f4632;line-height:1.55}#sugyeBlessingModal .sgBlessActions{display:flex;justify-content:flex-end;margin-top:16px}#sugyeBlessingModal .sgBlessActions button{border:none;background:linear-gradient(180deg,#8a5a32,#6f4324);color:#fff;border-radius:999px;padding:12px 20px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 12px 24px rgba(109,69,38,.22)}@keyframes sgSmoke{0%{opacity:.15;transform:translateY(0) scale(.82)}45%{opacity:.34;transform:translate(-2px,-16px) scale(1)}100%{opacity:0;transform:translate(5px,-34px) scale(1.26)}}@keyframes sgFlame{from{transform:translateX(-50%) scaleY(1) rotate(-3deg)}to{transform:translateX(-50%) scaleY(1.08) rotate(3deg)}}@media(max-width:760px){#sugyeBlessingModal .sgBlessCard{border-radius:24px}#sugyeBlessingModal .sgBlessHead{padding:20px 16px 12px}#sugyeBlessingModal .sgBlessBody{padding:14px 14px 16px}#sugyeBlessingModal h2{font-size:26px;margin-right:62px}#sugyeBlessingModal .sgBlessScene{grid-template-columns:1fr;gap:10px;padding:14px 10px}#sugyeBlessingModal .sgFigure,#sugyeBlessingModal .sgCenter{height:190px}#sugyeBlessingModal .sgLawName{font-size:34px}#sugyeBlessingModal .sgBlessFooter{grid-template-columns:1fr}}`;document.head.appendChild(sugyeBlessingStyle);
 const sugyeGoldExtra=document.createElement('style');sugyeGoldExtra.textContent=`
@@ -3468,7 +3527,8 @@ sugyeBlessingModal.querySelector('.sgBlessSub').textContent='촛불과 연꽃이
 let sgBlessingRevealToken=0;
 const SUGYE_DHARMA_POOL=[{name:'혜안',meaning:'지혜의 눈으로 자신과 세상을 맑게 바라본다는 뜻입니다.'},{name:'정심',meaning:'흔들림 없는 맑은 마음을 지켜가라는 뜻입니다.'},{name:'연화',meaning:'연꽃처럼 청정한 삶을 피워가라는 뜻입니다.'},{name:'지월',meaning:'고요한 달빛처럼 부드럽고 맑게 비추라는 뜻입니다.'},{name:'법운',meaning:'바른 가르침이 구름처럼 널리 퍼지기를 바라는 뜻입니다.'},{name:'보연',meaning:'자비의 향기가 연꽃처럼 은은히 퍼지라는 뜻입니다.'},{name:'선광',meaning:'선한 빛으로 자신과 이웃을 따뜻하게 비추라는 뜻입니다.'},{name:'무진',meaning:'끝없이 정진하며 배움을 이어가라는 뜻입니다.'},{name:'원명',meaning:'둥글고 밝은 지혜를 길러가라는 뜻입니다.'},{name:'자운',meaning:'자비의 구름처럼 넓게 세상을 감싸라는 뜻입니다.'},{name:'혜정',meaning:'지혜와 고요함을 함께 간직하라는 뜻입니다.'},{name:'법찬',meaning:'바른 가르침을 기쁘게 실천하라는 뜻입니다.'},{name:'청연',meaning:'맑은 연꽃처럼 깨끗한 마음을 지니라는 뜻입니다.'},{name:'도원',meaning:'깨달음의 길을 꾸준히 걸어가라는 뜻입니다.'},{name:'해담',meaning:'바다처럼 넓고 담담한 마음을 가지라는 뜻입니다.'},{name:'도윤',meaning:'도를 닦으며 주변에 윤택함을 나누라는 뜻입니다.'},{name:'보현',meaning:'넓은 서원과 실천으로 선한 길을 걸어가라는 뜻입니다.'},{name:'혜명',meaning:'밝은 지혜로 삶의 길을 환히 비추라는 뜻입니다.'},{name:'법진',meaning:'바른 가르침을 따라 한 걸음씩 정진하라는 뜻입니다.'},{name:'심원',meaning:'깊고 넓은 마음으로 세상을 품으라는 뜻입니다.'},{name:'원각',meaning:'둥글고 완전한 깨달음을 향해 나아가라는 뜻입니다.'},{name:'지선',meaning:'지혜롭고 착한 마음을 함께 길러가라는 뜻입니다.'},{name:'보광',meaning:'자비와 지혜의 빛을 널리 비추라는 뜻입니다.'},{name:'청명',meaning:'맑고 또렷한 마음을 늘 간직하라는 뜻입니다.'},{name:'도현',meaning:'바른 도리를 몸소 드러내며 살아가라는 뜻입니다.'},{name:'법해',meaning:'법의 바다가 넓듯 큰 마음으로 배우고 나누라는 뜻입니다.'},{name:'정운',meaning:'바른 마음이 구름처럼 넓게 퍼지라는 뜻입니다.'},{name:'혜린',meaning:'지혜의 숲처럼 풍성하게 자라가라는 뜻입니다.'},{name:'심광',meaning:'마음의 빛으로 자신과 이웃을 밝혀가라는 뜻입니다.'},{name:'보원',meaning:'이로운 서원을 세우고 꾸준히 실천하라는 뜻입니다.'},{name:'도심',meaning:'도를 향한 마음을 잃지 말고 살아가라는 뜻입니다.'},{name:'범해',meaning:'넓고 깊은 자비심으로 세상을 대하라는 뜻입니다.'},{name:'혜주',meaning:'지혜의 구슬처럼 맑고 귀한 마음을 지니라는 뜻입니다.'},{name:'정연',meaning:'고요하고 맑은 연꽃 같은 삶을 살아가라는 뜻입니다.'},{name:'자명',meaning:'자비의 빛을 스스로 밝히고 나누라는 뜻입니다.'},{name:'묘음',meaning:'아름답고 선한 말과 마음을 실천하라는 뜻입니다.'},{name:'연심',meaning:'연꽃 같은 청정한 마음을 품으라는 뜻입니다.'},{name:'법성',meaning:'본래의 맑은 성품을 잊지 말라는 뜻입니다.'},{name:'정혜',meaning:'고요함과 지혜를 함께 닦아가라는 뜻입니다.'},{name:'원덕',meaning:'원만한 덕을 쌓으며 살아가라는 뜻입니다.'}];
 const sugyeRibbon=document.createElement('div');sugyeRibbon.id='sugyeSeatRibbon';sugyeRibbon.setAttribute('aria-live','polite');document.body.appendChild(sugyeRibbon);
-let sugyePhase='idle',sugyeShared=false,sugyeEventId=0,sugyeAt=0,sugyeEndAt=0,sugyeNextAt=performance.now()+240000;
+const sugyeRandomDelay=()=>120000+Math.floor(Math.random()*240001); // 2–6 min after each ceremony, plus 60-second notice
+let sugyePhase='idle',sugyeShared=false,sugyeEventId=0,sugyeAt=0,sugyeEndAt=0,sugyeNextAt=0;
 let sugyeAccepted=false,sugyeDeclined=false,sugyeWasInside=false,sugyeQueue=[],sugyeIndex=0,sugyeCalledAt=0,sugyeReceived=false,sugyeNextCallAt=0;
 let sugyeNetworkReady=false,sugyeCallNoticeId='',sugyeSeatPermission=false,sugyeSeatPending=0,sugyeSeatMode='meditate';
 let sugyeForwardPath=null,sugyeLastRibbon='',sugyeLastBanner='',sugyePromptEvent=-1,sugyeSeatAtStart=null;
@@ -3574,7 +3634,7 @@ function sugyeBeginLocal(now){if(sugyePhase!=='notice')return;
  if(!sugyeQueue.length){sugyeEndAt=now+35_000;if(insideHallAt(player.position.x,player.position.z))sugyeOutside('🔒 방석에 앉아 신청한 방문자만 법회에 참석할 수 있습니다.')}
  else ritualToast('🙏 법회가 시작되었습니다. 방석에 앉아 번호 호명을 기다리세요.');
 }
-function sugyeFinishLocal(now){sugyePhase='idle';sugyeNextAt=now+9*60_000;sugyeQueue=[];sugyeIndex=0;sugyeCalledAt=0;sugyeReceived=false;sugyeAccepted=false;sugyeDeclined=false;sugyePromptEvent=-1;sugyeCloseModal();ritualToast('🌸 수계법회 종료 · 정각원 출입이 재개되었습니다.')}
+function sugyeFinishLocal(now){sugyePhase='idle';sugyeNextAt=now+sugyeRandomDelay();sugyeQueue=[];sugyeIndex=0;sugyeCalledAt=0;sugyeReceived=false;sugyeAccepted=false;sugyeDeclined=false;sugyePromptEvent=-1;sugyeCloseModal();ritualToast('🌸 수계법회 종료 · 정각원 출입이 재개되었습니다.')}
 function sugyeCallLocal(now){const q=sugyeQueue[sugyeIndex];if(!q)return;sugyeCalledAt=now;ritualToast(`🔔 ${q.seatId}번 방석에 앉으신 방문자분, 스님 앞으로 나오세요!`)}
 function sugyeReceiveLocal(){if(!sugyeMyCalled()||seated||Math.hypot(player.position.x-hx,player.position.z-(hz-4.0))>3.0){ritualToast('호명된 다음 방석에서 일어나 스님 앞으로 이동해 주세요.');return}
  const q=sugyeQueue[sugyeIndex];q.done=true;sugyeReceived=true;if(audio.ready)bell(audio.ctx.currentTime+.1);showSugyeBlessing(q.seatId);
@@ -3622,7 +3682,7 @@ function sugyeApplyServerSeats(seats){
  for(const [pid,peer] of mpPeers){peer.seatId=Number(Object.entries(seats).find(([sid,owner])=>owner===pid)?.[0]||0)}
 }
 function sugyeDisconnected(){if(!sugyeShared)return;sugyeNetworkReady=false;sugyeShared=false;sugyeSeatPending=0;
- sugyePhase='idle';sugyeQueue=[];sugyeIndex=0;sugyeCalledAt=0;sugyeNextAt=performance.now()+240000;sugyeCloseModal();sugyeForwardPath=null;
+ sugyePhase='idle';sugyeQueue=[];sugyeIndex=0;sugyeCalledAt=0;sugyeNextAt=0;sugyeCloseModal();sugyeForwardPath=null;
  for(const [sid,owner] of [...occupiedSeats])if(owner!==LOCAL_ACTOR_ID)occupiedSeats.delete(sid);
  ritualToast('⚠️ 서버 연결이 끊겼습니다. 공동 법회는 중지되었으며 재연결 시 다시 동기화됩니다.');}
 function sugyeClaimSeat(seat,mode='meditate',moveToSeat=false){
@@ -3645,7 +3705,7 @@ function sugyeSitNow(){if(!started){ritualToast('먼저 산책 시작 버튼을 
  const available=seatLocations.filter(s=>!occupiedSeats.has(s.id)||occupiedSeats.get(s.id)===LOCAL_ACTOR_ID).sort((a,b)=>Math.hypot(player.position.x-a.x,player.position.z-a.z)-Math.hypot(player.position.x-b.x,player.position.z-b.z));
  const seat=selectedSeat&&available.some(s=>s.id===selectedSeat.id)?selectedSeat:available[0];
  if(!seat){ritualToast('현재 이용할 수 있는 방석이 없습니다.');return}
- sugyeClaimSeat(seat,'meditate',true);
+ sugyeClaimSeat(seat,'sit',true);
 }
 function sugyeGoForward(){if(!sugyeMyCalled()){ritualToast('현재 내 방석 번호가 호명되지 않았습니다.');return}
  if(seated)leavePractice();haltMovement();
@@ -3679,6 +3739,7 @@ function sugyeDecline(){sugyeCloseModal();sugyeAccepted=false;sugyeDeclined=true
 }
 function sugyeTick(now){if(!started)return;
  if(!sugyeShared){
+  if(sugyePhase==='idle'&&!sugyeNextAt)sugyeNextAt=now+sugyeRandomDelay();
   if(sugyePhase==='idle'&&now>=sugyeNextAt)sugyeStartNotice();
   if(sugyePhase==='notice'&&now>=sugyeAt)sugyeBeginLocal(now);
   if(sugyePhase==='active'){
@@ -3707,8 +3768,9 @@ function sugyeTick(now){if(!started)return;
  sugyeUi('sugyeGo').hidden=!sugyeMyCalled()||!seated;
  const nearMaster=Math.hypot(player.position.x-hx,player.position.z-(hz-4.0))<3.0;
  sugyeUi('sugyeReceive').hidden=!sugyeMyCalled()||seated||!nearMaster;
- sugyeUi('sugyeDemo').hidden=sugyePhase!=='idle';
- sugyeUi('sugyeGuideText').textContent=sugyePhase==='active'?(sugyeMyCalled()?'🔔 내 차례입니다! 스님 앞으로 이동하세요.':(seated?`🧎 ${activeSeat.id}번 방석 · 호명 대기`:'🙏 법회 진행 중')):sugyePhase==='notice'?(sugyeAccepted?'✅ 참석 완료 · 방석에 앉기':'🙏 참석 신청 후 방석에 앉기'):'🙏 정각원 · 수계법회 체험';
+ const actionVisible=(sugyePhase==='notice'&&inside)||(sugyePhase==='active'&&!!sugyeMyQueue()&&!sugyeReceived);
+ sugyeDock.classList.toggle('on',actionVisible);
+ sugyeUi('sugyeGuideText').textContent=sugyePhase==='active'?(sugyeMyCalled()?'🔔 내 차례입니다! 큰스님 앞으로 이동하세요.':(seated?`🧎 ${activeSeat.id}번 방석 · 호명 대기`:'🙏 법회 진행 중')):(sugyeAccepted?'✅ 참석 완료 · 방석에 앉기':'🔔 참석 신청 후 방석에 앉기');
  sugyeSetRibbon(sugyeMyCalled()?seated?`🔔 ${sugyeQueue[sugyeIndex].seatId}번 방석 방문자분, 일어나 스님 앞으로 나오세요!`:
   nearMaster?`🌸 ${sugyeQueue[sugyeIndex].seatId}번 방석 방문자분, 수계 받기 버튼을 누르세요.`:
   `🔔 내 차례 · 법당 중앙 통로를 따라 스님 앞 빛나는 표시로 이동하세요.`:'');
@@ -3719,16 +3781,9 @@ sugyeUi('sugyeSeatButton').addEventListener('click',sugyeSitNow);
 sugyeUi('sugyeSitAction').addEventListener('click',sugyeSitNow);
 sugyeUi('sugyeGo').addEventListener('click',sugyeGoForward);
 sugyeUi('sugyeReceive').addEventListener('click',sugyeComplete);
-sugyeUi('sugyeDemo').addEventListener('click',()=>{
- if(!started){ritualToast('먼저 산책을 시작하세요.');return}
- if(sugyePhase!=='idle'){ritualToast('법회가 이미 진행 중이거나 예정되어 있습니다.');return}
- if(sugyeShared&&sugyeNetworkReady){sugyeSend('sugyeDemo');ritualToast('🔔 온라인 참가자에게 법회 개최 요청을 보냈습니다.');}
- else sugyeStartNotice();
-});
-sugyeUi('sugyeInfo').addEventListener('click',()=>ritualToast(sugyePhase==='idle'?'🎐 가끔 열리는 법회입니다. 체험 시작을 누르면 1분 후 시작합니다.':sugyePhase==='notice'?'🔔 참석 신청과 방석 착석을 법회 시작 전에 완료해 주세요.':`🙏 ${sugyeQueue.length}명 참여 · 좌석 번호 순서대로 호명됩니다.`));
 sugyeUi('sugyeBlessingClose').addEventListener('click',sugyeHideBlessing);sugyeUi('sugyeBlessingConfirm').addEventListener('click',sugyeHideBlessing);sugyeBlessingModal.addEventListener('click',e=>{if(e.target===sugyeBlessingModal)sugyeHideBlessing()});
 window.addEventListener('keydown',e=>{if(e.code==='KeyC'&&!e.repeat&&!(e.target instanceof HTMLElement&&e.target.matches('input,textarea,select,[contenteditable=true]'))&&!sugyeModal.classList.contains('on')&&!sugyeBlessingModal.classList.contains('on')){e.preventDefault();sugyeSitNow()}});
-window.__dguSugyeR13={get phase(){return sugyePhase},get shared(){return sugyeShared},get queue(){return sugyeQueue.map(q=>({...q}))},get accepted(){return sugyeAccepted},get seat(){return activeSeat?.id||null},get called(){return sugyeMyCalled()},startPreview(){if(sugyeShared)sugyeSend('sugyeDemo');else sugyeStartNotice()},finishPreview(){if(!sugyeShared)sugyeFinishLocal(performance.now())}};
+window.__dguSugyeR13={get phase(){return sugyePhase},get shared(){return sugyeShared},get queue(){return sugyeQueue.map(q=>({...q}))},get accepted(){return sugyeAccepted},get seat(){return activeSeat?.id||null},get called(){return sugyeMyCalled()}};
 // ==================== END R13 FIX ====================
 
 
