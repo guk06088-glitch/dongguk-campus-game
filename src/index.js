@@ -1,4 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
+import { serveWithAuth, rateLimitAttempt } from './auth.js';
 
 const cleanName = v => String(v||'방문자').replace(/[<>\\]/g,'').trim().slice(0,12)||'방문자';
 const finite=(v,min,max)=>typeof v==='number'&&Number.isFinite(v)?Math.max(min,Math.min(max,v)):0;
@@ -26,15 +27,17 @@ const cleanLook=v=>({
  bagColor:LOOK_ACCESSORY_COLORS.has(v?.bagColor)?v.bagColor:'sand'
 });
 const cleanWish=v=>String(v||'').replace(/[\x00-\x1F\x7F<>]/g,'').replace(/\s+/g,' ').trim().slice(0,30);
+async function fetchGame(request,env){
+ const url=new URL(request.url);
+ if(url.pathname==='/ws'){
+  const id=env.CAMPUS_ROOM.idFromName('public-campus-v1');
+  return env.CAMPUS_ROOM.get(id).fetch(request);
+ }
+ return env.ASSETS.fetch(request);
+}
 export default {
  async fetch(request,env){
-  const url=new URL(request.url);
-  if(url.pathname==='/ws'){
-   if(request.headers.get('Upgrade')?.toLowerCase()!=='websocket')return new Response('WebSocket required',{status:426});
-   const id=env.CAMPUS_ROOM.idFromName('public-campus-v1');
-   return env.CAMPUS_ROOM.get(id).fetch(request);
-  }
-  return env.ASSETS.fetch(request);
+  return serveWithAuth(request,env,fetchGame);
  }
 };
 export class CampusRoom extends DurableObject{
@@ -42,9 +45,14 @@ export class CampusRoom extends DurableObject{
   // Storage survives WebSocket hibernation, object restarts and reconnects.
   ctx.blockConcurrencyWhile(async()=>{this.sugye=(await ctx.storage.get(SG_STORAGE))||SG_NEW();await this.sugyeWake();});
  }
- peers(){return this.ctx.getWebSockets().map(ws=>({ws,state:ws.deserializeAttachment()})).filter(p=>p.state);}
+ // Drop sockets established before auth was enabled or whose 12-hour session expired.
+ authorizedSocket(ws){const a=ws.deserializeAttachment();const valid=Number.isFinite(a?.authExpiresAt)&&a.authExpiresAt>Date.now();
+  if(!valid){try{ws.send(JSON.stringify({type:'authExpired'}));ws.close(1008,'Authentication expired')}catch{}}
+  return valid;
+ }
+ peers(){return this.ctx.getWebSockets().filter(ws=>this.authorizedSocket(ws)).map(ws=>({ws,state:ws.deserializeAttachment()})).filter(p=>p.state);}
  send(ws,data){try{ws.send(JSON.stringify(data))}catch{}}
- broadcast(data,except){const str=JSON.stringify(data);for(const ws of this.ctx.getWebSockets()){if(ws!==except){try{ws.send(str)}catch{}}}}
+ broadcast(data,except){const str=JSON.stringify(data);for(const ws of this.ctx.getWebSockets()){if(ws!==except&&this.authorizedSocket(ws)){try{ws.send(str)}catch{}}}}
  count(){this.broadcast({type:'count',count:this.peers().filter(p=>p.state.ready).length})}
  rides(){const out={};for(const {state} of this.peers())if(state.ready&&state.rideId!==null)out[state.rideId]=state.id;return out;}
  seats(excludeWs=null){const seats={};for(const {ws,state} of this.peers())if(ws!==excludeWs&&state.ready&&Number.isInteger(state.seatId))seats[state.seatId]=state.id;return seats;}
@@ -96,9 +104,14 @@ export class CampusRoom extends DurableObject{
  async alarm(){await this.sugyeAdvance();await this.sugyeWake();}
 
  async fetch(request){
+  if(new URL(request.url).pathname==='/__auth/rate-limit')return rateLimitAttempt(request,this.ctx);
+  const expiresAt=Number(request.headers.get('X-DGU-Auth-Expires'));
+  if(!Number.isSafeInteger(expiresAt)||expiresAt<=Date.now()||expiresAt>Date.now()+12*60*60_000)
+   return new Response('Unauthorized',{status:401});
+  if(request.headers.get('Upgrade')?.toLowerCase()!=='websocket')return new Response('WebSocket required',{status:426});
   const pair=new WebSocketPair();const [client,server]=Object.values(pair);
   this.ctx.acceptWebSocket(server);
-  const id=crypto.randomUUID();const state={id,name:'방문자',x:1,y:0,z:28,r:0,ready:false,rideId:null,seatId:null,sugyeIntent:false,look:cleanLook(null)};server.serializeAttachment(state);
+  const id=crypto.randomUUID();const state={id,authExpiresAt:expiresAt,name:'방문자',x:1,y:0,z:28,r:0,ready:false,rideId:null,seatId:null,sugyeIntent:false,look:cleanLook(null)};server.serializeAttachment(state);
   const peers=this.peers().filter(p=>p.ws!==server&&p.state.ready).map(p=>p.state);
   const wishes=await this.ctx.storage.get(WISH_STORAGE_KEY)||[];
   await this.sugyeAdvance();this.send(server,{type:'welcome',id,peers,rides:this.rides(),wishFeature:true,wishes:Array.isArray(wishes)?wishes:[],sugyeFeature:true,sugye:this.sugyePacket(),seats:this.seats()});
@@ -107,6 +120,7 @@ export class CampusRoom extends DurableObject{
  async webSocketMessage(ws,raw){
   if(typeof raw!=='string'||raw.length>1200)return;
   let data;try{data=JSON.parse(raw)}catch{return}
+  if(!this.authorizedSocket(ws))return;
   const state=ws.deserializeAttachment();if(!state)return;
   await this.sugyeAdvance();
   if(data.type==='hello'){
