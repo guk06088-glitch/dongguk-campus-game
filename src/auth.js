@@ -39,7 +39,7 @@ async function signingKey(secret) {
 }
 async function sign(key, message) { return encodeB64url(await crypto.subtle.sign('HMAC', key, enc.encode(message))); }
 function configReady(env) { return typeof env.CAMPUS_PASSWORD === 'string' && /^[0-9]{4}$/.test(env.CAMPUS_PASSWORD) &&
-    typeof env.CAMPUS_SESSION_SECRET === 'string' && env.CAMPUS_SESSION_SECRET.length >= 32 &&
+    typeof env.CAMPUS_SESSION_SECRET === 'string' && env.CAMPUS_SESSION_SECRET.length >= 10 &&
     env.CAMPUS_PASSWORD !== env.CAMPUS_SESSION_SECRET; }
 async function tagForPassword(env, key) { return (await sign(key, 'r13.4-password-revision:' + env.CAMPUS_PASSWORD)).slice(0, 22); }
 function readCookie(request, name) {
