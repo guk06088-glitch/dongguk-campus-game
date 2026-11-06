@@ -11,7 +11,8 @@ const SG_X=28, SG_Z=-13;
 const SG_INSIDE=(x,z)=>Math.abs(x-SG_X)<12.12&&z>SG_Z-8.22&&z<SG_Z+8.25;
 const SG_SEATS=Array.from({length:60},(_,i)=>{const row=Math.floor(i/10),col=i%10;return {id:i+1,x:SG_X+(col<5?-10.6+col*1.91:2.96+(col-5)*1.91),z:SG_Z-2.77+row*1.08}});
 const SG_STORAGE='dgu-sugye-r13-v2';
-const SG_NEW=()=>({phase:'idle',eventId:0,nextAt:Date.now()+4*60_000,noticeAt:0,startAt:0,endAt:0,nextCallAt:0,calledAt:0,current:0,queue:[],lastManualAt:0});
+const SG_RANDOM_DELAY=()=>120_000+Math.floor(Math.random()*240_001); // random 2–6 minutes before 60-second notice
+const SG_NEW=()=>({phase:'idle',eventId:0,scheduleVersion:5,nextAt:Date.now()+SG_RANDOM_DELAY(),noticeAt:0,startAt:0,endAt:0,nextCallAt:0,calledAt:0,current:0,queue:[]});
 const SG_SPOT={x:SG_X,y:2.38,z:SG_Z-4.25};
 
 const WISH_STORAGE_KEY='public-wishes-v1';
@@ -43,7 +44,10 @@ export default {
 export class CampusRoom extends DurableObject{
  constructor(ctx,env){super(ctx,env);this.lastChat=new WeakMap();this.lastMove=new WeakMap();this.lastGreet=new WeakMap();this.lastWish=new WeakMap();this.lastLook=new WeakMap();
   // Storage survives WebSocket hibernation, object restarts and reconnects.
-  ctx.blockConcurrencyWhile(async()=>{this.sugye=(await ctx.storage.get(SG_STORAGE))||SG_NEW();await this.sugyeWake();});
+  ctx.blockConcurrencyWhile(async()=>{this.sugye=(await ctx.storage.get(SG_STORAGE))||SG_NEW();
+    // Upgrade the persistent R13 schedule once: keep an in-progress event but randomize the next idle ceremony.
+    if(this.sugye.scheduleVersion!==5){this.sugye.scheduleVersion=5;if(this.sugye.phase==='idle')this.sugye.nextAt=Date.now()+SG_RANDOM_DELAY();await ctx.storage.put(SG_STORAGE,this.sugye);}
+    await this.sugyeWake();});
  }
  // Drop sockets established before auth was enabled or whose 12-hour session expired.
  authorizedSocket(ws){const a=ws.deserializeAttachment();const valid=Number.isFinite(a?.authExpiresAt)&&a.authExpiresAt>Date.now();
@@ -83,7 +87,7 @@ export class CampusRoom extends DurableObject{
  }
  async sugyeFinish(now=Date.now()){
   const a=this.sugye;if(a.phase==='idle')return;
-  a.phase='idle';a.nextAt=now+9*60_000;a.noticeAt=0;a.startAt=0;a.endAt=0;a.calledAt=0;a.nextCallAt=0;a.queue=[];a.current=0;
+  a.phase='idle';a.nextAt=now+SG_RANDOM_DELAY();a.noticeAt=0;a.startAt=0;a.endAt=0;a.calledAt=0;a.nextCallAt=0;a.queue=[];a.current=0;
   for(const {ws,state} of this.peers())if(state.sugyeIntent){state.sugyeIntent=false;ws.serializeAttachment(state)}
   await this.sugyeSave();
  }
@@ -138,12 +142,6 @@ export class CampusRoom extends DurableObject{
    ws.serializeAttachment(state);this.broadcast({type:'move',...state},ws);
   }else if(data.type==='sugyeGet'){
    this.send(ws,this.sugyePacket());this.send(ws,{type:'sugyeSeatState',seats:this.seats()});
-  }else if(data.type==='sugyeDemo'){
-   const now=Date.now();const a=this.sugye;
-   if(a.phase!=='idle'){this.send(ws,{type:'sugyeInfo',reason:'already'});return;}
-   // A demonstration is a real shared event. Minimum 5 minutes between manual events.
-   if(now-a.lastManualAt<5*60_000){this.send(ws,{type:'sugyeInfo',reason:'cooldown'});return;}
-   a.lastManualAt=now;await this.sugyeNotice(now);
   }else if(data.type==='sugyeJoin'){
    const a=this.sugye;
    if(a.phase!=='notice'){this.send(ws,{type:'sugyeInfo',reason:'join-position'});return;}
