@@ -3348,10 +3348,10 @@ function mpConnect(){
  if(!/^https?:$/.test(location.protocol))return;
  const url=new URL('/ws',location.href);url.protocol=location.protocol==='https:'?'wss:':'ws:';
  try{mpSocket=new WebSocket(url);mpSocket.onopen=()=>{mpRetry=0;mpSocket.send(JSON.stringify({type:'hello',name:window.__donggukIdentityName||sessionStorage.getItem('dgName')||'방문자',look:myLook}))};
- mpSocket.onmessage=e=>{try{mpReceive(JSON.parse(e.data))}catch(err){console.warn('multiplayer message',err)}};
+ mpSocket.onmessage=e=>{try{const msg=JSON.parse(e.data);if(msg.type==='authExpired'){location.replace('/__auth/login');return;}mpReceive(msg)}catch(err){console.warn('multiplayer message',err)}};
  mpSocket.onclose=()=>{sugyeDisconnected();mpSelf=null;mpWishEnabled=false;ridePendingId=null;mpRideOwners.clear();if(wishPendingText!==null){clearWishPending();ritualToast('소원 공유 서버 연결이 끊겼습니다. 다시 시도해 주세요');}
  if(ridingElephant){const exit=safeElephantExit(ridingElephant);ridingElephant=null;ridePhase='none';player.position.set(exit.x,exit.y,exit.z);monk.position.y=0;for(const a of limbs.arms){a.rotation.x=0;a.rotation.z=0;}for(const leg of limbs.legs)leg.rotation.x=0;}
- for(const id of [...mpPeers.keys()])mpRemovePeer(id);window.dispatchEvent(new CustomEvent('dongguk:mpstatus',{detail:{online:false,count:0}}));setTimeout(mpConnect,Math.min(20000,1000*Math.pow(1.7,Math.min(6,mpRetry++))))};
+ for(const id of [...mpPeers.keys()])mpRemovePeer(id);window.dispatchEvent(new CustomEvent('dongguk:mpstatus',{detail:{online:false,count:0}}));setTimeout(()=>{fetch('/__auth/status',{cache:'no-store'}).then(r=>r.ok?r.json():{authenticated:false}).then(s=>{if(!s.authenticated)location.replace('/__auth/login');else mpConnect()}).catch(()=>mpConnect())},Math.min(20000,1000*Math.pow(1.7,Math.min(6,mpRetry++))))};
  mpSocket.onerror=()=>{};
  }catch(err){console.warn('multiplayer connection',err)}
 }
@@ -4010,6 +4010,20 @@ window.dispatchEvent(new CustomEvent('dongguk:identity',{detail:{name}}));
  const anchor=menu.querySelector('#quickControls');
  if(anchor)menu.insertBefore(group,anchor);else menu.appendChild(group);
  for(const btn of [photo,eight])btn.addEventListener('click',()=>{if(close)close.click();});
+})();
+</script>
+
+<script id="dguR134AuthLogout">
+(()=>{
+ const menu=document.getElementById('mainMenu');
+ if(!menu||location.protocol==='file:')return;
+ const form=document.createElement('form');form.action='/__auth/logout';form.method='POST';
+ form.style.cssText='margin:14px 0 6px;padding:12px 0 0;border-top:1px solid #bba77b66';
+ const button=document.createElement('button');button.type='submit';
+ button.textContent='🔒 로그아웃 · 입장 잠금';
+ button.style.cssText='width:100%;border:1px solid #af9470;background:#f3e5cb;color:#243e34;border-radius:12px;padding:12px 14px;font:800 13px/1.4 system-ui,sans-serif;cursor:pointer';
+ button.title='현재 브라우저의 로그인 세션을 종료하고 암호 입력 화면으로 이동';
+ form.appendChild(button);menu.appendChild(form);
 })();
 </script>
 </body>
