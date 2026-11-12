@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>허생전 · 풍자 마을 스토리 탐험</title>
+<style>
+:root{color-scheme:light;font-family:system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:#322b28}
+*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:#e9ddc8;touch-action:none}
+button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #ffca76;outline-offset:2px}
+#game{position:fixed;inset:0;overflow:hidden;background:#e7d6b7}
+#world{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 44%,transparent 48%,#33272129 100%)}
+#hud{position:absolute;top:max(12px,env(safe-area-inset-top));left:12px;right:12px;z-index:5;display:flex;align-items:flex-start;gap:10px;justify-content:space-between;pointer-events:none}
+#mission{width:min(520px,calc(100vw - 80px));border:1px solid #94734c;background:#2d3028ed;color:#f8e6c5;border-radius:15px;padding:10px 13px;box-shadow:0 8px 24px #0005;line-height:1.42}
+#mission b{display:block;color:#ffcc78;font-size:13px;margin-bottom:3px}#mission .sub{font-size:12px;color:#fbefd5}#mission .tiny{font-size:11px;color:#dfca9d;margin-top:4px}
+#tally{background:#fff7e9ed;border:1px solid #8d663c;padding:10px 12px;border-radius:13px;box-shadow:0 6px 22px #0003;white-space:nowrap;color:#4c3928;font-weight:900;font-size:12px}
+#bottomHint{position:absolute;bottom:calc(15px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:4;background:#292f2bdc;color:#fff1d8;border:1px solid #ffe6b06b;border-radius:50px;white-space:normal;text-align:center;font-weight:700;font-size:11px;padding:8px 13px;max-width:calc(100vw - 22px);pointer-events:none}
+#dialogue{position:absolute;z-index:11;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));width:min(690px,calc(100vw - 24px));border-radius:20px;background:#fff8e9f9;color:#372e23;border:2px solid #977448;box-shadow:0 19px 66px #0006;padding:17px 18px 15px;max-height:min(45dvh,330px);overflow:auto;touch-action:pan-y}
+#dialogue[hidden],#intro[hidden],#ending[hidden],#finalBtn[hidden],#interactBtn[hidden]{display:none!important}
+#dialogue .name{font-size:12px;color:#855e31;letter-spacing:.06em;font-weight:900}#dialogue p{font-size:14px;line-height:1.65;margin:7px 0 11px;word-break:keep-all}
+#answers{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}#answers button{min-width:0;text-align:left;padding:11px 12px;border:1px solid #d7b780;border-radius:12px;color:#433424;background:#f7ebd3;font-size:12px;line-height:1.4;font-weight:750;word-break:keep-all}
+#answers button:active{background:#ead3aa}#talkFeedback{font-weight:800;color:#376354;font-size:12px;line-height:1.5;min-height:0;margin-top:7px}#dialogue .close{position:absolute;right:10px;top:8px;border:0;background:#ede0c9;border-radius:50%;width:29px;height:29px;font-size:18px;color:#57452e}
+#finalBtn{position:absolute;z-index:6;bottom:calc(65px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#315a4b;border:2px solid #ffe7b6;border-radius:999px;color:#fff5dd;font-weight:850;padding:12px 19px;box-shadow:0 10px 24px #1d342577;font-size:14px}
+#interactBtn{position:absolute;right:14px;bottom:calc(93px + env(safe-area-inset-bottom));z-index:6;background:#f4d6a1;color:#433221;border:2px solid white;border-radius:99px;padding:14px 18px;box-shadow:0 7px 26px #0004;font-size:13px;font-weight:850;min-width:125px}
+#dpad{position:absolute;left:15px;bottom:calc(46px + env(safe-area-inset-bottom));z-index:7;display:none;width:137px;height:137px;touch-action:none}
+#dpad button{position:absolute;width:44px;height:44px;background:#244337dd;color:#fff7e0;border:1px solid #fde1b2ad;border-radius:13px;touch-action:none;font-weight:900;font-size:20px;box-shadow:0 6px 15px #0004;user-select:none}
+#dpad [data-dir='up']{left:46px;top:0}#dpad [data-dir='down']{left:46px;bottom:0}#dpad [data-dir='left']{left:0;top:46px}#dpad [data-dir='right']{right:0;top:46px}
+#intro,#ending{position:absolute;inset:0;z-index:15;display:grid;place-items:center;padding:18px;background:#29251fbe;backdrop-filter:blur(6px);touch-action:pan-y;overflow:auto}
+.sheet{max-width:500px;width:100%;max-height:92dvh;overflow:auto;background:#fff4df;padding:24px;border:7px double #9d7547;border-radius:24px;box-shadow:0 22px 65px #0009;text-align:center;color:#473522;touch-action:pan-y}
+.sheet .tag{font-size:11px;letter-spacing:.22em;font-weight:900;color:#a8793d}.sheet h1{font-family:Georgia,'Nanum Myeongjo',serif;margin:7px 0 13px;font-size:clamp(25px,5vw,36px);color:#50351f}.sheet p{font-size:14px;line-height:1.8;margin:10px 0;word-break:keep-all}
+.sheet button{background:#38584b;color:#fff5df;border:1px solid #274331;border-radius:16px;padding:13px 26px;font-size:15px;font-weight:850;margin-top:12px}
+.sheet small{display:block;margin-top:11px;color:#77634d;line-height:1.6;font-size:11px}.ornament{font-size:35px;color:#956a41}
+#ending #quizOptions{display:grid;gap:8px;margin-top:13px}#ending #quizOptions button{width:100%;margin:0;text-align:left;font-weight:750;background:#fff9eb;color:#4c4033;border:1px solid #d5b991}
+#ending #quizOptions button.selected{border-color:#4b7e60;background:#e1eedc}#ending #quizFeedback{min-height:21px;color:#4c704b;font-weight:800;font-size:13px;margin-top:11px}
+@media(hover:none),(pointer:coarse){#dpad{display:block}#bottomHint{bottom:calc(9px + env(safe-area-inset-bottom));width:calc(100vw - 22px);max-width:unset;padding:7px 10px;font-size:10px}#finalBtn{bottom:calc(194px + env(safe-area-inset-bottom))}#interactBtn{bottom:calc(126px + env(safe-area-inset-bottom))}}
+@media(max-width:560px){#mission{width:calc(100vw - 110px);padding:9px 10px}#mission b{font-size:12px}#mission .sub{font-size:11px}#tally{font-size:11px;padding:9px 8px}#dialogue{max-height:54dvh;bottom:calc(17px + env(safe-area-inset-bottom));padding:15px 13px 12px}#dialogue p{font-size:13px}#answers{grid-template-columns:1fr}#answers button{font-size:12px;padding:9px 11px}#dpad{left:8px;bottom:calc(41px + env(safe-area-inset-bottom));transform:scale(.9);transform-origin:bottom left}#interactBtn{right:9px;font-size:11px;padding:12px 9px;min-width:100px;bottom:calc(137px + env(safe-area-inset-bottom))}}
+@media(max-height:550px){#dialogue{max-height:65dvh}#mission .tiny{display:none}.sheet{padding:14px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* R13.17 story mode: dialogue portraits, scalable instructional panels and narrative tutorial */
+#mission{max-width:410px;min-width:0}
+#tally{font-size:11px;align-self:start}
+#hudActions{display:flex;align-items:center;gap:7px;pointer-events:auto}
+.hudBtn{background:#fff8e9ed;color:#453423;border:1px solid #8d663c;border-radius:12px;padding:10px 11px;font-size:12px;font-weight:850;white-space:nowrap;box-shadow:0 6px 18px #0003}
+#mission .chapter{color:#ffd88c;font-size:11px;letter-spacing:.09em;margin-bottom:4px}
+#mission b{font-size:14px}
+#mission .tiny{font-size:11px;line-height:1.45}
+#compass{position:absolute;left:50%;transform:translateX(-50%);top:76px;z-index:4;padding:7px 12px;background:#fff7e8e6;color:#574027;border:1px solid #caa979;border-radius:99px;font-size:12px;font-weight:850;pointer-events:none;max-width:90vw;text-align:center;box-shadow:0 4px 18px #0002}
+#dialogue{width:min(740px,calc(100vw - 20px));max-height:min(49dvh,400px);padding:17px 18px}
+#dialogue .dialogueTop{display:grid;grid-template-columns:82px minmax(0,1fr);gap:13px;align-items:start;padding-right:25px}
+#dialogue .head{display:flex;align-items:center;gap:10px}
+#dialogue .name{color:#704d27;font-size:15px}
+#dialogue .lineNote{font-size:11px;color:#8b6f4b;margin-top:3px}
+#dialogue p{font-size:15px;line-height:1.72;margin:9px 0 12px;white-space:pre-line}
+#dialogue .portrait{height:87px;width:79px;border:2px solid #b59061;border-radius:14px;background:linear-gradient(145deg,#f7e4c5,#e6c5a1);display:grid;place-items:center;position:relative;overflow:hidden}
+#dialogue .portrait .person{font-size:47px;filter:drop-shadow(0 2px 1px #3c281732)}
+#dialogue .portrait::after{content:'✿';font-size:11px;color:#ad8349;position:absolute;bottom:3px;right:7px}
+#answers{margin:9px 0 0 95px;grid-template-columns:1fr}
+#answers button{padding:11px 13px;font-size:13px}
+#talkFeedback{margin:8px 0 0 96px;line-height:1.6}
+#hintBtn{margin:7px 0 0 96px;border:1px solid #b8996d;background:#fff6e8;border-radius:9px;color:#70502e;padding:8px 11px;font-size:12px;font-weight:800}
+#hintBtn[hidden],#journal[hidden],#compass[hidden]{display:none!important}
+#journal{position:absolute;z-index:12;top:54px;right:12px;width:min(375px,calc(100vw - 24px));max-height:calc(100dvh - 70px);overflow:auto;touch-action:pan-y;padding:17px;background:#fff7e8;border:2px solid #a78051;border-radius:18px;box-shadow:0 16px 43px #0006}
+#journal h2{font-size:18px;margin:0 0 8px;color:#503820}#journal p,#journal li{font-size:12px;line-height:1.7;color:#57452e}
+#journal ul{padding-left:19px;margin:7px 0}#journal .journalClose{float:right;border:0;background:#e9d5b1;border-radius:9px;padding:5px 11px;font-weight:800}
+#journal .dictionary{margin-top:9px;border-top:1px solid #ceb38e;padding-top:8px}
+#journal .dictionary b{color:#624020}
+#journal .difficultyRow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+#journal .difficultyRow button,.difficultyGroup button{padding:9px 11px;border-radius:12px;border:1px solid #bd986b;background:#fff8e8;color:#513c2c;font-size:12px;font-weight:850}
+#journal .difficultyRow button.on,.difficultyGroup button.on{background:#315d4e;color:#fff6e3;border-color:#315d4e}
+#intro .sheet{max-width:620px;text-align:left;max-height:93dvh}
+#intro .sheet .tag,#intro .sheet .ornament,#intro .sheet h1{text-align:center}
+#intro .sheet p{font-size:14px}
+#intro .openingStory{background:#f5e3c4;border-left:4px solid #a57745;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.75}
+#intro .difficultyGroup{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:9px}
+#intro .difficultyGroup button{display:grid;gap:5px;text-align:center;padding:12px 6px}
+#intro .difficultyGroup button small{margin:0;color:inherit;opacity:.8;font-weight:500;font-size:10px}
+#intro .sheet .startActions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px}
+#intro .sheet .startActions button{margin:0;font-size:14px}
+#intro .sheet .startActions button.secondary{background:#fff8eb;color:#5c482d}
+#intro .sheet .disclaimer{font-size:11px;color:#725c43;text-align:center;line-height:1.6}
+#ending #quizOptions button{line-height:1.5}
+#bottomHint{max-width:calc(100vw - 18px)}
+@media(max-width:560px){
+ #hud{gap:5px;left:7px;right:7px;top:max(7px,env(safe-area-inset-top))}
+ #mission{width:calc(100vw - 142px);min-width:0;padding:8px 9px}
+ #mission b{font-size:11px}#mission .sub{font-size:10px;line-height:1.32}#mission .tiny{display:none}
+ #tally{display:none}#hudActions{gap:4px}
+ .hudBtn{padding:8px 7px;font-size:11px;max-width:57px;white-space:normal;line-height:1.1;text-align:center}
+ #compass{top:79px;font-size:11px;max-width:93vw;padding:5px 8px}
+ #dialogue{max-height:61dvh;bottom:calc(8px + env(safe-area-inset-bottom));padding:12px 11px}
+ #dialogue .dialogueTop{grid-template-columns:58px 1fr;gap:8px;padding-right:18px}
+ #dialogue .portrait{width:55px;height:64px;border-radius:10px}#dialogue .portrait .person{font-size:33px}
+ #dialogue .name{font-size:13px}#dialogue p{font-size:12px;line-height:1.55;margin:6px 0 8px}
+ #answers,#talkFeedback,#hintBtn{margin-left:0}#answers button{font-size:12px;padding:9px 11px}
+ #talkFeedback{font-size:11px}
+ #intro .sheet{padding:16px}#intro .difficultyGroup{gap:5px}#intro .difficultyGroup button{padding:10px 4px;font-size:12px}
+ #intro .difficultyGroup button small{font-size:9px}#intro .sheet p{font-size:12px;line-height:1.65}
+ #bottomHint{font-size:9px}
+}
+@media(max-height:600px){#compass{display:none}#dialogue{max-height:70dvh}}
+</style></head>
+<body><div id="game">
+ <canvas id="world" aria-label="『허생전』 스토리 마을 탐험. WASD, 화살표키나 터치로 이동"></canvas><div id="vignette"></div>
+ <div id="hud"><div id="mission"><div class="chapter" id="chapterName">프롤로그</div><b id="missionTitle">허생의 발자취</b><div class="sub" id="goal">처음이라면 쉬움 난이도로 시작하세요.</div><div class="tiny">WASD·방향키 이동 · E 대화 · 화면 터치 이동</div></div><div id="hudActions"><div id="tally">📜 <span id="count">0</span>/4</div><button id="journalBtn" class="hudBtn" type="button">📖 이야기 수첩</button><button id="helpBtn" class="hudBtn" type="button">💡 길 찾기</button></div></div>
+ <div id="compass" hidden></div><div id="bottomHint">가까운 인물에게 다가가 대화해 보세요.</div>
+ <div id="dpad" aria-label="이동 버튼"><button data-dir="up" aria-label="위로 이동">▲</button><button data-dir="left" aria-label="왼쪽 이동">◀</button><button data-dir="right" aria-label="오른쪽 이동">▶</button><button data-dir="down" aria-label="아래로 이동">▼</button></div>
+ <button id="interactBtn" hidden>💬 대화하기</button><button id="finalBtn" hidden>📜 이야기의 의미 정리하기</button>
+ <section id="dialogue" role="dialog" aria-label="스토리 대화" hidden><button class="close" id="closeTalk" aria-label="대화 닫기">×</button><div class="dialogueTop"><div class="portrait"><span class="person" id="portrait">📜</span></div><div><div class="head"><div><div class="name" id="talkName"></div><div class="lineNote" id="talkRole"></div></div></div><p id="talkBody"></p></div></div><div id="answers"></div><button id="hintBtn" type="button" hidden>💡 단서 힌트 보기</button><div id="talkFeedback" aria-live="polite"></div></section>
+ <aside id="journal" hidden aria-label="이야기 수첩"><button class="journalClose" id="journalClose">닫기</button><h2>📖 이야기 수첩</h2><div id="journalContent"></div><div class="dictionary"><b>처음 보는 말, 여기서 확인하세요.</b><ul><li><b>풍자</b>: 사회의 모순과 잘못을 이야기로 비판하는 표현</li><li><b>매점매석</b>: 물건을 대량으로 사 모아 판매량을 조절하며 이익을 얻는 행위</li><li><b>실학</b>: 실제 생활과 사회 문제의 개선을 중시한 학문적 흐름</li><li><b>북벌론</b>: 청을 공격해 지난 전쟁의 굴욕을 씻자는 주장</li></ul></div><b>진행 난이도</b><div class="difficultyRow" id="difficultyRow"></div></aside>
+ <section id="intro"><div class="sheet"><div class="ornament">❀</div><div class="tag">DONGGUK · STORY ADVENTURE</div><h1>허생전, 조선의 비밀 기록</h1><p class="openingStory"><b>조선, 남산 아래 묵적골.</b> 책만 읽던 가난한 선비 허생이 어느 날 집을 나섰습니다. 그는 큰돈을 빌려 장터로 향하고, 낯선 섬을 개척한 뒤 나라의 인물과 논쟁을 벌입니다.<br><b>당신은 사건을 기록하는 작은 여행자.</b> 인물에게 말을 걸고 물건을 조사하며, '허생은 왜 이런 일을 했을까?'를 알아보세요.</p><p>『허생전』을 몰라도 괜찮습니다. 사건을 직접 경험하면서 배우도록 구성했습니다.</p><b>난이도 선택</b><div class="difficultyGroup" id="difficultyGroup"><button data-level="easy" class="on">🌿 쉬움<small>목표 화살표 · 쉬운 선택 · 설명 강화</small></button><button data-level="normal">📜 보통<small>직접 탐색 · 힌트 선택 사용</small></button><button data-level="hard">🔥 어려움<small>추가 선택지 · 실수 감점</small></button></div><p><b>조작:</b> PC WASD·방향키 / 모바일 방향 버튼 또는 땅 터치 이동 / 인물 가까이서 E·대화 버튼</p><div class="startActions"><button id="start">📜 처음부터 이야기 시작</button><button id="resume" class="secondary" hidden>▶ 이어하기</button></div><small class="disclaimer">박지원의 『허생전』 사건을 바탕으로 새로 만든 게임입니다. 인물 대사와 소품 일부는 창작 각색이며, 원문 직접 인용이 아닙니다.</small></div></section>
+ <section id="ending" hidden><div class="sheet"><div class="ornament" id="endIcon">📜</div><div class="tag">마지막 장면 · 읽고 생각하기</div><h1 id="endTitle">허생이 남긴 질문</h1><p id="endDesc"></p><div id="quizOptions"></div><div id="quizFeedback" role="status"></div><button id="closeEnding">마을로 돌아가기</button><small>교육용 창작 게임이며 대학 공식 평가·교육 이수와는 무관합니다.</small></div></section>
+</div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),canvas=$('world'),ctx=canvas.getContext('2d');
+const WORLD={w:1420,h:1150}, SAVEKEY='dgu-classic-story-v2';
+const people=[
+ {id:'byeon',name:'변씨',role:'한양의 큰 부자',x:300,y:315,coat:'#52634b',hat:'#272d26',tip:'만 냥을 빌린 사건',portrait:'👨🏻‍💼'},
+ {id:'seller',name:'과일 상인',role:'안성의 장터 상인',x:902,y:330,coat:'#ac7847',hat:'#4e3627',tip:'과일값이 오른 이유',portrait:'🧑🏻‍🌾'},
+ {id:'sailor',name:'뱃사공',role:'섬으로 가는 길',x:1168,y:806,coat:'#476b6c',hat:'#203e42',tip:'도적들과 빈섬 이야기',portrait:'🧑🏻‍✈️'},
+ {id:'general',name:'이완',role:'나라의 장수',x:1155,y:370,coat:'#68818b',hat:'#2b3b48',tip:'명분과 개혁의 갈등',portrait:'🧑🏻‍⚖️'}
+];
+const fruitItems=[{id:'chestnut',name:'밤',x:720,y:482,color:'#8f613f'},{id:'jujube',name:'대추',x:815,y:520,color:'#ba5438'},{id:'persimmon',name:'감',x:954,y:480,color:'#dc8540'}];
+const CHAPTER=[
+ {title:'프롤로그 · 허생의 집',goal:'남산 아래, 가난한 허생의 이야기를 듣습니다.'},
+ {title:'제1장 · 뜻밖의 빚',goal:'변씨를 만나 허생이 빌린 돈의 의미를 알아보세요.'},
+ {title:'제2장 · 장터의 소동',goal:'장터의 밤·대추·감을 조사한 뒤 과일 상인을 만나세요.'},
+ {title:'제3장 · 바다 건너 빈섬',goal:'마을 아래쪽 뱃사공을 찾아 섬 이야기를 들어보세요.'},
+ {title:'제4장 · 명분과 현실',goal:'이완을 만나 허생과의 논쟁을 확인하세요.'},
+ {title:'마지막 장 · 허생의 질문',goal:'모든 이야기를 정리하고 작품의 풍자를 생각해 보세요.'}
+];
+const notes=[
+ '허생은 오랫동안 독서했으나 살림이 어려웠고, 아내의 말에 책을 덮고 집을 나섭니다.',
+ '허생은 부자 변씨에게 만 냥을 빌립니다. 큰돈이 장터에서 어떤 일을 일으킬지 지켜봅니다.',
+ '허생이 과일과 말총을 사 모으자 물건이 귀해지고 값이 오릅니다. 유통이 취약한 현실이 드러납니다.',
+ '허생은 도적을 설득해 섬으로 옮겨 농사짓게 합니다. 곡물을 팔아 재물을 얻고 가난한 이들을 구제합니다.',
+ '이완과의 논쟁은 명분만 앞세우고 실천하지 못하는 지배층을 비판하는 핵심 장면입니다.'
+];
+let stage=0, difficulty='easy', examined=new Set(), player={x:495,y:425,facing:1,step:0},started=false,completed=false,dialogue=false,endingOpen=false;
+let keys=new Set(),pointerTarget=null,held=new Set(), view={w:0,h:0,dpr:1,scale:1,camx:0,camy:0},moving=false,autoGuide=true;
+let wrongCount=0,score=100,hintsUsed=0;
+let saveData=null;
+try{const s=JSON.parse(localStorage.getItem(SAVEKEY)||'null');if(s&&Number.isInteger(s.stage)&&s.stage>=1&&s.stage<=5)saveData=s}catch{}
+const bounded=(n,a,b)=>Math.min(b,Math.max(a,n));
+function save(){try{localStorage.setItem(SAVEKEY,JSON.stringify({stage,difficulty,examined:[...examined],player,completed,score,hintsUsed}))}catch{}}
+function restore(){if(!saveData)return false;stage=saveData.stage;difficulty=['easy','normal','hard'].includes(saveData.difficulty)?saveData.difficulty:'easy';examined=new Set((saveData.examined||[]).filter(id=>fruitItems.some(f=>f.id===id)));if(saveData.player&&Number.isFinite(saveData.player.x)&&Number.isFinite(saveData.player.y))player={x:bounded(saveData.player.x,78,WORLD.w-80),y:bounded(saveData.player.y,155,WORLD.h-65),facing:1,step:0};completed=!!saveData.completed;score=Number.isFinite(saveData.score)?saveData.score:100;hintsUsed=Number.isFinite(saveData.hintsUsed)?saveData.hintsUsed:0;return true}
+function setDifficulty(d){if(!['easy','normal','hard'].includes(d))return;difficulty=d;autoGuide=d==='easy';document.querySelectorAll('[data-level]').forEach(b=>b.classList.toggle('on',b.dataset.level===d));document.querySelectorAll('[data-jlevel]').forEach(b=>b.classList.toggle('on',b.dataset.jlevel===d));save();updateHud()}
+function makeChoice(text,callback){const b=document.createElement('button');b.type='button';b.textContent=text;b.onclick=callback;return b}
+function notify(s){$('bottomHint').textContent=s}
+function updateHud(){const info=CHAPTER[stage]||CHAPTER[0];$('chapterName').textContent=info.title;$('missionTitle').textContent=stage===2&&examined.size<3?'조사하기 '+examined.size+'/3':stage===5?'이야기를 완성했어요':'허생전 · 스토리 탐험';$('goal').textContent=stage===2&&examined.size<3?`밤·대추·감 중 ${3-examined.size}개를 더 조사해 보세요.`:info.goal;$('count').textContent=Math.max(0,stage-1);$('finalBtn').hidden=stage!==5||endingOpen;$('helpBtn').textContent=difficulty==='hard'?'💡 힌트':'💡 길 찾기';drawJournal()}
+function setStage(next,showScene=true){stage=next;autoGuide=difficulty==='easy';pointerTarget=null;save();updateHud();if(showScene)openChapterScene(next)}
+function hintText(){return stage===0?'허생의 집 이야기를 읽어 보세요.':stage===1?'장터 왼편의 초록옷 변씨를 찾아 대화하세요.':stage===2&&examined.size<3?'장터 가운데서 🔎 표식이 뜨는 밤·대추·감을 조사하세요.':stage===2?'장터 오른쪽 과일 상인에게 말을 걸어보세요.':stage===3?'마을 오른쪽 아래 뱃사공이 기다리고 있습니다.':stage===4?'화면 오른쪽 위 이완과 대화해 보세요.':'중앙 아래 「이야기 의미 정리하기」를 눌러 보세요.'}
+function getTarget(){if(stage===1)return people[0];if(stage===2)return examined.size<3?fruitItems.find(f=>!examined.has(f.id)):people[1];if(stage===3)return people[2];if(stage===4)return people[3];return null}
+function updateCompass(){const el=$('compass'),target=getTarget();if(!target||!autoGuide||endingOpen||dialogue){el.hidden=true;return}const dx=target.x-player.x,dy=target.y-player.y;const dist=Math.hypot(dx,dy);const arrow=dist<115?'◎':Math.abs(dx)>Math.abs(dy)?dx>0?'→':'←':dy>0?'↓':'↑';el.hidden=false;el.textContent=`${arrow} ${stage===2&&examined.size<3?target.name:target.name} ${difficulty==='easy'?' · '+Math.round(dist/15)+'걸음':''}`}
+function resize(){const r=canvas.getBoundingClientRect();view.w=r.width;view.h=r.height;view.dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.round(r.width*view.dpr));canvas.height=Math.max(1,Math.round(r.height*view.dpr));view.scale=view.w<=560?Math.max(.64,Math.min(.86,view.w/430)):view.w<950?.92:1.0}
+new ResizeObserver(resize).observe(canvas);resize();
+function prng(a){let x=Math.sin(a*193.73+1.991)*43758.5453;return x-Math.floor(x)}
+const rect=(x,y,w,h,fill)=>{ctx.fillStyle=fill;ctx.fillRect(x,y,w,h)};
+function rounded(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.lineWidth=2;ctx.strokeStyle=stroke;ctx.stroke()}}
+function poly(pts,fill,stroke,lineWidth=2){ctx.beginPath();pts.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lineWidth;ctx.stroke()}}
+function circle(x,y,r,fill,stroke,width=1){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke()}}
+function line(x1,y1,x2,y2,c,w=2){ctx.strokeStyle=c;ctx.lineWidth=w;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()}
+function text(s,x,y,size=18,color='#3d3129',align='center',weight=800){ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillStyle=color;ctx.font=`${weight} ${size}px system-ui,'Malgun Gothic',sans-serif`;ctx.fillText(s,x,y)}
+function ground(){rect(0,0,WORLD.w,WORLD.h,'#d9c4a3');
+ poly([[0,160],[190,180],[320,105],[610,178],[880,130],[1420,176],[1420,1050],[1200,1020],[860,1125],[450,1055],[0,1120]],'#e8d5b7');
+ for(let i=0;i<350;i++){let x=prng(i+1)*WORLD.w,y=prng(i+904)*WORLD.h;circle(x,y,.7+prng(i+300)*1.6,i%2?'#af98763a':'#fff8dc7b')}
+ for(let i=0;i<12;i++){const x=80+i*118;line(x,170+15*Math.sin(i),x-40,810,'#bda88742',1)}
+ for(let j=0;j<9;j++)line(0,235+j*105,1420,225+j*107,'#bda8872f',1);
+}
+function tree(x,y,k=1){ctx.save();ctx.translate(x,y);ctx.scale(k,k);circle(0,18,57,'#6d71433b');rect(-11,-55,22,89,'#6f5036');for(const [a,b,r] of [[-38,-81,54],[23,-108,59],[43,-68,49],[-10,-122,57]])circle(a,b,r,'#557b58','#47624a',2);for(let i=0;i<7;i++)circle(-52+i*18,-85+Math.sin(i*2)*17,3,'#abc192');ctx.restore()}
+function hanok(x,y,s=1){ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+ rounded(-135,-45,270,188,7,'#a87d55','#61482e');rect(-124,-37,246,179,'#d1b189');
+ for(let i=0;i<5;i++){rect(-113+i*48,-17,4,149,'#7d573e');line(-113+i*48,25,-65+i*48,25,'#6b4c36',1.5)}
+ for(let i=0;i<3;i++){rect(-94+i*71,8,60,98,'#c19c6c');for(let j=0;j<5;j++)rect(-92+i*71,18+j*15,57,2,'#735236');rect(-89+i*71,11,3,94,'#735236')}
+ poly([[-165,-65],[0,-177],[165,-65],[145,-38],[-145,-38]],'#303b3f','#242c30',4);
+ for(let i=0;i<16;i++){const xx=-147+i*19;const yy=-57-(1-Math.abs(xx)/167)*99;line(xx,yy,xx+19,yy+27,'#677075',3);line(xx,yy+18,xx+18,yy+46,'#222b30',3)}
+ line(-155,-44,155,-44,'#9a8e72',8);ctx.restore()}
+function stall(x,y,k=1){ctx.save();ctx.translate(x,y);ctx.scale(k,k);circle(8,50,155,'#56402817');rect(-148,-53,296,103,'#a47c53');poly([[-160,-53],[-102,-113],[156,-113],[166,-53]],'#77513b','#5e4632',4);for(let i=0;i<5;i++)line(-141+i*62,-57,-92+i*50,-110,'#aa8262',3);rect(-138,-52,274,18,'#c9a578');
+ for(let i=0;i<8;i++){const xx=-113+i*31;circle(xx,-8+(i%3)*10,14,['#a0b35e','#bf7b45','#b2ad69'][i%3]);circle(xx+5,-14+(i%3)*10,6,'#d8c884')}
+ for(let i=0;i<6;i++){rounded(-120+i*42,32,36,21,5,'#998263');circle(-103+i*42,29,10,'#719663')}
+ ctx.restore()}
+function gate(x,y,k=1){ctx.save();ctx.translate(x,y);ctx.scale(k,k);rounded(-106,-38,220,156,5,'#b69370','#6c4b35');rect(-90,-17,182,121,'#d7c4a6');rect(-72,-35,20,141,'#874a33');rect(52,-35,20,141,'#874a33');poly([[-126,-43],[0,-118],[132,-43],[119,-23],[-113,-23]],'#303f43','#26363c',4);rect(-8,16,16,85,'#775642');ctx.restore()}
+function well(x,y){circle(x,y+15,78,'#7e694e44');poly([[x-62,y+8],[x-40,y+38],[x+50,y+38],[x+67,y+8],[x+38,y-20],[x-44,y-20]],'#8e907e','#555d54');circle(x,y+7,45,'#6f9189','#d2c49f',8);circle(x-8,y-9,20,'#8eb5b1a0')}
+function marketStand(x,y){circle(x+10,y+27,65,'#5d4e3242');rect(x-42,y-47,84,60,'#b68455');rect(x-50,y-54,100,14,'#b99c73');for(let i=0;i<4;i++)circle(x-32+i*21,y-23,10,i%2?'#9ba45b':'#b58c4e')}
+function smallDecor(){
+ tree(130,948,.78);tree(1240,1090,.77);tree(735,110,.46);tree(400,920,.65);tree(980,890,.7);
+ for(let i=0;i<8;i++){let x=190+i*135;rect(x,1022,5,23,'#896b48');line(x,1029,x+65,1029,'#9f865e',4)}
+ hanok(205,220,.90);hanok(1230,164,.77);hanok(500,58,.52);hanok(270,1040,.55);stall(873,201,.90);stall(1000,815,.63);stall(535,870,.62);gate(1294,493,.72);marketStand(635,275);marketStand(790,600);well(650,132);well(360,680);
+ // signpost and woven mats
+ rect(482,313,8,95,'#765236');rounded(417,299,140,38,5,'#3b564b','#dfc18a');text('풍자 이야기 장터',487,318,15,'#fff2cb');
+ rounded(976,650,130,56,14,'#ae875d');rounded(982,654,118,47,13,'#d6b98a');
+ for(let i=0;i<5;i++){line(991,659+i*10,1092,659+i*10,'#b19168',1)}
+ for(let i=0;i<7;i++)circle(55+i*24,493+(i%2)*7,6,'#76966a');
+}
+function scrollPaper(x,y){rounded(x-29,y-20,57,40,6,'#f1e5c8','#af8c61');line(x-18,y-9,x+18,y-9,'#b3a487',2);line(x-18,y+1,x+8,y+1,'#b3a487',2)}
+function character(p,isPlayer=false,t=0){
+ const x=p.x,y=p.y;ctx.save();ctx.translate(x,y);
+ const f=isPlayer?p.facing||1:1;ctx.scale(f*.73,.73);
+ const bob=isPlayer&&started&&moving?Math.sin(p.step*10)*2:Math.sin(t/950+x)*.6;
+ circle(0,10,32,'#483a2e35');ctx.translate(0,bob);
+ // Boots, robe and sleeves; frontal character is always rendered with face visible.
+ rounded(-18,3,16,22,6,'#3e3a33');rounded(4,3,16,22,6,'#3e3a33');
+ poly([[-22,-55],[22,-55],[34,6],[-32,6]],isPlayer?'#7294a7':p.coat,'#614832',2);
+ poly([[-10,-44],[5,-43],[16,2],[-3,2]],isPlayer?'#f4e3c5':'#e9d8bd');
+ line(-12,-44,2,-22,'#f2e7d2',3);
+ circle(-27,-31,12,isPlayer?'#739bb0':p.coat);circle(27,-31,12,isPlayer?'#739bb0':p.coat);
+ circle(-32,-25,6,'#f0cda8');circle(31,-25,6,'#f0cda8');
+ // Cap is drawn BEHIND the face: the previous massive round hat brim covered the eyes.
+ if(isPlayer){
+   rounded(-19,-158,38,52,10,'#ad8558','#785436');
+   ctx.save();ctx.scale(1,.26);circle(0,-415,60,'#bd9b6a','#765337',6);ctx.restore();
+ } else if(p.id==='seller'){
+   rounded(-17,-151,34,45,9,'#907248','#4c3a2e');
+   ctx.save();ctx.scale(1,.23);circle(0,-452,48,'#9c8259','#584534',6);ctx.restore();
+ } else {
+   poly([[-23,-106],[-17,-149],[16,-149],[23,-106]],p.hat,'#182126',3);
+   rounded(-52,-114,104,11,5,p.hat);
+ }
+ // Full front-facing face remains visible regardless of walking direction.
+ circle(0,-73,35,'#f3d2ac','#d5ab7f',2);
+ circle(-31,-76,7,'#edc9a1');circle(31,-76,7,'#edc9a1');
+ // Eyes, eyebrows, highlights, gentle smile and blush.
+ line(-14,-88,-5,-89,'#6b4d38',2);line(8,-89,17,-88,'#6b4d38',2);
+ circle(-11,-77,4.3,'#282d2a');circle(12,-77,4.3,'#282d2a');
+ circle(-12,-79,1.45,'#fffdf5');circle(11,-79,1.45,'#fffdf5');
+ circle(-22,-66,6,'#e7aaa2aa');circle(23,-66,6,'#e7aaa2aa');
+ ctx.strokeStyle='#925e4d';ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(1,-66,9,.18,Math.PI-.18);ctx.stroke();
+ // Draw brim as a slim ellipse ABOVE eye level, after facial features, not a full disk.
+ if(isPlayer||p.id==='seller'){
+   ctx.beginPath();ctx.ellipse(0,-111,isPlayer?59:45,11,0,0,Math.PI*2);
+   ctx.fillStyle=isPlayer?'#b28a59':'#95784c';ctx.fill();
+   ctx.lineWidth=3;ctx.strokeStyle=isPlayer?'#765234':'#55402f';ctx.stroke();
+   line(-46,-110,46,-110,'#e4c29170',2);
+ } else {line(-28,-111,-26,-69,'#4e4537',1.7);line(28,-111,26,-69,'#4e4537',1.7)}
+ ctx.restore();
+ if(!isPlayer){rounded(x-67,y-168,134,29,10,'#fff0d5ed','#98734d');text(p.name,x,y-154,16,'#4a3526');if(stage>({byeon:1,seller:2,sailor:3,general:4}[p.id]||999)){circle(x+65,y-153,14,'#4b8b6b');text('✓',x+65,y-153,18,'#fff')}}
+}
+function drawFruitItem(f,t){if(examined.has(f.id))return;ctx.save();ctx.translate(f.x,f.y);
+ circle(0,9,28,'#53433136');poly([[-24,-2],[22,-2],[19,17],[-19,17]],'#ae885f','#765231',2);
+ for(let i=0;i<3;i++){const x=-12+i*12;circle(x,-8+(i%2)*4,10,f.color,'#6a4d36',1.5);circle(x-3,-12+(i%2)*4,2,'#f5dbb2')}
+ ctx.strokeStyle='#f3dc96';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,14,35+Math.sin(t/450)*3,13,0,0,Math.PI*2);ctx.stroke();
+ rounded(-33,-53,66,24,9,'#fff0ceee','#9a794f');text('🔎 '+f.name,0,-41,14,'#5b442b');ctx.restore()}
+
+function drawWaypoint(t){const target=getTarget();if(!target)return;ctx.save();ctx.strokeStyle=difficulty==='hard'?'#f6d68c75':'#f6d68cd1';ctx.lineWidth=difficulty==='easy'?5:2;ctx.beginPath();ctx.ellipse(target.x,target.y+13,52+3*Math.sin(t/350),17,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
+function drawBoat(){ctx.save();ctx.translate(1260,965);ctx.rotate(-.1);ctx.fillStyle='#6b8f98';ctx.beginPath();ctx.ellipse(0,25,130,54,0,0,7);ctx.fill();poly([[-110,0],[105,0],[83,46],[-82,46]],'#73513a','#4d3529',3);line(-15,0,-15,-115,'#66452f',6);poly([[-9,-100],[64,-26],[-9,-24]],'#eee3c9','#ae9777',2);ctx.restore()}
+let last=0;
+function frame(t){if(!view.w||!started){requestAnimationFrame(frame);return}const dt=Math.min(.045,Math.max(0,(t-(last||t))/1000));last=t;
+ let dx=0,dy=0;for(const k of keys){if(k==='arrowup'||k==='w')dy-=1;if(k==='arrowdown'||k==='s')dy+=1;if(k==='arrowleft'||k==='a')dx-=1;if(k==='arrowright'||k==='d')dx+=1}for(const k of held){if(k==='up')dy-=1;if(k==='down')dy+=1;if(k==='left')dx-=1;if(k==='right')dx+=1}
+ if(pointerTarget&&!(dx||dy)){const vx=pointerTarget.x-player.x,vy=pointerTarget.y-player.y;if(Math.hypot(vx,vy)>10){dx=vx;dy=vy}else pointerTarget=null}
+ moving=(dx!==0||dy!==0)&&!dialogue&&!endingOpen&&!(!$('journal').hidden);
+ if(moving){const len=Math.hypot(dx,dy),speed=245;let xx=dx/len*speed*dt,yy=dy/len*speed*dt;player.x=bounded(player.x+xx,78,WORLD.w-80);player.y=bounded(player.y+yy,155,WORLD.h-65);if(Math.abs(xx)>1)player.facing=xx<0?-1:1;player.step+=dt*3.1}
+ ctx.setTransform(view.dpr,0,0,view.dpr,0,0);ctx.clearRect(0,0,view.w,view.h);
+ const vw=view.w/view.scale,vh=view.h/view.scale;
+ view.camx=bounded(player.x-vw*.50,0,Math.max(0,WORLD.w-vw));view.camy=bounded(player.y-vh*.55,0,Math.max(0,WORLD.h-vh));
+ ctx.setTransform(view.dpr*view.scale,0,0,view.dpr*view.scale,-view.camx*view.dpr*view.scale,-view.camy*view.dpr*view.scale);
+ ground();smallDecor();drawBoat();
+ for(const f of fruitItems)drawFruitItem(f,t);
+ const sprites=[...people.map(p=>({...p,kind:'npc'})),{...player,kind:'player'}];sprites.sort((a,b)=>a.y-b.y);for(const p of sprites)character(p,p.kind==='player',t);
+ drawWaypoint(t);updateCompass();
+ const action=chooseInteractable(getNearest(),getNearFruit());$('interactBtn').hidden=!action||dialogue||endingOpen||!$('journal').hidden;$('interactBtn').textContent=action?(action.type==='fruit'?'🔎 '+action.obj.name+' 조사':'💬 '+action.obj.name+' 대화'):'';
+ requestAnimationFrame(frame)
+}
+function getNearest(){let chosen=null,dist=111;for(const p of people){const d=Math.hypot(player.x-p.x,player.y-p.y);if(d<dist){chosen=p;dist=d}}return chosen}
+function getNearFruit(){let chosen=null,dist=90;for(const f of fruitItems){if(examined.has(f.id))continue;const d=Math.hypot(player.x-f.x,player.y-f.y);if(d<dist){chosen=f;dist=d}}return chosen}
+function chooseInteractable(p,f){if(!p&&!f)return null;if(p&&!f)return {type:'person',obj:p};if(f&&!p)return {type:'fruit',obj:f};return Math.hypot(player.x-p.x,player.y-p.y)<Math.hypot(player.x-f.x,player.y-f.y)?{type:'person',obj:p}:{type:'fruit',obj:f}}
+function resetDialog(){dialogue=false;$('dialogue').hidden=true;$('answers').replaceChildren();$('talkFeedback').textContent='';$('hintBtn').hidden=true;document.activeElement?.blur?.()}
+function showBox(name,role,portrait,body,choices=[]){dialogue=true;$('dialogue').hidden=false;$('talkName').textContent=name;$('talkRole').textContent=role;$('portrait').textContent=portrait;$('talkBody').textContent=body;$('talkFeedback').textContent='';$('hintBtn').hidden=true;const box=$('answers');box.replaceChildren();choices.forEach(q=>box.append(makeChoice(q.label,q.fn)));$('dialogue').scrollTop=0}
+function narrative(name,role,portrait,pages,finished){let idx=0;const render=()=>{const last=idx>=pages.length-1;showBox(name,role,portrait,pages[idx],[{label:last?'이 장면 기억하고 계속하기 ✓':'다음 이야기 →',fn:()=>{if(last){resetDialog();finished?.()}else{idx++;render()}}}])};render()}
+function openChapterScene(stage){if(stage===1)narrative('기록관','첫째 장면 · 큰돈의 시작','📜',[
+ '허생은 가난한 선비였습니다. 하지만 돈이 없어도 오랫동안 책을 읽었습니다. 어느 날, 아내가 살림이 어렵다고 말하자 허생은 집을 나섰지요.',
+ '그가 찾아간 사람은 한양의 부자 변씨였습니다. 왜 허생은 생전 처음 보는 사람에게 큰돈을 빌리려 했을까요? 시장에 어떤 일이 벌어질지 직접 살펴보세요.'
+ ],()=>notify('🔎 변씨를 만나 만 냥을 빌린 이야기를 들어보세요.'));
+ if(stage===2)narrative('장터 소식','둘째 장면 · 시장을 뒤흔든 거래','🍊',[
+ '허생은 변씨에게서 만 냥을 빌렸습니다. 그는 돈을 가지고 안성의 장터로 가서 과일을 대량으로 사 모으기 시작했습니다.',
+ '사람들이 흔히 찾는 물건을 한 사람이 많이 사들인다면 어떤 일이 생길까요? 밤·대추·감 세 가지를 살펴본 뒤 상인의 이야기를 들어보세요.'
+ ],()=>notify('🔎 밤·대추·감 세 가지를 조사하세요.'));
+ if(stage===3)narrative('바닷길 기록','셋째 장면 · 도적들이 떠난 섬','⛵',[
+ '허생은 과일뿐 아니라 말총 거래로도 큰돈을 벌었습니다. 하지만 돈만 버는 데서 멈추지 않았습니다.',
+ '허생은 도적들을 설득해 사람이 살지 않는 섬으로 옮겨 농사를 짓게 했습니다. 이후 곡물을 팔아 얻은 재물로 가난한 사람들을 돕기도 했습니다.',
+ '이 사건은 이야기 속에서 새로운 사회를 꿈꾸는 장면으로 읽힙니다. 배를 타는 곳에 있는 뱃사공과 만나 보세요.'
+ ],()=>notify('⛵ 오른쪽 아래 뱃사공에게 다가가 보세요.'));
+ if(stage===4)narrative('조선의 마지막 기록','넷째 장면 · 누구를 위한 나라일까','⚖️',[
+ '허생의 일을 들은 장수 이완은 그를 찾아왔습니다. 허생은 나라를 바꾸기 위해 무엇을 실천할 수 있느냐고 되물었습니다.',
+ '그러나 이완은 허생의 제안을 받아들이기 어렵다고 했습니다. 명분을 말하는 것과 실제로 변화를 만드는 것은 어떻게 다를까요? 이완을 만나 보세요.'
+ ],()=>notify('⚖️ 오른쪽 위 이완에게서 마지막 단서를 찾아보세요.'));
+ if(stage===5)narrative('마지막 기록','다섯째 장면 · 허생이 남긴 질문','🏵️',[
+ '허생은 시장의 문제를 보여 주고, 도적들이 일할 새 삶을 열고, 나라의 지도자에게 변화를 요구했습니다.',
+ '이 이야기는 돈을 많이 버는 방법만 말하는 작품이 아닙니다. 『허생전』이 무엇을 비판하고 어떤 생각을 제안하는지 마지막 선택으로 정리해 보세요.'
+ ],()=>notify('📜 「이야기 의미 정리하기」 버튼을 눌러 마무리하세요.'));
+}
+const QUESTION={
+ byeon:{q:'허생이 변씨에게 빌린 돈은 얼마였을까요?',correct:'만 냥을 빌렸다',options:['만 냥을 빌렸다','왕에게 벼슬을 청했다','한 달 식량만 받았다','가족의 땅을 팔았다'],hint:'허생은 큰돈을 빌려 장터에서 물건을 사 모았습니다.',explain:'변씨가 허생에게 만 냥을 빌려주면서 상거래가 시작됩니다.'},
+ seller:{q:'허생이 과일을 한꺼번에 사들인 뒤 장터에는 어떤 일이 일어났을까요?',correct:'물건이 귀해지고 값이 올랐다',options:['물건이 귀해지고 값이 올랐다','과일이 무료로 나누어졌다','장터에 과일이 넘쳐났다','사람들이 모두 장사를 그만두었다'],hint:'시장에서 물건을 구하기 어려워지면 보통 가격은 어떻게 될까요?',explain:'과일을 대량으로 사들이자 시장에서 과일이 귀해져 값이 올랐습니다. 이는 유통이 취약한 경제 상황을 드러냅니다.'},
+ sailor:{q:'허생은 도적들에게 새로운 삶을 제안했습니다. 이야기의 사건에 맞는 선택은?',correct:'섬에서 농사를 지으며 살아간다',options:['섬에서 농사를 지으며 살아간다','장터 물건을 계속 빼앗는다','아무도 일하지 않고 기다린다','도적들을 억지로 전쟁에 보낸다'],hint:'허생이 이들을 데리고 간 곳은 사람이 살지 않는 섬이었습니다.',explain:'허생은 도적들을 설득해 섬에 정착시키고 농사를 짓게 했습니다.'},
+ general:{q:'허생이 이완과 이야기하며 비판한 태도는 무엇일까요?',correct:'실행하지 못하면서 명분만 앞세우는 태도',options:['실행하지 못하면서 명분만 앞세우는 태도','백성을 도우려는 실천','다른 지역의 문물을 배우려는 노력','현실 문제를 살피는 자세'],hint:'허생이 여러 개혁안을 제시했지만 이완은 실천하기 어렵다고 했습니다.',explain:'작품은 허울뿐인 북벌론과 현실을 바꾸지 못하는 지배층의 태도를 비판합니다.'}
+};
+function askQuestion(p,after){const q=QUESTION[p.id];if(!q)return;let options=difficulty==='easy'?q.options.slice(0,2):difficulty==='normal'?q.options.slice(0,3):q.options.slice();
+ const make=()=>{showBox(p.name,p.role,p.portrait,q.q,options.map((s,i)=>({label:s,fn:()=>{if(s===q.correct){showBox(p.name,'📜 사건 기록 완료',p.portrait,q.explain,[{label:'기록하고 다음 장면 보기 →',fn:()=>{resetDialog();after()}}]);return}
+ wrongCount++;if(difficulty==='hard')score=Math.max(0,score-5);$('talkFeedback').textContent=difficulty==='easy'?'괜찮아요. '+q.hint:'다시 살펴보세요. 필요하면 힌트를 열 수 있습니다.';
+ if(difficulty==='easy'&&wrongCount%2===0){$('talkFeedback').textContent+=' 답: '+q.correct;} }})));
+ if(difficulty!=='easy'){$('hintBtn').hidden=false;$('hintBtn').onclick=()=>{$('talkFeedback').textContent='💡 '+q.hint;hintsUsed++;if(difficulty==='hard')score=Math.max(0,score-2);save()}}};make()}
+function inspectFruit(f){if(examined.has(f.id))return;if(stage!==2){showBox('과일 상자','지금은 다른 사건을 조사하고 있습니다','🍐','먼저 변씨의 돈 이야기를 알아본 뒤에 장터 조사로 돌아오세요.',[{label:'알겠어요',fn:resetDialog}]);return}examined.add(f.id);save();updateHud();const caption={chestnut:'밤은 음식과 제사에 쓰이던 열매입니다.',jujube:'대추도 조선 사람들에게 익숙한 열매였습니다.',persimmon:'감도 장터에서 거래되었습니다.'}[f.id];showBox('장터의 기록','물건 조사','🧺',`${f.name}을(를) 살펴봤습니다. ${caption}\n한 사람이 자주 쓰는 물건을 모두 사 모으면 가격이 어떻게 달라질까요?`,[{label:'조사 기록하기 ✓',fn:()=>{resetDialog();notify(`🔎 조사 ${examined.size}/3 완료! ${examined.size===3?'과일 상인에게 가세요.':'남은 과일을 찾아보세요.'}`)}}]);}
+function showTalk(p){if(!p||endingOpen)return;pointerTarget=null;
+ if((p.id==='byeon'&&stage!==1)||(p.id==='seller'&&stage!==2)||(p.id==='sailor'&&stage!==3)||(p.id==='general'&&stage!==4)){
+ const lines={byeon:'허생에게 만 냥을 빌려준 변씨의 집입니다.',seller:'과일 거래로 시끌벅적한 장터입니다.',sailor:'바다 건너 섬으로 향하는 뱃사공입니다.',general:'허생의 개혁안을 듣는 장수 이완입니다.'};showBox(p.name,p.role,p.portrait,lines[p.id]+' 지금 이야기의 목표는 위쪽 임무를 확인하세요.',[{label:'임무로 돌아가기',fn:resetDialog}]);return}
+ if(p.id==='seller'&&examined.size<3){showBox('과일 상인',p.role,p.portrait,`과일이 없어 손님들이 발길을 돌리고 있어요. 밤·대추·감 중 ${examined.size}가지만 조사했군요. 먼저 장터 물건을 살펴봐 주세요.`,[{label:'장터 물건 찾으러 가기',fn:resetDialog}]);return}
+ const dialoguePages={
+ byeon:['낯선 선비가 집으로 찾아와 큰돈을 빌리겠다고 했소. 어디에 쓸지 자세히 말하지도 않았지. 나는 그 눈빛에 무언가 계획이 있다고 생각했소.','허생의 이야기를 알아볼 수 있도록 한 가지를 물어보겠소.'],
+ seller:['이상한 선비가 과일을 한꺼번에 사가더니, 얼마 지나지 않아 물건을 구하기 어려워졌지요. 장터의 가격도 크게 흔들렸습니다.','이 일로 당장 돈을 번 사람은 있어도, 필요한 물건을 사야 하는 사람들은 곤란해졌습니다. 이야기가 보여 주는 시장의 허점을 생각해 보세요.'],
+ sailor:['그 선비는 돈을 번 다음 도적들을 설득해 사람이 없던 섬으로 데려갔다더군요. 그곳에서 삶을 다시 꾸릴 수 있도록 농사를 짓게 했다고 합니다.','이후 그들은 수확한 곡식을 팔고, 허생은 가난한 이들을 돕는 일도 했다고 하지요.'],
+ general:['허생은 나를 만나 나라의 체면을 말하기 전에 실제로 바꿀 일을 해 보라고 요구했습니다. 낯선 문물을 배우고 행동할 수 있는지를 따졌습니다.','그러나 나는 그의 제안을 실천하기 어렵다고 했습니다. 오늘 이야기에서 무엇이 비판받는지 생각해 보세요.']
+ };narrative(p.name,p.role,p.portrait,dialoguePages[p.id],()=>askQuestion(p,()=>setStage(stage+1)))}
+function interact(){const i=chooseInteractable(getNearest(),getNearFruit());if(!i)return;if(i.type==='fruit')inspectFruit(i.obj);else showTalk(i.obj)}
+function drawJournal(){const el=$('journalContent');const complete=stage===5&&completed;const listed=notes.slice(0,Math.min(stage+1,notes.length));el.replaceChildren();const h=document.createElement('p');h.textContent=`${CHAPTER[stage].title} · ${difficulty==='easy'?'쉬움':difficulty==='normal'?'보통':'어려움'} · 사건 진행 ${Math.min(stage,5)}/5`;el.append(h);const ul=document.createElement('ul');listed.forEach((s,i)=>{const li=document.createElement('li');li.textContent=`${i===0?'프롤로그':`제${i}장`}: ${s}`;ul.append(li)});el.append(ul);const scorep=document.createElement('p');scorep.textContent=`현재 점수: ${score}점${complete?' · 고전문학 탐험 완료 ✓':''}`;el.append(scorep);const row=$('difficultyRow');row.replaceChildren();[['easy','🌿 쉬움'],['normal','📜 보통'],['hard','🔥 어려움']].forEach(([key,title])=>{const b=makeChoice(title,()=>setDifficulty(key));b.dataset.jlevel=key;b.classList.toggle('on',difficulty===key);row.append(b)})}
+function openEnding(){if(stage!==5)return;endingOpen=true;resetDialog();$('ending').hidden=false;$('quizOptions').replaceChildren();$('quizFeedback').textContent='';$('endIcon').textContent=completed?'🏵️':'📜';$('endTitle').textContent=completed?'고전문학 탐험 완주!':'허생전이 남긴 질문';$('endDesc').textContent=completed?'허생이 떠난 이유부터 나라를 바꾸려 했던 마음까지 이야기로 만났습니다.':`허생은 시장의 거래, 빈섬의 삶, 이완과의 논쟁을 거쳤습니다. 작가 박지원은 왜 이런 이야기를 썼을까요?`;
+ if(completed){$('quizFeedback').textContent='여행의 기록이 저장되었습니다. 조선 장터를 더 둘러보거나 명진관으로 돌아갈 수 있습니다.';return}
+ const options=['사회 문제를 살피고, 명분보다 실제 개선을 중시해야 한다','많은 물건을 독점한 사람이 언제나 훌륭한 지도자다','책을 읽는 선비는 모두 쓸모없는 사람이다',...(difficulty==='hard'?['북벌론은 이미 충분히 실현되었으므로 더 바꿀 일이 없다']:[])];
+ for(let i=0;i<options.length;i++){const b=makeChoice(options[i],()=>{if(i!==0){$('quizFeedback').textContent='다시 생각해 봅시다. 변씨·과일 상인·뱃사공·이완에게서 들은 사건을 연결해 보세요.';if(difficulty==='hard')score=Math.max(0,score-5);return}completed=true;save();updateHud();$('endIcon').textContent='🏵️';$('endTitle').textContent='고전문학 탐험 도장 획득!';$('endDesc').textContent='『허생전』은 경제적 취약함과 명분 중심 사고를 풍자하면서 현실을 바꾸는 실천과 새로운 문물에 눈을 돌릴 필요성을 드러냅니다.';$('quizFeedback').textContent=`탐험 완료! ${score}점 · 고전문학 탐험 수첩에 기록했습니다.`;$('quizOptions').querySelectorAll('button').forEach(el=>el.disabled=true);if(window.parent!==window&&location.origin!=='null')window.parent.postMessage({type:'dgu-classic-story-completed',version:1},location.origin)});$('quizOptions').append(b)}
+}
+function begin(isResume){if(isResume&&restore()){autoGuide=difficulty==='easy';}else{stage=0;player={x:495,y:425,facing:1,step:0};examined.clear();completed=false;score=100;wrongCount=0;hintsUsed=0}started=true;$('intro').hidden=true;updateHud();requestAnimationFrame(frame);if(!isResume||stage===0)narrative('허생의 아내','프롤로그 · 묵적골의 집','👩🏻',[
+ '여보, 집에 먹을 것도 떨어졌어요. 책만 읽어서는 식구들이 살기 어렵습니다. 이제 어떻게 하시려는 건가요?',
+ '허생은 오랫동안 붙들었던 책을 덮었습니다. 그는 뜻을 품고 집 밖으로 나섰습니다.',
+ '당신은 그가 떠난 길을 따라가는 기록관입니다. 이야기 속 인물을 만나면 대화를 읽고 선택해 보세요. 모르는 내용은 수첩에서 배울 수 있습니다.'
+ ],()=>setStage(1));else notify('이어서 시작했습니다. '+hintText())}
+$('start').onclick=()=>begin(false);$('resume').onclick=()=>begin(true);
+$('closeTalk').onclick=resetDialog;$('interactBtn').onclick=interact;$('finalBtn').onclick=openEnding;$('closeEnding').onclick=()=>{endingOpen=false;$('ending').hidden=true};
+$('journalBtn').onclick=()=>{$('journal').hidden=false;drawJournal()};$('journalClose').onclick=()=>{$('journal').hidden=true};
+$('helpBtn').onclick=()=>{autoGuide=true;notify('💡 '+hintText());if(difficulty==='hard'){hintsUsed++;score=Math.max(0,score-2);save()}updateCompass()};
+document.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>setDifficulty(b.dataset.level));
+if(saveData)$('resume').hidden=false;
+window.addEventListener('keydown',e=>{const tag=e.target?.tagName;if(tag==='INPUT'||tag==='TEXTAREA')return;const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup','arrowdown','w','a','s','d','e',' '].includes(k)&&started)e.preventDefault();if(k==='escape'){if(!$('journal').hidden){$('journal').hidden=true;return}if(dialogue){resetDialog();return}if(endingOpen){endingOpen=false;$('ending').hidden=true;return}}if(!started||endingOpen||!$('journal').hidden)return;if(k==='e'||k===' '){if(!dialogue)interact();return}if(!dialogue)keys.add(k)});
+window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{keys.clear();held.clear()});
+$('dpad').querySelectorAll('button').forEach(b=>{const d=b.dataset.dir;b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);held.add(d);pointerTarget=null});const done=()=>held.delete(d);b.addEventListener('pointerup',done);b.addEventListener('pointercancel',done);b.addEventListener('lostpointercapture',done)});
+canvas.addEventListener('pointerup',e=>{if(!started||dialogue||endingOpen||!$('journal').hidden)return;const r=canvas.getBoundingClientRect();const mx=(e.clientX-r.left)/view.scale+view.camx,my=(e.clientY-r.top)/view.scale+view.camy;let nearest=null,dist=80;for(const p of people){const d=Math.hypot(p.x-mx,p.y-68-my);if(d<dist){nearest=p;dist=d}}let fruit=null,fruitDist=50;for(const f of fruitItems){if(examined.has(f.id))continue;const d=Math.hypot(f.x-mx,f.y-my);if(d<fruitDist){fruit=f;fruitDist=d}}if(fruit){if(Math.hypot(player.x-fruit.x,player.y-fruit.y)<90)inspectFruit(fruit);else pointerTarget={x:fruit.x-15,y:fruit.y+38}}else if(nearest){if(Math.hypot(player.x-nearest.x,player.y-nearest.y)<111)showTalk(nearest);else pointerTarget={x:nearest.x-35,y:nearest.y+65}}else pointerTarget={x:mx,y:my}});
+window.addEventListener('pagehide',save);updateHud();
+})();
+</script></body></html>
