@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <meta name="theme-color" content="#182927"><meta name="description" content="정각원·팔정도·명진관을 걷고, 절하고, 명상하는 비공식 가상 동국대학교 캠퍼스">
-<meta name="dgu-build" content="DGU-20261113-R13.34-MEDITATION-FOCUS"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
+<meta name="dgu-build" content="DGU-20261113-R13.35-LANDSCAPE-CONTROLS"><title>마음의 동국 | 정각원 · 팔정도 · 명진관 3D 힐링 산책</title>
 <style>
   :root{color-scheme:dark;--glass:rgba(22,35,36,.77);--stroke:rgba(245,238,216,.24);--gold:#eccc91;--cream:#fff7e9}
   *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#b4a8a1;font-family:system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:var(--cream);touch-action:none;-webkit-user-select:none;user-select:none}
@@ -5553,5 +5553,158 @@ for(const id of ['chantFrame','templeSoundVideo']){const el=document.getElementB
 })();
 </script>
 
+
+<style id="dguR135MobileLandscape">
+/* R13.35 – phone landscape dedicated lanes. No forced CSS rotation of the WebGL canvas. */
+#dguLandscapeGate{display:none;position:fixed;inset:0;z-index:50000;background:linear-gradient(135deg,#142c28f5,#0d1e1cee);color:#fceccf;align-items:center;justify-content:center;padding:24px;touch-action:pan-y;overflow:auto}
+#dguLandscapeGate .dguRotateCard{width:min(420px,100%);background:#213d34;border:1px solid #e5cc99;border-radius:20px;padding:25px 24px;text-align:center;box-shadow:0 18px 65px #0009}
+#dguLandscapeGate .dguRotateIcon{font-size:48px;display:block;margin-bottom:8px}
+#dguLandscapeGate h2{font-size:21px;line-height:1.35;margin:9px 0}
+#dguLandscapeGate p{font-size:13px;line-height:1.7;color:#e5decd}
+#dguLandscapeGate button{background:#f1d5a0;color:#263a34;font:800 13px system-ui,sans-serif;border:0;border-radius:13px;padding:12px 15px;min-height:44px;margin:4px;touch-action:manipulation}
+#dguLandscapeGate #dguPortraitContinue{background:#486157;color:white;border:1px solid #e5cca28a}
+body.dgu-portrait-prompt #dguLandscapeGate{display:flex}
+#dguLandscapeActions{display:none;position:fixed;right:calc(91px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:117;min-width:73px;min-height:55px;padding:8px 9px;border:1.5px solid #ffe7b7;border-radius:17px;background:#27483fe9;color:#fff0d2;box-shadow:0 6px 22px #0006;font:800 13px/1.2 system-ui,sans-serif;touch-action:manipulation}
+#dguLandscapeActions[hidden]{display:none!important}
+body.dgu-portrait-allowed #dguLandscapeActions:not([hidden]){display:block;right:calc(82px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+body.dgu-portrait-allowed #interaction{display:none!important}
+body.dgu-portrait-allowed.dgu-actions-open #interaction.show{display:flex!important;position:fixed!important;left:auto!important;right:calc(9px + env(safe-area-inset-right,0px))!important;bottom:calc(82px + env(safe-area-inset-bottom,0px))!important;top:auto!important;width:min(260px,calc(100vw - 130px))!important;min-width:0!important;max-height:32dvh!important;overflow-y:auto!important;padding:9px!important;background:#203c32f2!important;border:1px solid #e6ce9d!important;border-radius:16px!important;transform:none!important;opacity:1!important;z-index:116!important;pointer-events:auto!important}
+body.dgu-portrait-allowed #practiceButtons{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}
+body.dgu-portrait-allowed #practiceButtons .actbtn{font-size:11px!important;padding:8px 4px!important;min-width:0!important;white-space:normal!important}
+
+body.dgu-mobile-landscape #dguLandscapeActions:not([hidden]){display:block}
+body.dgu-mobile-landscape #dguLandscapeActions[aria-expanded="true"]{background:#f1d5a0;color:#24382f}
+/* On small portrait phones jump still stays on the OPPOSITE side to the joystick. */
+@media (max-width:700px), (pointer:coarse){
+  #jumpBtn{display:block!important;left:auto!important;right:calc(12px + env(safe-area-inset-right,0px))!important;bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;min-width:64px!important;min-height:57px!important;padding:8px!important;font-size:13px!important;border-radius:18px!important;z-index:117!important}
+}
+body.dgu-mobile-landscape #joystick{display:block!important;position:fixed!important;left:calc(12px + env(safe-area-inset-left,0px))!important;bottom:calc(10px + env(safe-area-inset-bottom,0px))!important;top:auto!important;right:auto!important;width:105px!important;height:105px!important;z-index:117!important;pointer-events:auto!important;touch-action:none!important}
+body.dgu-mobile-landscape #joyKnob{width:47px!important;height:47px!important}
+body.dgu-mobile-landscape #jumpBtn{display:block!important;position:fixed!important;left:auto!important;right:calc(12px + env(safe-area-inset-right,0px))!important;bottom:calc(14px + env(safe-area-inset-bottom,0px))!important;width:65px!important;height:60px!important;min-width:65px!important;min-height:60px!important;padding:7px!important;font:800 13px system-ui,sans-serif!important;z-index:117!important}
+body.dgu-mobile-landscape #header{padding:calc(6px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px))!important;align-items:center!important;gap:6px!important;z-index:20!important}
+body.dgu-mobile-landscape #header .brand{display:none!important}
+body.dgu-mobile-landscape #placeTitle{top:calc(7px + env(safe-area-inset-top,0px))!important;max-width:min(45vw,320px)!important;overflow:hidden!important;text-overflow:ellipsis!important;padding:7px 11px!important;font-size:11px!important}
+body.dgu-mobile-landscape #topButtons{gap:7px!important}
+body.dgu-mobile-landscape #topButtons .iconbtn{width:38px!important;height:38px!important}
+body.dgu-mobile-landscape #info{display:none!important}
+body.dgu-mobile-landscape.mobile-info-open #info{display:block!important;position:fixed!important;left:12px!important;right:auto!important;top:calc(52px + env(safe-area-inset-top,0px))!important;bottom:auto!important;width:min(242px,40vw)!important;max-height:36dvh!important;overflow:auto!important;z-index:110!important}
+body.dgu-mobile-landscape #practicePanel{position:fixed!important;left:calc(12px + env(safe-area-inset-left,0px))!important;right:auto!important;top:calc(55px + env(safe-area-inset-top,0px))!important;bottom:auto!important;transform:none!important;width:min(188px,27vw)!important;max-height:min(29dvh,125px)!important;overflow:auto!important;padding:7px 9px!important;z-index:19!important}
+body.dgu-mobile-landscape #practicePanel .practiceTitle{font-size:10px!important}
+body.dgu-mobile-landscape #practicePanel .practiceText{font-size:11px!important;line-height:1.35!important}
+body.dgu-mobile-landscape #practicePanel .practiceTiny{font-size:9px!important;margin-top:4px!important}
+body.dgu-mobile-landscape #practiceCount{font-size:17px!important}
+/* The context action panel is collapsed until explicitly requested. */
+body.dgu-mobile-landscape #interaction{display:none!important}
+body.dgu-mobile-landscape.dgu-actions-open #interaction.show{display:flex!important;position:fixed!important;left:auto!important;right:calc(88px + env(safe-area-inset-right,0px))!important;bottom:calc(81px + env(safe-area-inset-bottom,0px))!important;top:auto!important;width:min(306px,calc(100vw - 350px))!important;max-width:306px!important;max-height:min(46dvh,185px)!important;overflow-y:auto!important;transform:none!important;opacity:1!important;padding:8px!important;z-index:116!important;min-width:0!important;background:#19382fe9!important;border:1px solid #eccf9a!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 12px 30px #0009!important}
+body.dgu-mobile-landscape #practiceButtons{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;width:100%!important}
+body.dgu-mobile-landscape #practiceButtons .actbtn,body.dgu-mobile-landscape #practiceButtons #actionBtn{min-width:0!important;min-height:39px!important;max-height:none!important;padding:7px 5px!important;font:800 11px/1.2 system-ui,sans-serif!important;white-space:normal!important;overflow-wrap:anywhere!important}
+body.dgu-mobile-landscape #interaction .hint{display:none!important}
+body.dgu-mobile-landscape #zoomDock.active{display:flex!important;position:fixed!important;left:calc(131px + env(safe-area-inset-left,0px))!important;right:auto!important;top:auto!important;bottom:calc(13px + env(safe-area-inset-bottom,0px))!important;flex-direction:row!important;gap:3px!important;width:auto!important;padding:5px!important;z-index:115!important}
+body.dgu-mobile-landscape #zoomDock button{width:34px!important;height:39px!important;font-size:22px!important}
+body.dgu-mobile-landscape #zoomDock output{font-size:9px!important;min-width:38px!important}
+body.dgu-mobile-landscape #mobileRitualToggle.available{display:block!important;right:calc(11px + env(safe-area-inset-right,0px))!important;left:auto!important;top:calc(56px + env(safe-area-inset-top,0px))!important;bottom:auto!important;min-height:35px!important;padding:7px 10px!important;font-size:11px!important}
+body.dgu-mobile-landscape.mobile-ritual-expanded #ritualDock.open{display:block!important;position:fixed!important;left:auto!important;right:calc(11px + env(safe-area-inset-right,0px))!important;top:calc(97px + env(safe-area-inset-top,0px))!important;bottom:auto!important;width:224px!important;max-width:min(38vw,224px)!important;max-height:min(37dvh,145px)!important;overflow:auto!important;z-index:118!important}
+body.dgu-mobile-landscape #sugyeDock.on{position:fixed!important;top:calc(56px + env(safe-area-inset-top,0px))!important;bottom:auto!important;left:calc(50% - 110px)!important;right:auto!important;width:220px!important;max-height:min(38dvh,145px)!important;overflow:auto!important;z-index:121!important}
+body.dgu-mobile-landscape #sugyeDock button{min-height:30px!important;font-size:10px!important;padding:5px!important}
+body.dgu-mobile-landscape #mjFloorToggle:not([hidden]){display:block!important;position:fixed!important;left:12px!important;top:calc(53px + env(safe-area-inset-top,0px))!important;bottom:auto!important;min-height:34px!important;padding:7px 9px!important;font-size:11px!important;z-index:24!important}
+body.dgu-mobile-landscape #floorPanel.active{display:none!important}
+body.dgu-mobile-landscape.mj-floors-open #floorPanel.active{display:block!important;position:fixed!important;left:12px!important;top:calc(95px + env(safe-area-inset-top,0px))!important;right:auto!important;bottom:auto!important;width:min(260px,42vw)!important;max-height:45dvh!important;overflow:auto!important;z-index:120!important}
+body.dgu-mobile-landscape #mjQuestBtn:not([hidden]){left:132px!important;top:calc(53px + env(safe-area-inset-top,0px))!important;min-height:34px!important;padding:7px 10px!important;font-size:11px!important}
+body.dgu-mobile-landscape #mjPlayButton:not([hidden]){right:calc(92px + env(safe-area-inset-right,0px))!important;bottom:calc(82px + env(safe-area-inset-bottom,0px))!important;min-height:36px!important;padding:7px 12px!important;z-index:116!important}
+body.dgu-mobile-landscape #sceneAction:not([hidden]){position:fixed!important;left:50%!important;right:auto!important;bottom:calc(15px + env(safe-area-inset-bottom,0px))!important;transform:translateX(-50%)!important;z-index:114!important}
+body.dgu-mobile-landscape #contextBtn{padding:9px 15px!important;min-height:40px!important;font-size:12px!important}
+body.dgu-mobile-landscape #experienceButtons{position:fixed!important;right:calc(121px + env(safe-area-inset-right,0px))!important;top:calc(7px + env(safe-area-inset-top,0px))!important;bottom:auto!important;z-index:21!important}
+body.dgu-mobile-landscape #journalBtn{padding:8px 10px!important;font-size:10px!important}
+body.dgu-mobile-landscape #mainMenu{position:fixed!important;right:calc(9px + env(safe-area-inset-right,0px))!important;top:calc(49px + env(safe-area-inset-top,0px))!important;width:min(338px,68vw)!important;max-height:calc(100dvh - 58px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))!important;overflow:auto!important;z-index:230!important}
+body.dgu-mobile-landscape #guide.open{position:fixed!important;right:12px!important;top:calc(52px + env(safe-area-inset-top,0px))!important;width:min(320px,68vw)!important;max-height:calc(100dvh - 65px)!important;overflow:auto!important}
+body.dgu-mobile-landscape #netBadge{display:none!important}
+/* Dialogs have priority over game movement, so the jump button cannot cover the dialog. */
+body.dgu-mobile-landscape.dgu-modal-open #joystick,
+body.dgu-mobile-landscape.dgu-modal-open #jumpBtn,
+body.dgu-mobile-landscape.dgu-modal-open #zoomDock,
+body.dgu-mobile-landscape.dgu-modal-open #dguLandscapeActions,
+body.dgu-mobile-landscape.dgu-modal-open #interaction,
+body.dgu-portrait-allowed.dgu-modal-open #joystick,
+body.dgu-portrait-allowed.dgu-modal-open #jumpBtn,
+body.dgu-portrait-allowed.dgu-modal-open #zoomDock,
+body.dgu-portrait-allowed.dgu-modal-open #dguLandscapeActions,
+body.dgu-portrait-allowed.dgu-modal-open #interaction {visibility:hidden!important;pointer-events:none!important}
+
+body.dgu-mobile-landscape #viewHint{display:none!important}
+body.dgu-mobile-landscape #rideGreetingUI{left:50%!important;top:calc(55px + env(safe-area-inset-top,0px))!important;bottom:auto!important;transform:translateX(-50%)!important}
+body.dgu-mobile-landscape #rideGreetingUI button{font-size:10px!important;padding:7px 9px!important}
+body.dgu-mobile-landscape #localChatPanel{position:fixed!important;left:12px!important;right:12px!important;top:6vh!important;bottom:calc(env(safe-area-inset-bottom,0px) + var(--keyboard-inset,0px) + 5px)!important;width:auto!important;max-height:none!important;overflow:auto!important;z-index:20000!important}
+body.dgu-mobile-landscape #dialogue:not([hidden]),body.dgu-mobile-landscape #wishModal:not([hidden]){max-height:calc(100dvh - 30px)!important;overflow:auto!important}
+body.dgu-mobile-landscape #dguFocusCard{width:min(540px,90vw)!important;max-height:92dvh!important;overflow-y:auto!important}
+body.dgu-mobile-landscape #ritualActivityCard{max-height:calc(100dvh - 18px)!important;overflow-y:auto!important}
+@media (max-height:380px){
+ body.dgu-mobile-landscape #joystick{width:90px!important;height:90px!important}
+ body.dgu-mobile-landscape #jumpBtn{width:59px!important;height:52px!important;min-width:59px!important;min-height:52px!important}
+ body.dgu-mobile-landscape #dguLandscapeActions{min-height:48px!important}
+ body.dgu-mobile-landscape #practicePanel{top:45px!important;max-height:75px!important}
+ body.dgu-mobile-landscape #zoomDock.active{left:114px!important}
+ body.dgu-mobile-landscape.dgu-actions-open #interaction.show{max-height:120px!important}
+}
+</style>
+
+<script id="dguR135LandscapeLogic">
+(()=>{'use strict';
+ const body=document.body;
+ const interaction=document.getElementById('interaction');
+ const joystick=document.getElementById('joystick');
+ const jump=document.getElementById('jumpBtn');
+ if(!interaction||!joystick||!jump)return;
+ const coarse=()=>window.matchMedia('(pointer:coarse)').matches || window.matchMedia('(hover:none)').matches || (window.innerWidth<=700 && ('ontouchstart' in window));
+ const landscape=()=>coarse() && window.innerWidth>window.innerHeight && window.innerHeight<=640;
+ const portrait=()=>coarse() && window.innerHeight>window.innerWidth && window.innerWidth<=700;
+ const panel=document.createElement('button');panel.id='dguLandscapeActions';panel.type='button';panel.textContent='☷ 체험';panel.setAttribute('aria-controls','interaction');panel.setAttribute('aria-expanded','false');panel.hidden=true;document.body.appendChild(panel);
+ const gate=document.createElement('div');gate.id='dguLandscapeGate';gate.setAttribute('role','dialog');gate.setAttribute('aria-modal','true');gate.setAttribute('aria-label','가로 화면 안내');
+ gate.innerHTML='<div class="dguRotateCard"><span class="dguRotateIcon" aria-hidden="true">📱↻</span><h2>휴대전화를 가로로 돌려 주세요</h2><p>3D 캠퍼스는 가로 화면에 맞추어 배치되었습니다. 왼쪽은 이동, 오른쪽은 점프와 체험입니다. 화면 회전이 잠겨 있다면 잠금을 해제해 주세요.</p><button type="button" id="dguTryLandscape">가로 화면 요청</button><button type="button" id="dguPortraitContinue">세로로 임시 이용</button><p id="dguRotateStatus" aria-live="polite"></p></div>';
+ document.body.appendChild(gate);
+ let allowPortrait=false;
+ function closePanel(){body.classList.remove('dgu-actions-open');panel.setAttribute('aria-expanded','false');panel.textContent='☷ 체험';}
+ function update(){
+  const wide=landscape(),compactPortrait=portrait() && allowPortrait,ready=interaction.classList.contains('show');
+  body.classList.toggle('dgu-mobile-landscape',wide);
+  body.classList.toggle('dgu-portrait-allowed',compactPortrait);
+  body.classList.toggle('dgu-portrait-prompt',portrait() && !allowPortrait);
+  panel.hidden=!((wide||compactPortrait) && ready);
+  if((!wide&&!compactPortrait)||!ready)closePanel();
+ }
+ panel.addEventListener('click',()=>{if(panel.hidden)return;const willOpen=!body.classList.contains('dgu-actions-open');body.classList.toggle('dgu-actions-open',willOpen);panel.setAttribute('aria-expanded',String(willOpen));panel.textContent=willOpen?'✕ 닫기':'☷ 체험';});
+ document.addEventListener('pointerdown',e=>{if(body.classList.contains('dgu-actions-open') && !panel.contains(e.target) && !interaction.contains(e.target))closePanel();},{capture:true});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel()});
+ function modalOpen(){
+  const intro=document.getElementById('intro');
+  if(intro && !intro.classList.contains('hide'))return true;
+  const ids=['loading','mainMenu','guide','dialogue','wishModal','ritualActivity','scriptureModal','koreanDeptModal','multicultureDeptModal','mjGameOverlay','mjQuestOverlay','mjPlanOverlay','mjClassicStoryOverlay','dguFocusOverlay','sugyeModal','sugyeBlessingModal'];
+  return ids.some(id=>{const el=document.getElementById(id);if(!el||el.hidden)return false;const st=getComputedStyle(el);return st.display!=='none'&&st.visibility!=='hidden'&&Number(st.opacity||1)>0.06;});
+ }
+ function updateModal(){
+  const locked=modalOpen();
+  body.classList.toggle('dgu-modal-open',locked);
+  if(locked)closePanel();
+ }
+ const observer=new MutationObserver(()=>{update();updateModal()});observer.observe(interaction,{attributes:true,attributeFilter:['class']});
+ const modalIds=['loading','intro','mainMenu','guide','dialogue','wishModal','ritualActivity','scriptureModal','koreanDeptModal','multicultureDeptModal','mjGameOverlay','mjQuestOverlay','mjPlanOverlay','mjClassicStoryOverlay','dguFocusOverlay','sugyeModal','sugyeBlessingModal'];
+ for(const id of modalIds){const el=document.getElementById(id);if(el)observer.observe(el,{attributes:true,attributeFilter:['class','hidden','style']});}
+
+ document.getElementById('dguPortraitContinue').addEventListener('click',()=>{allowPortrait=true;update()});
+ document.getElementById('dguTryLandscape').addEventListener('click',async()=>{
+  const status=document.getElementById('dguRotateStatus');
+  try{
+   if(!window.screen?.orientation?.lock)throw new Error('이 브라우저에서는 자동 화면 회전을 지원하지 않습니다.');
+   if(document.documentElement.requestFullscreen && !document.fullscreenElement){await document.documentElement.requestFullscreen();}
+   await window.screen.orientation.lock('landscape');
+   status.textContent='가로 화면으로 전환했습니다.';
+  }catch(e){status.textContent='화면 회전 잠금을 해제한 뒤 휴대전화를 가로로 돌려 주세요. 자동 전환은 일부 브라우저에서 지원되지 않습니다.';}
+  update();
+ });
+ window.addEventListener('resize',update,{passive:true});
+ window.addEventListener('orientationchange',()=>{allowPortrait=false;update()},{passive:true});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden){update();updateModal()}});
+ update();updateModal();
+})();
+</script>
 </body>
 </html>
