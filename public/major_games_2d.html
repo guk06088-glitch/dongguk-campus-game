@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="theme-color" content="#1b3833">
+<meta name="description" content="동국대학교 7개 대학원 전공을 2D 스토리 게임으로 체험하는 비공식 교육용 게임">
+<title>동국대학교 · 7개 전공 2D 픽셀 RPG · R13.31</title>
+<style>
+:root{font-family:system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:#263c36;color-scheme:light}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#eae4d6}button,a{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #c78322;outline-offset:3px}
+body{background:radial-gradient(ellipse at 20% 7%,#f9edca 0,transparent 44%),linear-gradient(150deg,#f6f0e5,#dce5dc);}
+.top{background:#1c3731;color:#fff7e8;border-bottom:3px solid #b89b5d}.top-inner{max-width:1160px;margin:auto;padding:17px 24px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.brand{font-size:13px;letter-spacing:.06em;font-weight:850}.brand span{font-size:10px;display:block;color:#e1c999;letter-spacing:.17em;margin-bottom:5px}.top a{display:inline-block;padding:9px 14px;border:1px solid #d9c296;border-radius:99px;color:#fff8e4;text-decoration:none;font-size:12px;font-weight:750}
+.container{max-width:1160px;margin:0 auto;padding:25px 20px 38px}.eyebrow{color:#997844;font-size:11px;letter-spacing:.14em;font-weight:850}.hero{display:grid;grid-template-columns:1fr auto;align-items:end;gap:15px;padding-bottom:20px;border-bottom:1px solid #c6c9b9}.hero h1{font-size:clamp(26px,4.3vw,44px);line-height:1.22;letter-spacing:-.06em;margin:8px 0 10px}.hero p{max-width:700px;font-size:13px;line-height:1.8;margin:0;color:#52655a}
+.progress{background:#fff8e9;border:1px solid #d5bc86;border-radius:19px;padding:19px;min-width:160px;box-shadow:0 12px 30px #1c3a2312}.progress b{font-size:30px;color:#325f4c}.progress span{display:block;font-size:11px;color:#53655c}.bar{margin-top:12px;height:7px;background:#dedac6;border-radius:99px;overflow:hidden}.bar i{display:block;width:0;height:100%;background:#b28a46;transition:width .2s}
+section.group{margin-top:26px}section.group h2{font-size:17px;color:#2c473c;margin:0 0 13px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.major{border:1px solid #d6c7ad;border-radius:19px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:9px;background:linear-gradient(150deg,#fffcf3,#f1e6d4);padding:20px;color:#264238;min-height:210px;box-shadow:0 10px 27px #3a5a3420;touch-action:manipulation;transition:transform .16s,box-shadow .16s}
+.major:hover{transform:translateY(-3px);box-shadow:0 14px 32px #3a5a3430}.major .icon{font-size:29px;line-height:1;background:#f7e4c0;border-radius:12px;padding:11px}.major strong{font-size:17px;line-height:1.35;word-break:keep-all}.major .desc{font-size:12px;color:#67736a;line-height:1.6;flex:1}.major .stamp{font-size:12px;font-weight:800;color:#927142}.major.complete{border-color:#a9ba93;background:linear-gradient(150deg,#f8ffef,#e1ebd7)}
+.notice{font-size:12px;color:#5f6d64;line-height:1.75;margin:24px 0 0;padding:13px 16px;border-radius:12px;border:1px solid #cfd0b8;background:#fff9eb}
+#viewer[hidden],#result[hidden]{display:none!important}#viewer{position:fixed;inset:0;z-index:20;background:#223d34;display:flex;flex-direction:column}#viewerTop{display:flex;align-items:center;gap:10px;padding:8px 11px;padding-top:max(8px,env(safe-area-inset-top));background:#19362f;color:#fff7e5;min-height:52px;border-bottom:2px solid #b9a06b}#viewerTitle{flex:1;min-width:0;font-size:clamp(11px,2.5vw,15px);line-height:1.4;font-weight:800}#viewerTop .pill{font-size:10px;border:1px solid #b7a27d;border-radius:20px;padding:5px 9px;color:#eed6a5;white-space:nowrap}#viewerTop button{border:0;background:#f6e3bf;color:#243c34;border-radius:10px;font-size:12px;font-weight:800;min-height:39px;padding:8px 12px;touch-action:manipulation}
+#gameframe{flex:1;min-height:0;width:100%;height:100%;border:0;background:#ebdcc2}#loadState{position:absolute;top:70px;left:50%;transform:translateX(-50%);pointer-events:none;padding:10px 15px;color:#37533f;background:#fdf7e6;border-radius:100px;font-size:11px;font-weight:750;box-shadow:0 5px 15px #0002}#loadState[hidden]{display:none!important}
+#result{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:#0c231ebc;backdrop-filter:blur(4px);padding:16px;touch-action:pan-y;overflow:auto}#resultCard{width:min(480px,100%);padding:25px;background:#fff9e9;border:2px solid #d4b06c;border-radius:22px;text-align:center;color:#304438;box-shadow:0 20px 60px #0006}#resultCard .seal{font-size:48px}#resultCard h2{font-size:23px;margin:10px 0}#resultCard p{font-size:13px;line-height:1.8;color:#57685b}#resultCard button{width:100%;margin:5px 0 0;min-height:45px;padding:10px;border:0;border-radius:12px;background:#325e4d;color:white;font-size:13px;font-weight:850}#resultCard button.secondary{background:#eee1c5;color:#294237}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.top-inner{padding:12px 15px}.container{padding:17px 13px 28px}.hero{grid-template-columns:1fr}.progress{display:flex;align-items:center;gap:12px;min-width:0;padding:12px}.progress .bar{flex:1;margin:0}.grid{grid-template-columns:1fr;gap:10px}.major{min-height:128px;padding:12px;gap:6px}.major .icon{font-size:22px;padding:6px}.major strong{font-size:15px}.major .desc{font-size:11px}#viewerTop{gap:6px;padding-left:6px;padding-right:6px}#viewerTop .pill{display:none}#viewerTop button{padding:7px 9px;font-size:11px}}
+@media(max-height:520px){#resultCard{padding:15px}#resultCard .seal{font-size:30px}#resultCard h2{font-size:18px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* R13.31 rendered concept artwork and playable selection cards */
+body{background:radial-gradient(ellipse at 10% 0,#f8e1ae55 0,transparent 44%),linear-gradient(145deg,#192d31,#344f42)}
+.top{background:linear-gradient(145deg,#152830,#293c31);border-bottom:3px solid #d2a15f}
+.container{max-width:1220px}.hero{color:#ffe6af;border-bottom:1px solid #ba985e}.hero h1{color:#fff0ce;text-shadow:0 3px #17231e}.hero p{color:#d7ded5}.eyebrow{color:#ffcf7a}.progress{background:#2b3931;border:2px solid #cbab6e}.progress b{color:#ffe0a1}.progress span{color:#cfdfd0}
+section.group h2{color:#fff0cb}.major{position:relative;overflow:hidden;background:linear-gradient(150deg,#fffaeb,#dfd0ad);border:3px solid #b9945b;box-shadow:0 0 0 2px #483e2b,0 10px 20px #071a1899;border-radius:13px;min-height:280px;padding:0 15px 15px;gap:8px}
+.majorArt{height:132px;min-height:132px;position:relative;width:calc(100% + 30px);margin:0 -15px 9px;overflow:hidden;background:#7b8a6c}
+.majorArt:after{content:'';position:absolute;inset:0;box-shadow:inset 0 -25px 22px -9px #6f583b99}
+.majorArt img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;filter:saturate(1.06) contrast(1.06);transition:transform .2s ease}
+.major:hover .majorArt img{transform:scale(1.045)}.major strong{font-size:18px;color:#35422f}.major .icon{position:absolute;right:12px;top:108px;border:2px solid #d3ae71;background:#fff5df;z-index:2;box-shadow:0 3px 6px #0004;padding:7px}
+.major .desc{font-size:12px}.major .stamp{border-top:1px solid #ad977b70;padding-top:10px;width:100%;font-size:12px;color:#865c2e}
+.major.complete{background:linear-gradient(145deg,#f7efd4,#d7e8cf)}
+.notice{background:#182d2de9;border:1px solid #bea06d;color:#dfdaca}
+@media(max-width:560px){.major{min-height:230px;padding:0 13px 13px}.majorArt{height:114px;min-height:114px;margin:0 -13px 8px;width:calc(100% + 26px)}.major .icon{top:89px}.major strong{font-size:16px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner"><div class="brand"><span>DONGGUK CAMPUS · 2D STORY EXPERIENCE</span>동국대학교 대학원 전공 탐험</div><a href="./index.html">🏛️ 3D 캠퍼스로</a></div></header>
+<main class="container"><div class="hero"><div><div class="eyebrow">R13.31 · 7 WORLDS · ORIGINAL PIXEL QUEST</div><h1>전공별로 펼쳐지는 픽셀 RPG 세계</h1><p>이 페이지는 무거운 3D 건물을 불러오지 않는 <b>전공별 2D 게임 전용 화면</b>입니다. 마음에 드는 전공을 선택하고 난이도를 정한 뒤, 캐릭터를 이동시켜 NPC와 대화하고 단서를 찾고, 선택에 따라 사건·다음 목적지·결말이 바뀌는 탐험을 시작하세요.</p></div><div class="progress"><div><b id="count">0/7</b><span>탐험 도장</span></div><div class="bar"><i id="fill"></i></div></div></div>
+<section class="group" aria-labelledby="koreanTitle"><h2 id="koreanTitle">2층 · 국어국문학과 5개 전공</h2><div class="grid" id="koreanGrid"></div></section>
+<section class="group" aria-labelledby="multiTitle"><h2 id="multiTitle">3층 · 국제다문화학과 2개 전공</h2><div class="grid" id="multiGrid"></div></section>
+<p class="notice">R13.31에서는 7개 전공 모두 충돌·자동 길 찾기를 검수한 가로형 도트맵 탐험 RPG로 실행되며, 방향별 캐릭터 보행 스프라이트와 물결·조명·환경 효과를 추가했습니다. 전공별 숨은 기록 3개, 특별 후일담, 목적지 자동 이동 기능이 추가됐습니다. 선택에 따른 사건·퀘스트 분기는 오프라인 로컬 엔진으로 작동하며, 생성형 AI 문장 생성은 Cloudflare Workers AI를 별도로 연결한 경우에만 활성화됩니다. 각 이야기는 교육·홍보용 창작 각색입니다. 완료 기록은 이 브라우저에만 보관되며 실제 대학원 학점, 자격 또는 공식 이수를 의미하지 않습니다. 기록을 초기화하는 경우에는 브라우저 저장 데이터가 삭제될 수 있습니다.</p></main>
+<section id="viewer" hidden role="dialog" aria-modal="true" aria-label="전공별 2D 스토리 게임"><div id="viewerTop"><b id="viewerTitle">2D 스토리 탐험</b><span class="pill">2D RPG MODE</span><button id="close" type="button">✕ 전공 선택</button></div><div id="loadState" hidden>2D 이야기를 불러오는 중…</div><iframe id="gameframe" title="2D 스토리 게임" loading="eager"></iframe>
+<section id="result" role="dialog" aria-modal="true" aria-labelledby="resultTitle" hidden><div id="resultCard"><div class="seal">🏵️</div><h2 id="resultTitle">전공 탐험 완료!</h2><p id="resultText">탐험 도장이 기록되었습니다.</p><button id="backList" type="button">다른 2D 전공 탐험하기</button><button id="backGame" class="secondary" type="button">현재 이야기 다시 보기</button></div></section></section>
+<script>
+(()=>{'use strict';
+const majors=[
+{id:'classic',name:'고전문학',file:'rpg_landscape.html?major=classic',icon:'📜',desc:'『허생전』 조선 장터에서 사건과 풍자의 의미를 찾아보세요.',floor:2},
+{id:'modern',name:'현대문학',file:'rpg_landscape.html?major=modern',icon:'🕯️',desc:'사라진 원고의 단서를 찾아 문학제 전시를 완성하세요.',floor:2},
+{id:'ling',name:'국어학',file:'rpg_landscape.html?major=ling',icon:'🔤',desc:'말의 미로에서 문장 구조와 띄어쓰기의 단서를 풀어보세요.',floor:2},
+{id:'teach',name:'외국어로서의 한국어교육',file:'rpg_landscape.html?major=teach',icon:'✏️',desc:'예비 교사가 되어 학생과 대화하고 교실 수업을 이끌어 보세요.',floor:2},
+{id:'creative',name:'문예창작',file:'rpg_landscape.html?major=creative',icon:'🖋️',desc:'달빛 편집실에서 사건과 결말을 선택해 작품을 완성하세요.',floor:2},
+{id:'multi',name:'국제다문화학',file:'rpg_landscape.html?major=multi',icon:'🌍',desc:'문화 간 소통과 생활 속 문제 해결을 체험하세요.',floor:3},
+{id:'asia',name:'한국·아시아문화학',file:'rpg_landscape.html?major=asia',icon:'🎎',desc:'아시아 문화유산을 조사하고 전시를 준비해 보세요.',floor:3}
+];
+const byId=Object.fromEntries(majors.map(x=>[x.id,x]));
+const key='dgu-mj-study-book-v1';let current=null,finished=false;
+const $=id=>document.getElementById(id);
+function saved(){try{const x=JSON.parse(localStorage.getItem(key)||'[]');return new Set(Array.isArray(x)?x.filter(id=>byId[id]):[])}catch{return new Set()}}
+let earned=saved();
+function persist(){try{localStorage.setItem(key,JSON.stringify([...earned]))}catch{}}
+function render(){earned=saved();$('count').textContent=earned.size+'/7';$('fill').style.width=(100*earned.size/7)+'%';
+for(const id of ['koreanGrid','multiGrid'])$(id).replaceChildren();
+for(const major of majors){const button=document.createElement('button');button.type='button';button.className='major'+(earned.has(major.id)?' complete':'');button.dataset.major=major.id;const art=document.createElement('div');art.className='majorArt';const im=document.createElement('img');im.src='./assets/rpg/'+major.id+'.webp';im.alt=major.name+' RPG 콘셉트 일러스트';im.loading='lazy';art.append(im);const icon=document.createElement('span');icon.className='icon';icon.textContent=major.icon;const title=document.createElement('strong');title.textContent=major.name;const desc=document.createElement('span');desc.className='desc';desc.textContent=major.desc;const stamp=document.createElement('span');stamp.className='stamp';stamp.textContent=earned.has(major.id)?'🏵️ 탐험 완료 · 다시 하기':'▶ 2D 스토리 시작';button.append(art,icon,title,desc,stamp);button.addEventListener('click',()=>open(major.id));$(major.floor===2?'koreanGrid':'multiGrid').append(button)}
+}
+function open(id){const major=byId[id];if(!major)return;current=id;finished=false;$('result').hidden=true;$('viewer').hidden=false;$('viewerTitle').textContent=major.icon+' '+major.name+' · 2D 스토리 탐험';$('gameframe').title=major.name+' 2D 스토리 게임';$('loadState').hidden=false;$('gameframe').src='./'+major.file;document.body.style.overflow='hidden';$('close').focus({preventScroll:true});}
+function close(){if($('viewer').hidden)return;$('viewer').hidden=true;$('result').hidden=true;$('gameframe').src='about:blank';$('loadState').hidden=true;current=null;document.body.style.overflow='';render();}
+$('gameframe').addEventListener('load',()=>{ $('loadState').hidden=true; try{const b=$('gameframe').contentDocument.getElementById('mjReturnToCampus');if(b)b.textContent='↩ 전공 선택 화면으로';}catch{} });
+$('close').addEventListener('click',close);$('backList').addEventListener('click',close);$('backGame').addEventListener('click',()=>$('result').hidden=true);
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('viewer').hidden){close()}});
+window.addEventListener('message',e=>{if($('viewer').hidden||!current||(e.origin!==location.origin && !((location.protocol==='file:' || location.origin==='null') && e.origin==='null'))||e.source!==$('gameframe').contentWindow)return;const d=e.data;if(!d||d.version!==1)return;
+if(d.type==='dgu-story-return'&&d.major===current){close();return}
+if(finished)return;
+const done=current==='classic'?d.type==='dgu-classic-story-completed':d.type==='dgu-major-story-completed'&&d.major===current;if(!done)return;
+finished=true;const wasNew=!earned.has(current);earned.add(current);persist();
+const score=Number(d.score);if(Number.isFinite(score)&&score>=0&&score<=1000){try{const k='dgu-mj-story-best-score-v1',past=JSON.parse(localStorage.getItem(k)||'{}');past[current]=Math.max(Number(past[current])||0,Math.round(score));localStorage.setItem(k,JSON.stringify(past))}catch{}}
+const major=byId[current];$('resultTitle').textContent=earned.size===7?'🏆 7개 전공 모두 완주!':major.name+' 탐험 완료!';$('resultText').textContent=wasNew?major.name+' 전공 도장을 획득했습니다. 현재 '+earned.size+'/7개 전공 완료입니다.':major.name+'을(를) 다시 완료했습니다. 기존 도장은 그대로 유지됩니다.';$('result').hidden=false;$('backList').focus({preventScroll:true});
+});
+window.addEventListener('storage',e=>{if(e.key===key)render()});
+render();
+})();
+</script>
+</body>
+</html>

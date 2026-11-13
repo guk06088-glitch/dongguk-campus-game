@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content"><meta name="theme-color" content="#152b32"><title>동국 전공 탐험 RPG · R13.28</title>
+<style>
+:root{--ink:#f9eed5;--deep:#14282d;--gold:#e4c17e;--edge:#c8a876;--glass:#122b34ed;font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--ink);color-scheme:dark}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b1b23;touch-action:none}button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible{outline:3px solid #ffe084;outline-offset:2px}#game{width:100%;height:100%;display:block;image-rendering:pixelated;touch-action:none}#hud{position:absolute;inset:0;pointer-events:none;z-index:3}#hud>*{pointer-events:auto}.top{position:absolute;top:env(safe-area-inset-top,0px);left:0;right:0;display:flex;gap:9px;align-items:flex-start;justify-content:space-between;padding:10px 12px}.tag{background:#1b333bea;border:1px solid #edcf91a8;box-shadow:0 4px 14px #0007;border-radius:11px;padding:8px 12px;max-width:min(66vw,530px)}.tag small{display:block;color:#efcf91;font-size:10px;letter-spacing:.08em;font-weight:850}.tag strong{font-size:14px;line-height:1.3;display:block;margin:3px 0}.tag p{font-size:11px;line-height:1.45;color:#d4e8de;margin:0}.tools{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;max-width:45vw}.tools button,.miniBtn{color:var(--ink);background:#193942e9;border:1px solid #d2b783af;border-radius:11px;padding:8px 11px;font-size:11px;font-weight:800;white-space:nowrap}.tools button:active,.miniBtn:active{background:#80633b}.objective{position:absolute;left:12px;bottom:12px;background:#122d32e8;border:1px solid #dec58b7c;border-radius:13px;padding:9px 12px;max-width:min(385px,50vw);min-width:185px;box-shadow:0 6px 23px #0005}.objective b{color:#f2d68d;font-size:12px}.objective div{font-size:11px;line-height:1.55;margin-top:3px}.status{display:flex;gap:8px;flex-wrap:wrap;margin-top:5px;font-size:10px;color:#b6d8d3}.location{position:absolute;left:50%;top:10px;transform:translateX(-50%);pointer-events:none;border-radius:100px;background:#142e35c9;padding:5px 12px;font-weight:850;font-size:11px;max-width:36vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.minimap{position:absolute;right:13px;top:69px;background:#11252bdc;border:1px solid #ddc68d91;padding:5px;border-radius:12px;max-width:176px}.minimap canvas{display:block;width:150px;height:97px;image-rendering:pixelated}.minimap small{display:block;text-align:center;font-size:9px;color:#d5dca6;padding:4px 0 1px}.action{position:absolute;right:16px;bottom:17px;background:#f3d8a0;color:#172e33;border:2px solid #fff4d9;min-width:126px;min-height:48px;padding:8px 13px;border-radius:13px;font-size:13px;font-weight:900;box-shadow:0 6px 20px #0006}.action[hidden]{display:none!important}#mobile{display:none;position:absolute;inset:0;pointer-events:none;z-index:4}#mobile>*{pointer-events:auto}.pad{position:absolute;left:16px;bottom:calc(17px + env(safe-area-inset-bottom,0px));width:130px;height:130px;border:2px solid #e6d4ad7a;border-radius:50%;background:#162f39ae;touch-action:none;box-shadow:inset 0 0 23px #fff1}.knob{position:absolute;left:50%;top:50%;width:54px;height:54px;transform:translate(-50%,-50%);border-radius:50%;background:linear-gradient(145deg,#fff0b8,#bca07b);box-shadow:0 4px 10px #0007}.sidebutton{position:absolute;right:14px;bottom:calc(78px + env(safe-area-inset-bottom,0px));padding:12px;border-radius:12px;background:#20434de7;color:#f5e7bf;border:1px solid #e2c98c;font-size:12px;font-weight:800}.layer{position:fixed;inset:0;background:#06151bc8;backdrop-filter:blur(3px);z-index:8;display:grid;place-items:center;padding:12px;overflow-y:auto;touch-action:pan-y}.layer[hidden]{display:none!important}.panel{width:min(680px,100%);max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y;background:linear-gradient(145deg,#23424a,#132b36 80%);border:2px solid #d6bb81;border-radius:18px;padding:18px 20px 22px;box-shadow:0 20px 65px #000a}.panel header{display:flex;gap:9px;align-items:flex-start;justify-content:space-between}.panel .kicker{font-size:10px;color:#f5d08b;font-weight:850;letter-spacing:.11em}.panel h1{font-size:clamp(20px,4vw,30px);line-height:1.25;letter-spacing:-.04em;margin:7px 0 11px}.panel p{font-size:13px;line-height:1.8;color:#e1e8da;margin:9px 0;white-space:pre-line;word-break:keep-all}.panel em{font-style:normal;color:#ffd88a}.panel .sub{color:#b7d0cc;font-size:11px}.options{display:grid;gap:9px;margin-top:14px}.options button,.btn{width:100%;text-align:left;padding:12px 13px;border-radius:12px;border:1px solid #e8d6a17c;background:#f0dfb9;color:#283e37;font-weight:800;font-size:13px;line-height:1.45;min-height:44px}.options button:hover,.btn:hover{background:#fff1cb}.options button.secondary,.btn.secondary{background:#31545b;color:#fcebd0;border-color:#d4c1958c}.options button:disabled{opacity:.6}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.row>.btn{flex:1;min-width:145px}.chips{display:flex;gap:7px;flex-wrap:wrap}.chips button{background:#183a43;border:1px solid #d4b67a;padding:9px 11px;color:#ffe0ad;border-radius:100px;font-weight:750}.chips button.active{background:#edc982;color:#1d3232}.paper{background:#f5ead0;color:#394a3c;border:1px solid #d6ba7f;border-radius:10px;padding:11px 13px;margin:11px 0;font-size:12px;line-height:1.65;word-break:keep-all}.paper strong{color:#845622}.paper p{color:#3b4a3e!important;font-size:12px!important}.muted{font-size:11px;color:#b5d0cb;line-height:1.65}.dialog{width:min(760px,100%);margin:auto auto 10px;align-self:end}.person{display:flex;align-items:center;gap:10px;margin-bottom:8px}.portrait{width:52px;height:55px;display:grid;place-items:center;font-size:32px;background:linear-gradient(150deg,#f0d8ac,#a4baa3);border:2px solid #e9ce8c;border-radius:10px;flex:0 0 auto}.name{font-size:13px;font-weight:850;color:#fff0c5}.tiny{font-size:10px;color:#bfcdc5}.feedback{border-left:3px solid #ecc374;padding:8px 12px;background:#ffffff10;font-size:12px;line-height:1.7;margin:12px 0}.journalList{margin:8px 0;padding-left:20px;line-height:1.7;font-size:12px}.portraitFloat{display:block;text-align:center;font-size:48px;margin:3px}.footerhint{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);font-size:10px;color:#fcebc9b0;pointer-events:none;white-space:nowrap}#toast{position:absolute;left:50%;top:16%;transform:translateX(-50%);background:#ffe9b8;color:#203e36;font-weight:850;padding:10px 15px;border:1px solid #b58a47;border-radius:10px;z-index:7;opacity:0;pointer-events:none;transition:opacity .2s;font-size:12px;text-align:center;max-width:90%}#toast.on{opacity:1}
+@media(pointer:coarse){#mobile{display:block}.objective{bottom:calc(158px + env(safe-area-inset-bottom,0px));left:10px;max-width:min(55vw,290px);min-width:0}.action{right:13px;bottom:calc(12px + env(safe-area-inset-bottom,0px));min-width:100px}.minimap{right:10px;top:69px}.tag{max-width:65vw}.location{display:none}.footerhint{display:none}}
+@media(max-width:600px){.top{padding:6px}.tag{padding:6px 8px;max-width:60vw}.tag small{font-size:8px}.tag strong{font-size:11px}.tag p{font-size:9px}.tools{gap:3px;max-width:43vw}.tools button{font-size:10px;padding:7px}.minimap{right:8px;top:95px}.minimap canvas{width:108px;height:69px}.objective{font-size:10px;padding:7px 8px;bottom:calc(156px + env(safe-area-inset-bottom,0px));width:min(52vw,238px)}.objective div{font-size:10px}.status{gap:4px;font-size:9px}.pad{width:106px;height:106px;left:14px;bottom:calc(13px + env(safe-area-inset-bottom,0px))}.knob{width:44px;height:44px}.sidebutton{right:12px;bottom:calc(66px + env(safe-area-inset-bottom,0px));padding:9px}.panel{padding:13px}.panel p{font-size:12px}.options button{padding:10px 12px}.panel h1{font-size:20px}.dialog{margin-bottom:4px}}
+@media(pointer:coarse) and (max-height:520px){.objective{top:calc(95px + env(safe-area-inset-top,0px))!important;bottom:auto!important;left:9px;max-width:195px!important;min-height:0;padding:6px 8px}.pad{bottom:calc(5px + env(safe-area-inset-bottom,0px))}.action{bottom:calc(6px + env(safe-area-inset-bottom,0px))}}
+@media(max-height:520px){.minimap{display:none}.objective{bottom:5px;max-width:260px}.pad{width:86px;height:86px}.objective:has(.status){max-width:200px}.panel{padding:11px;max-height:calc(100dvh - 12px)}.panel h1{font-size:19px}.panel p{line-height:1.5;margin:4px 0}.options{gap:5px}.options button{min-height:36px;padding:7px 10px}}
+
+/* R13.25: optional exploration, responsive quest navigation */
+#hud #location,#hud .footerhint{pointer-events:none!important}
+.navBtn{margin:8px 0 0;padding:7px 11px;min-height:33px;border:1px solid #ecd193ab;background:#375e5ae8;color:#fff1c7;border-radius:9px;font-weight:850;font-size:11px;letter-spacing:-.02em}
+.navBtn:active{background:#5b7865}.objective .status{display:flex;gap:6px;flex-wrap:wrap}.objective{max-width:min(410px,55vw)}
+@media(max-width:600px){.navBtn{width:100%;min-height:34px;padding:7px 5px;font-size:10px}.objective{max-width:min(57vw,240px);bottom:calc(145px + env(safe-area-inset-bottom,0px))}.objective .status{font-size:9px}.objective .status span:nth-child(n+3){display:none}}
+@media(pointer:coarse) and (max-height:520px){.navBtn{padding:4px;min-height:26px}.objective{max-height:calc(100dvh - 155px);overflow:hidden}}
+
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+
+/* R13.28 · premium original pixel RPG composition */
+:root{--ink:#fff1ce;--gold:#ffd68a;--edge:#dbad5e}
+.tag{position:relative;background:linear-gradient(150deg,#162832fa,#263e37e9);border:2px solid #bd8f4b;border-radius:11px;box-shadow:0 0 0 2px #241f1d,0 5px 0 #171e1e,0 11px 28px #0007;min-width:220px}
+.tag:before{content:'✦';position:absolute;right:9px;top:5px;color:#f5dba2;font-size:14px}
+.tag small{color:#f9d59d;letter-spacing:.09em}
+.tag strong{color:#fff6dc;text-shadow:1px 2px 0 #423429;font-size:15px}
+.storyMeters{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.storyMeters span{font-size:9px;background:#0b232acc;color:#edd5a7;border:1px solid #ae8554a0;padding:3px 7px;border-radius:5px}
+.storyMeters b{color:#fff;font-size:10px}
+.tools button,.miniBtn{background:linear-gradient(150deg,#345154,#1a2c35);border:2px solid #c5a369;box-shadow:inset 0 1px #ffdfaa99,0 3px 0 #141e1f;border-radius:9px;color:#fff2c8;text-shadow:0 1px 2px #0008}
+.objective{background:linear-gradient(150deg,#242e2feb,#112a31f2);border:2px solid #bb985f;border-radius:12px;box-shadow:0 0 0 2px #29251d,0 6px 0 #171d1c,0 12px 30px #0008;padding:12px 13px}
+.objective:before{content:'✧  QUEST  ✧';display:block;font-size:9px;font-weight:900;letter-spacing:.2em;color:#f7ce87;margin-bottom:6px}
+.objective b{font-size:13px;color:#ffe19e}
+.navBtn,.action,.sidebutton{border-radius:9px;border:2px solid #e4bf7d;background:linear-gradient(160deg,#f6dca1,#b38b50);color:#24312f;box-shadow:inset 0 2px #fff1c5,0 4px 0 #4f3a25,0 7px 18px #0006}
+.navBtn{width:100%;background:linear-gradient(155deg,#496758,#244941);color:#ffeac8}
+.minimap{background:#1d2f2ce9;border:3px solid #c49b5e;box-shadow:0 0 0 2px #27231a,0 7px 21px #0007;border-radius:10px}
+.minimap small{color:#ffe2a0;font-weight:800}
+.pad{border:3px solid #edcc8e9c;background:#17342da8;box-shadow:0 0 0 3px #1b282880,inset 0 0 26px #ffedb822}
+.knob{background:linear-gradient(145deg,#ffe8ac,#ae8352);box-shadow:inset 0 2px #fff3d6,0 5px 12px #0008}
+.panel{background:linear-gradient(145deg,#2a4340,#101e26 85%);border:3px solid #cda45f;box-shadow:inset 0 0 0 2px #685038,0 20px 65px #000b}
+.panel h1{color:#fff3d1;text-shadow:1px 2px #1118}
+.panel .kicker{color:#fbe2a7}
+.introArt{height:clamp(146px,25vh,245px);position:relative;background-position:center 45%;background-size:cover;border:2px solid #b88f56;border-radius:13px;margin:12px 0 18px;box-shadow:inset 0 0 0 2px #fff3d844,0 7px 20px #0007;overflow:hidden}
+.introArtText{position:absolute;bottom:0;left:0;right:0;padding:18px 15px 9px;font-size:15px;font-weight:900;letter-spacing:-.03em;color:#fff6e4;text-shadow:0 2px 5px #000,1px 1px #30241f}
+.options button,.btn{border:2px solid #d7af72;background:linear-gradient(160deg,#fff0cc,#ddbe85);box-shadow:0 3px 0 #674a2b}
+.options button.secondary,.btn.secondary{background:linear-gradient(160deg,#3f6b66,#294b4d)}
+.portrait{border:3px solid #dbb877;background:linear-gradient(145deg,#f7ddae,#809d91)}
+#toast{border:2px solid #b88743;box-shadow:0 4px 0 #4b3721,0 11px 22px #0007}
+@media(max-width:600px){.tag{min-width:0;padding:7px 8px}.tag strong{font-size:11px}.storyMeters{gap:3px;margin-top:5px}.storyMeters span{font-size:8px;padding:2px 4px}.objective{padding:8px 9px}.objective:before{font-size:8px;margin-bottom:3px}.introArt{height:155px}.introArtText{font-size:13px}.panel .kicker{font-size:9px}}
+@media(pointer:coarse) and (max-height:520px){.tag{max-width:47vw}.storyMeters{display:none}.tools{max-width:53vw}.objective{top:91px!important;bottom:auto!important;max-height:118px;overflow:hidden}.objective .status{display:none}.introArt{height:90px}}
+
+/* R13.28: small screen layout; environmental effects toggle. */
+#fxBtn{min-width:78px}
+@media(max-width:430px){#fxBtn{font-size:9px;padding:6px 7px}.tools{max-width:46vw}}
+@media(pointer:coarse) and (max-height:520px){#fxBtn{display:none}}
+</style></head>
+<body><canvas id="game" aria-label="전공 스토리 RPG 2D 탐험 지도"></canvas><div id="hud"><div class="top"><div class="tag"><small id="majorLabel">DONGGUK · 2D RPG</small><strong id="storyTitle">스토리 준비 중</strong><p id="stageName">선택에 따라 다음 사건이 달라집니다</p><div class="storyMeters"><span>신뢰 <b id="trustMeter">0</b></span><span>탐구 <b id="insightMeter">0</b></span><span>창의 <b id="creativeMeter">0</b></span></div></div><div class="tools"><button id="journalBtn">📜 수첩</button><button id="hintBtn">💡 힌트</button><button id="mapBtn">🗺️ 지도</button><button id="fxBtn" title="배경 효과 켜기 또는 끄기" aria-pressed="true">✨ 효과 ON</button><button id="restartBtn">↻ 새 이야기</button></div></div><div id="location" class="location">전공 RPG 탐험</div><div class="minimap" id="minimap"><canvas id="mini" width="150" height="97"></canvas><small>✦ 목적지 · ● 내 위치</small></div><div class="objective"><b id="questTitle">첫 임무</b><div id="questDesc">안내자를 만나세요.</div><button id="navBtn" class="navBtn" type="button">🧭 목적지까지 이동</button><div class="status"><span id="clueCount">단서 0/2</span><span id="memoryCount">숨은 기록 0/3</span><span id="trustStatus">신뢰 0</span><span id="insightStatus">탐구 0</span><span id="aiState">AI: 로컬 분기</span></div></div><button id="action" class="action" hidden>💬 대화 / 조사</button><div class="footerhint">이동: WASD · 방향키 / 클릭 이동 · G 목적지 자동 이동 | 상호작용: E · Enter · Space</div></div><div id="mobile"><div id="pad" class="pad" aria-label="이동 조이스틱"><div id="knob" class="knob"></div></div><button id="mobileHint" class="sidebutton">✦ 퀘스트</button></div><div id="toast" role="status" aria-live="polite"></div>
+<div id="intro" class="layer"><div class="panel"><span class="kicker">R13.28 · 7 MAJORS · ORIGINAL PIXEL QUEST RPG</span><div class="introArt" id="introArt" aria-label="전공별 RPG 콘셉트 일러스트"><div class="introArtText" id="introArtText">DONGGUK · MAJOR STORY</div></div><h1 id="introTitle">새로운 이야기 시작</h1><p id="introText"></p><div class="paper"><strong>처음 하시는 분을 위한 안내</strong><p>NPC에 다가가 대화하고, 반짝이는 물건을 조사한 뒤 선택을 결정하세요. 푸른빛 숨은 기록 3개를 모으면 특별한 후일담이 열립니다. 선택에 따라 도움을 주는 인물과 다음 퀘스트가 달라집니다. 처음이라면 쉬움 난이도를 권장합니다.</p></div><div class="chips" id="difficultyButtons"><button data-diff="easy" class="active">쉬움 · 길 안내</button><button data-diff="normal">보통 · 자유 탐색</button><button data-diff="hard">어려움 · 힌트 제한</button></div><div class="row"><button class="btn" id="startBtn">▶ 새 스토리 시작</button><button class="btn secondary" id="resumeBtn" hidden>⏯ 저장된 탐험 이어하기</button><button class="btn secondary" id="newSeedBtn">🎲 다른 사건 만들기</button></div><p class="muted">이 게임의 이야기는 미리 검토한 사건 소재를 바탕으로 로컬 분기 엔진이 자동 조합합니다. Cloudflare Workers AI를 별도로 활성화하면 선택을 반영한 생성형 AI 문장도 추가됩니다. 기본 설정에서는 외부 모델 비용 없이 로컬 분기 엔진으로 작동합니다. 역사적 대사와 게임 속 인물은 창작 각색입니다.</p></div></div>
+<div id="dialog" class="layer" hidden><div class="panel dialog"><div class="person"><div id="face" class="portrait">🧑🏻</div><div><div id="speaker" class="name">안내자</div><div id="speakerInfo" class="tiny">이야기를 들어보세요</div></div></div><h1 id="dialogTitle">대화</h1><p id="dialogBody"></p><div id="dialogFeedback" class="feedback" hidden></div><div id="dialogOptions" class="options"></div></div></div>
+<div id="journal" class="layer" hidden><div class="panel"><header><div><span class="kicker">STORY NOTEBOOK</span><h1>탐험 수첩</h1></div><button id="journalClose" class="miniBtn">✕ 닫기</button></header><div id="journalBody"></div></div></div>
+<div id="puzzle" class="layer" hidden><div class="panel"><span class="kicker">전공별 체험 · 실천 미션</span><h1 id="puzzleTitle">자료 조사</h1><p id="puzzlePrompt"></p><div class="options" id="puzzleOptions"></div><p class="muted" id="puzzleNote"></p></div></div>
+<div id="ending" class="layer" hidden><div class="panel"><span class="kicker">QUEST CLEAR · BRANCHING ENDING</span><div class="portraitFloat" id="endIcon">🏵️</div><h1 id="endingTitle">탐험 완료!</h1><p id="endingText"></p><div class="paper" id="endingStory"></div><p id="endingScore" class="muted"></p><div class="row"><button id="returnBtn" class="btn">🏫 원래 화면으로 돌아가기</button><button id="replayBtn" class="btn secondary">🎲 다른 이야기 재도전</button></div></div></div>
+<script>
+(()=>{'use strict';
+const MAJORS={
+classic:{name:'고전문학',icon:'📜',world:'조선 장터',clothing:'#4d6b9a',palette:['#65865b','#c6ad7e','#655044','#23485b','#c99564'],mentor:'서책방 주인',resident:'장터 상인',expert:'마을 원로',item:['가격 장부','선비의 편지','뱃사공의 기록'],themes:[['조선 장터의 수상한 소문','장터의 물건이 사라지자 사람들은 서로를 의심합니다. 거래의 겉모습과 그 뒤의 구조를 살펴보세요.'],['사라진 서책의 행방','마을에 오래된 서책이 사라졌습니다. 내용만이 아니라 그 시대를 바라보는 비판적 시선을 찾아야 합니다.'],['나루터에서 온 편지','낯선 편지가 시장에 도착했습니다. 사건을 이해하려면 인물의 말과 행동을 비교해야 합니다.']],choice:['먼저 사람들의 삶을 듣는다','기록의 앞뒤를 비교한다','새로운 해결책을 제안한다'],question:'고전 서사를 해석할 때 바람직한 접근은?',answers:['당시 사회와 인물의 행위를 함께 살핀다','한 사람의 말을 무조건 믿는다','사건의 순서를 무시한다'],correct:0,lesson:'『허생전』 같은 고전소설을 읽을 때는 인물의 행동뿐 아니라 작품의 풍자와 사회적 맥락을 함께 살펴야 합니다.',endings:['사람들의 이야기를 바탕으로 서로의 사정을 이해하는 장터 모임이 열렸습니다.','기록의 차이를 발견해 왜 소문이 부풀려졌는지 설명했습니다.','새로운 장터 규칙을 제안해 주민들이 함께 실험하기로 했습니다.']},
+modern:{name:'현대문학',icon:'📖',world:'비 오는 문학 도시',clothing:'#734f92',palette:['#526778','#8c8c92','#45495e','#294356','#bcb3a4'],mentor:'책방지기',resident:'낭독회 준비생',expert:'문학 동아리 회장',item:['찢어진 원고','낡은 사진','낭독회 메모'],themes:[['잃어버린 마지막 문장','낭독회를 앞두고 작품의 마지막 문장이 사라졌습니다. 여러 해석 가운데 어떤 결말을 발표할지 결정하세요.'],['골목의 낯선 시인','아무도 알지 못하는 시가 골목에 붙었습니다. 이미지와 화자의 감정을 조사하세요.'],['비밀에 싸인 독서회','같은 작품을 읽은 사람들이 서로 다른 생각을 합니다. 다양한 해석의 근거를 수집하세요.']],choice:['인물의 감정에 집중한다','상징과 단서를 분석한다','다른 결말을 상상한다'],question:'문학 작품의 해석을 설명할 때 중요한 것은?',answers:['정답을 한 개만 강요한다','작품 안의 표현과 근거를 제시한다','작가 의도를 임의로 단정한다'],correct:1,lesson:'문학 작품은 다양한 해석이 가능하지만, 작품에 나타난 표현과 맥락을 근거로 설명해야 합니다.',endings:['낭독회에서 각 인물의 감정을 조심스럽게 드러내는 해설이 호응을 얻었습니다.','원고 속 반복되는 이미지와 단서를 연결해 낭독회를 완성했습니다.','독자와 함께 여러 결말을 비교하는 새로운 낭독 무대를 마련했습니다.']},
+ling:{name:'국어학',icon:'🔤',world:'말소리 연구 마을',clothing:'#557b97',palette:['#5f7f89','#c2d1bf','#52616a','#5a8d96','#f1d59b'],mentor:'언어 연구원',resident:'표지판 제작자',expert:'기록관 관리자',item:['표지판 조각','녹음 기록','어절 카드'],themes:[['사라진 띄어쓰기','마을 안내판에서 띄어쓰기가 사라졌습니다. 문장의 의미를 정확히 전할 방법을 찾으세요.'],['문장의 수수께끼','같은 발음처럼 들리는 말이 다른 뜻으로 전달됩니다. 문맥과 표현의 차이를 확인하세요.'],['옛 기록의 암호','훼손된 기록의 어절과 문맥을 분석해 안내문을 복원하세요.']],choice:['이용자의 이해를 먼저 확인한다','말뭉치와 기록을 대조한다','읽기 쉬운 표기를 제안한다'],question:'"오늘 날씨가 좋다"를 바르게 띄어 쓴 것은?',answers:['오늘날씨가 좋다','오늘 날씨가좋다','오늘 날씨가 좋다'],correct:2,lesson:'국어학에서는 소리·단어·문장의 구조를 실제 자료와 사용 맥락에서 분석합니다.',endings:['마을 사람들과 함께 읽기 쉬운 안내문을 고쳤습니다.','훼손된 자료를 대조해 원래 표기의 근거를 설명했습니다.','누구나 이해할 수 있는 새 표지판을 만들어 세웠습니다.']},
+teach:{name:'외국어로서의 한국어교육',icon:'✏️',world:'다온 한국어 학당',clothing:'#b56a62',palette:['#6d9277','#cbb99a','#796c58','#4e8296','#e9d49b'],mentor:'지도교수',resident:'한국어 학습자',expert:'실습 수업 조교',item:['학습자 관찰 기록','수업 활동 카드','상황 대화문'],themes:[['첫 수업의 고민','새로운 학생들이 교실에 왔습니다. 서로 다른 언어 수준을 고려한 첫 수업을 설계하세요.'],['캠퍼스 안내 수업','학생들이 도서관을 찾아가려 합니다. 생활 속 표현을 연습할 기회를 만들어 보세요.'],['말하기 평가의 날','학생이 말을 잘못해도 위축되지 않도록 배움의 경험을 구성하세요.']],choice:['학습자의 말을 충분히 듣는다','수준에 맞는 관찰 기록을 살핀다','활동형 수업으로 바꾼다'],question:'초급 학습자가 표현을 이해하지 못할 때 적절한 반응은?',answers:['쉬운 예시와 몸짓으로 다시 설명한다','모르는 학생을 꾸짖는다','설명 없이 넘어간다'],correct:0,lesson:'언어 수업에서는 학습자의 수준과 목표를 고려하고 이해 가능한 입력과 참여 기회를 제공해야 합니다.',endings:['학생과 함께 수업의 어려움을 나누며 안전한 참여 분위기를 만들었습니다.','학습 수준을 분석해 적절한 단계의 수업 자료를 완성했습니다.','생활 과제를 이용한 참여형 수업을 진행했습니다.']},
+creative:{name:'문예창작',icon:'🖋️',world:'달빛 이야기 공방',clothing:'#a66f93',palette:['#846b88','#c5b9ab','#5c4764','#466576','#f1ceac'],mentor:'이야기 장인',resident:'견습 작가',expert:'편집장',item:['사건 카드','인물 노트','결말 조각'],themes:[['달빛 아래 열린 공방','이야기의 주인공이 목표를 잃었습니다. 인물과 사건의 연결을 다시 짜 보세요.'],['사라진 첫 장','원고의 첫 장이 없어졌습니다. 독자의 기대를 만드는 도입부를 만들어 보세요.'],['세 갈래 결말','한 작품에 세 가지 결말이 생겼습니다. 선택의 이유를 서사 속에 녹여 보세요.']],choice:['인물의 마음에서 이야기를 시작한다','사건의 인과관계를 먼저 정리한다','상상을 깨는 반전을 제안한다'],question:'이야기의 사건을 설득력 있게 연결하는 데 도움이 되는 것은?',answers:['장면마다 인물을 무작위로 바꾼다','인물의 목표와 사건의 인과를 살핀다','앞선 사건은 모두 무시한다'],correct:1,lesson:'창작의 자유를 존중하면서도 인물의 동기, 사건의 인과와 표현의 일관성을 고민할 수 있습니다.',endings:['주인공의 감정에서 출발해 서정적인 단편을 완성했습니다.','단서와 사건을 치밀하게 연결한 추리 단편이 완성됐습니다.','예상하지 못한 반전으로 새로운 결말을 만들어 냈습니다.']},
+multi:{name:'국제다문화학',icon:'🌏',world:'함께하는 세계 마을',clothing:'#547e72',palette:['#6d9686','#dbc7a4','#786c68','#44768a','#e6a878'],mentor:'교류센터 상담가',resident:'새로 온 유학생',expert:'지역 행사 코디네이터',item:['여러 언어 안내문','학교 생활 설문','행사 운영 기록'],themes:[['잃어버린 안내판','새로 온 주민이 행사 장소를 찾지 못했습니다. 다양한 필요를 고려해 안내를 개선하세요.'],['함께 만드는 축제','여러 집단이 같은 공간을 쓰고 싶어 합니다. 서로의 의견을 듣고 일정을 조율하세요.'],['한 장의 신청서','지원 제도 안내가 어렵다는 의견이 나왔습니다. 이해할 수 있는 방식으로 정보를 전달하세요.']],choice:['당사자의 경험을 충분히 듣는다','제도와 정보의 접근성을 확인한다','함께 해결 방안을 설계한다'],question:'문화 간 오해가 생겼을 때 우선 고려할 행동은?',answers:['한 문화의 방식만 강요한다','당사자의 설명을 듣고 사실을 확인한다','일부 사례로 전체를 단정한다'],correct:1,lesson:'다문화 상황에서는 고정관념을 경계하고, 당사자의 목소리와 제도적 접근성을 함께 고려해야 합니다.',endings:['당사자의 이야기를 바탕으로 편안한 상담 안내가 만들어졌습니다.','지원 정보의 접근 장벽을 찾아 수정 요청을 제출했습니다.','여러 구성원이 참여하는 공동 안내 활동이 시작됐습니다.']},
+asia:{name:'한국·아시아문화학',icon:'🎎',world:'아시아 문화 교류 거리',clothing:'#bc8358',palette:['#729477','#d9b58e','#76624e','#54849a','#d7ac66'],mentor:'문화 전시 해설사',resident:'교류전 기획자',expert:'문화 자료 연구자',item:['전시 해설 카드','문화 교류 지도','관람객 의견지'],themes:[['서로 닮은 축제','서로 다른 지역의 축제 소개가 뒤섞였습니다. 차이와 공통점을 함께 설명하세요.'],['문화 교류의 작은 전시','전시실에 소개문이 비어 있습니다. 근거를 조사하고 관람객이 이해할 수 있게 작성하세요.'],['옛 물건의 새로운 이야기','유물의 용도가 오해되고 있습니다. 맥락과 전승 방식의 차이를 조사하세요.']],choice:['서로의 경험을 듣고 공통점을 찾는다','자료의 출처와 맥락을 확인한다','참여형 문화 소개를 기획한다'],question:'지역 문화를 비교할 때 적절한 태도는?',answers:['차이만으로 우열을 판단한다','한 지역을 다른 지역과 같다고 단정한다','각 문화의 맥락과 교류를 함께 살핀다'],correct:2,lesson:'한국과 아시아의 문화를 비교할 때는 차이를 존중하고 맥락과 교류의 역사에 주목합니다.',endings:['관람객이 자신의 문화 경험을 공유하는 전시가 열렸습니다.','확인된 자료를 바탕으로 오해를 바로잡는 전시문을 완성했습니다.','여러 문화권 관람객이 참여할 수 있는 체험 코너를 마련했습니다.']}
+};
+const HIDDEN_NOTES={
+classic:[['낡은 영수증','서로 다른 물건의 값이 왜 갑자기 바뀌었을까? 장터의 가격 기록은 경제와 사회의 관계를 생각하게 합니다.'],['접힌 서찰','누가 사건을 기록했는지에 따라 같은 이야기도 다르게 전해질 수 있습니다.'],['바닷길 지도','고전 서사는 이동과 만남을 통해 인물의 생각을 바꾸기도 합니다.']],
+modern:[['문장 조각','하나의 표현도 서술자의 관점에 따라 다르게 받아들여집니다.'],['오래된 시집','이미지와 리듬이 화자의 감정을 드러내는 방식에 주목해 보세요.'],['작가 노트','작품을 이해할 때 시대적 배경과 인물의 마음을 함께 살필 수 있습니다.']],
+ling:[['낱말 카드','형태소와 단어, 어절은 구분되는 언어 단위입니다.'],['소리 기록','말소리는 환경에 따라 달라지고, 그 변화를 관찰해 규칙을 찾아낼 수 있습니다.'],['문장 표지','띄어쓰기와 문장 구성은 의미를 명확히 전달하는 데 도움을 줍니다.']],
+teach:[['학습자 메모','학습자의 경험과 한국어 수준을 고려해 수업을 설계해야 합니다.'],['활동 계획표','교사는 이해 정도를 확인하면서 다양한 연습 활동을 구성합니다.'],['수업 관찰지','정답을 알려주기 전에 학습자가 스스로 표현을 고쳐 볼 기회를 줄 수 있습니다.']],
+creative:[['인물 설정집','인물에게 목표와 갈등이 있으면 이야기를 이어 나가기 쉬워집니다.'],['사건 카드','하나의 선택이 다른 사건과 결말로 이어질 수 있습니다.'],['결말 초안','결말을 바꾸면 작품 전체에서 앞서 등장한 단서의 의미도 달라집니다.']],
+multi:[['쉬운 안내문','누구나 이해할 수 있는 접근 가능한 안내는 공동체 참여를 돕습니다.'],['방문자 의견','서로 다른 목소리를 듣고 판단을 서두르지 않는 태도가 중요합니다.'],['협력 일정표','지속적인 협력은 일회성 행사뿐 아니라 실제 운영의 변화를 필요로 합니다.']],
+asia:[['교류 지도','문화유산은 지역적 맥락 안에서 이해해야 하며, 단순한 국적 맞히기에 그치지 않습니다.'],['전시 안내지','서로 닮아 보이는 관습도 역사와 맥락이 다를 수 있습니다.'],['관람 후기','한 문화를 하나의 특징으로 단정하지 않고 다양한 관점을 함께 살펴보세요.']]
+};
+const params=new URLSearchParams(location.search);const ID=MAJORS[params.get('major')]?params.get('major'):'classic';const C=MAJORS[ID];
+let aiEnabled=false;
+async function checkAI(){try{const r=await fetch('./__rpg/status',{credentials:'same-origin'});if(!r.ok)return;const j=await r.json();aiEnabled=j.enabled===true;$('aiState').textContent=aiEnabled?'✨ 생성형 AI 연결됨':'AI: 로컬 분기';}catch{}}
+async function requestAI(phase,choice,activeSeed){
+ if(!aiEnabled)return;
+ try{
+  const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),8000);
+  let result;
+  try{const r=await fetch('./__rpg/scene',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({major:ID,phase,choice,title:story.caseTitle}),signal:controller.signal});if(!r.ok)return;result=await r.json()}finally{clearTimeout(timeout)}
+  if(!result?.text||activeSeed!==story.seed)return;
+  const text=String(result.text).slice(0,360);
+  story.aiText=phase==='ending'?text:story.aiText;
+  if(phase==='branch'){addLog('생성형 AI 장면: '+text);toast('✨ AI가 이어지는 장면을 작성했습니다. 탐험 수첩에서 확인하세요.')}
+  else if(story.complete&&!$('ending').hidden){$('endingStory').textContent=story.generatedText+'\n\n[AI가 보완한 게임 장면]\n'+text;store()}
+ }catch{/* optional model errors must never block play */}
+}
+const $=id=>document.getElementById(id);const canvas=$('game'),ctx=canvas.getContext('2d',{alpha:false}),mini=$('mini'),mctx=mini.getContext('2d');
+$('majorLabel').textContent='DONGGUK QUEST · '+C.name;
+const coverURL='./assets/rpg/'+ID+'.webp';$('introArt').style.backgroundImage='linear-gradient(0deg,rgba(11,21,24,.75),transparent 65%),url("'+coverURL+'")';$('introArtText').textContent=C.name+' · '+C.world;$('location').textContent=C.world;
+const TILE=40,W=32,H=22,worldW=W*TILE,worldH=H*TILE;
+let seed=Math.floor(Math.random()*1000000000),diff='easy',story=null,playing=false,paused=true,openLayer='',lastTime=0,cam={x:0,y:0},arr=[],buildings=[],props=[],actors=[];
+let player={x:2.7,y:11,dir:'down',step:0,moving:false},touch={x:0,y:0},keys=new Set(),path=[],currentTarget=null,frameTick=0,deviceScale=1;
+// R13.28: six original 4x4 sprite atlases; fallback geometry remains available until loaded.
+const spriteNames=['hero','mentor','resident','expert','villager_a','villager_b'];
+const spriteAtlases={};for(const name of spriteNames){const img=new Image();img.decoding='async';img.src='./assets/rpg/sprites/'+name+'.png';spriteAtlases[name]=img;}
+const prefersReducedMotion=!!window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+let effectsOn=(!prefersReducedMotion);try{const savedEffects=localStorage.getItem('dgu-rpg-effects');if(savedEffects!==null)effectsOn=savedEffects==='on'}catch{}
+let sceneNow=0;
+function effectLabel(){$('fxBtn').textContent=effectsOn?'✨ 효과 ON':'🌙 효과 OFF';}
+const entityCoords={mentor:[5,11],resident:[16,11],expert:[28,11],clue0:[9,7],clue1:[20,15],clue2:[24,7],support:[25,15],memory0:[4,8],memory1:[14,15],memory2:[28,8]};
+const DIGIT=[0,1,2,3];function mulberry(a){return()=>{a|=0;a=a+0x6d2b79f5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};let random=mulberry(seed);const pick=a=>a[Math.floor(random()*a.length)];const lim=(v,a,b)=>Math.max(a,Math.min(b,v));
+function newStory(s){seed=s;random=mulberry(seed);const n=Math.floor(random()*C.themes.length);let t=C.themes[n];return{seed,theme:n,caseTitle:t[0],opening:t[1],stage:0,clues:[],memories:[],pathChoice:null,branch:null,finalChoice:null,puzzleSolved:false,errors:0,trust:0,insight:0,creative:0,score:25,log:[],outcome:null,complete:false,episode:Math.floor(random()*5000)}}
+function buildMap(){random=mulberry(seed+79);arr=Array.from({length:H},()=>Array(W).fill(0));for(let y=0;y<H;y++)for(let x=0;x<W;x++){if(x===0||y===0||x===W-1||y===H-1)arr[y][x]=8;else if(x>=1&&x<=30&&y>=10&&y<=12)arr[y][x]=1;else arr[y][x]=random()<.075?6:0;}
+ const line=(x1,y1,x2,y2,type)=>{for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++)if(x>0&&x<W-1&&y>0&&y<H-1)arr[y][x]=type};
+ for(const x of [5,9,16,20,24,25,28])line(x-1,5,x+1,17,1);
+ buildings=[[2,2,5,4],[12,2,6,4],[25,2,5,4],[3,17,7,3],[15,17,6,3],[27,17,3,3]];
+ for(const [x,y,w,h] of buildings)line(x,y,x+w-1,y+h-1,7);
+ // Carve clear paths around quest targets, retaining silhouettes of buildings.
+ for(const [x,y] of Object.values(entityCoords)){line(x-1,y-1,x+1,y+1,1)}
+ line(1,10,30,12,1);
+ // Two shallow ornamental ponds on unused lawns (water blocks walking, not any critical path).
+ for(const [x,y] of [[11,14],[12,14],[10,15],[11,15],[12,15],[13,15],[11,16],[12,16], [22,18],[23,18],[22,19],[23,19]]){
+  if(arr[y][x]===0||arr[y][x]===6)arr[y][x]=9;
+ }
+ props=[];for(let i=0;i<125;i++){let x=1+Math.floor(random()*30),y=1+Math.floor(random()*20);if(arr[y][x]===0&&Math.abs(y-11)>3&&Math.abs(x-16)>2){props.push({x,y,kind:random()<.30?'flower':random()<.65?'shrub':'tree',variant:Math.floor(random()*3)})}}
+ actors=[{id:'mentor',name:C.mentor,x:5,y:11,skin:'#e7b99a',robe:'#a97c54',face:'👩🏻‍🏫'}, {id:'resident',name:C.resident,x:16,y:11,skin:'#ddb092',robe:'#5e8c9b',face:'🧑🏻'}, {id:'expert',name:C.expert,x:28,y:11,skin:'#e7bea5',robe:'#a66e7a',face:'🧑🏻‍🎓'}];
+ for(let i=0;i<3;i++)actors.push({id:'clue'+i,name:C.item[i],x:entityCoords['clue'+i][0],y:entityCoords['clue'+i][1],object:true});
+ for(let i=0;i<3;i++)actors.push({id:'memory'+i,name:HIDDEN_NOTES[ID][i][0],x:entityCoords['memory'+i][0],y:entityCoords['memory'+i][1],object:true,memory:true});
+ actors.push({id:'support',name:'추가 과제',x:25,y:15,object:true});
+ for(let i=0;i<11;i++){let x=3+i*2.4,y=i%2?9.1:13.6;if(arr[Math.floor(y)][Math.floor(x)]!==7)actors.push({id:'extra'+i,name:'지나가는 주민',x,y,skin:'#e4ad8f',robe:['#598477','#b07c54','#745e9f'][i%3],decor:true})}
+}
+function collides(x,y){if(x<.75||y<.75||x>W-1.4||y>H-1.4)return true;for(let ox of [-.22,.22])for(let oy of [-.20,.20]){const xx=Math.floor(x+ox),yy=Math.floor(y+oy);if((arr[yy]?.[xx]??8)>=7)return true}return false}
+function activeObjective(){if(story.complete)return'완료';if(story.stage===0)return'mentor';if(story.stage===1)return'clues';if(story.stage===2)return'resident';if(story.stage===3)return story.branch==='listen'?'mentor':story.branch==='investigate'?'clue2':'support';return'expert'}
+function objectiveText(){if(story.stage===0)return [C.mentor+' 만나기','반짝이는 길을 따라 안내자에게 다가가 대화하세요.'];if(story.stage===1)return ['단서 '+story.clues.length+'/2 수집','지도에 표시된 반짝이는 물건을 두 개 조사하세요.'];if(story.stage===2)return [C.resident+' 인터뷰','대화를 통해 해결 방향을 결정하세요.'];if(story.stage===3)return story.branch==='listen'?['당사자 의견 다시 듣기',C.mentor+'에게 돌아가 조언을 요청하세요.']:story.branch==='investigate'?['추가 기록 조사','지도 위쪽의 추가 단서를 조사하세요.']:['체험 과제 해결','오른쪽 아래 체험대에서 전공 미션을 수행하세요.'];if(story.stage===4)return [C.expert+' 만나기','마지막 선택을 결정해 결말을 확인하세요.'];return ['완료','도장이 지급되었습니다.']}
+function hudUpdate(){const o=objectiveText();$('storyTitle').textContent=story.caseTitle;$('stageName').textContent=diff==='easy'?'🧭 쉬움 · 목적지 안내':diff==='normal'?'🗺️ 보통 · 자유 탐험':'🌙 어려움 · 단서 추적';$('questTitle').textContent='✦ '+o[0];$('questDesc').textContent=o[1];$('clueCount').textContent='단서 '+story.clues.length+'/2';$('memoryCount').textContent='숨은 기록 '+(story.memories?.length||0)+'/3';$('trustStatus').textContent='🤝 '+story.trust;$('insightStatus').textContent='🔎 '+story.insight;$('trustMeter').textContent=story.trust;$('insightMeter').textContent=story.insight;$('creativeMeter').textContent=story.creative}
+function addLog(s){story.log.push(s);story.log=story.log.slice(-25);store()}function store(){try{localStorage.setItem('dgu-rpg-r13-24-'+ID,JSON.stringify({story,player,diff}))}catch{}}
+let toastTimer;function toast(s){$('toast').textContent=s;$('toast').classList.add('on');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('on'),2300)}
+function layerShow(id){if(id){player.moving=false;path=[]}for(const v of ['intro','dialog','journal','puzzle','ending'])$(v).hidden=v!==id;openLayer=id;paused=!!id;if(id!=='')touch={x:0,y:0}}
+function unlock(){layerShow('');playing=true;hudUpdate();store()}
+function generateIntro(){ $('introTitle').textContent=C.icon+' '+C.name+' — '+story.caseTitle;$('introText').textContent=story.opening+'\n'+C.world+'에서 일어나는 사건을 조사해 주세요. 탐험을 새로 시작할 때마다 사건 소재, 단서와 선택 결과가 달라집니다.';hudUpdate()}
+function startGame(){story=newStory(seed);player={x:2.7,y:11,dir:'down',step:0};buildMap();unlock();addLog('새 사건 시작: '+story.caseTitle);toast('✦ '+C.mentor+'에게 먼저 말을 걸어보세요!')}
+function resumeFromStorage(){try{const saved=JSON.parse(localStorage.getItem('dgu-rpg-r13-24-'+ID)||'null');if(saved?.story?.seed!=null&&!saved.story.complete){seed=saved.story.seed;story=saved.story;diff=saved.diff||'easy';player=saved.player||player;buildMap();return true}}catch{}return false}
+function formatChoices(choices){const list=$('dialogOptions');list.replaceChildren();choices.forEach(ch=>{const b=document.createElement('button');b.textContent=ch.label;b.className=ch.secondary?'secondary':'';b.addEventListener('click',ch.run);list.append(b)})}
+function say(who,face,title,body,choices,detail=''){layerShow('dialog');$('face').textContent=face;$('speaker').textContent=who;$('speakerInfo').textContent=detail||C.world;$('dialogTitle').textContent=title;$('dialogBody').textContent=body;$('dialogFeedback').hidden=true;formatChoices(choices)}
+function resultSay(body,next){$('dialogFeedback').hidden=false;$('dialogFeedback').textContent=body;formatChoices([{label:'계속 진행 →',run:()=>{layerShow('');next?.()}}])}
+function chooseStyle(i,part='intro'){story.pathChoice=i;if(i===0){story.trust+=2;story.score+=12}else if(i===1){story.insight+=2;story.score+=12}else{story.creative+=2;story.score+=12};addLog(part+': '+C.choice[i]);story.stage=1;resultSay(['상대의 입장을 먼저 살피기로 했습니다. 이후 이야기에서 사람들의 반응이 달라집니다.','자료를 꼼꼼히 확인하기로 했습니다. 이후 조사 방법이 달라집니다.','새로운 해결책을 고민하기로 했습니다. 이후 창작 활동이 달라집니다.'][i],()=>{hudUpdate();toast('✦ 주변에서 단서 2개를 찾아보세요.')})}
+function talkMentor(){if(story.stage===0){say(C.mentor,'👩🏻‍🏫','이야기의 시작',story.opening+'\n\n"제가 아는 건 일부뿐이에요. 어떤 방식으로 사건을 살펴보시겠어요?"',C.choice.map((s,i)=>({label:['🤝 ','🔎 ','✨ '][i]+s,run:()=>chooseStyle(i)})).concat([{label:'📜 처음부터 설명 듣기',secondary:true,run:()=>say(C.mentor,'👩🏻‍🏫','사전 안내',C.lesson,[{label:'알겠습니다. 조사 방법 선택하기',run:talkMentor}])}]))}
+ else if(story.stage===3&&story.branch==='listen'){story.trust+=2;story.score+=8;story.stage=4;addLog('안내자의 추가 의견을 들었습니다.');say(C.mentor,'👩🏻‍🏫','다른 시각을 얻다',`"당신은 사람들의 의견을 다시 들으러 왔군요. ${C.lesson}"`,[{label:'마지막 결정을 하러 가기 →',run:unlock}]);hudUpdate()}
+ else say(C.mentor,'👩🏻‍🏫','조언',C.lesson,[{label:'고마워요',run:unlock}])}
+function inspectClue(i){const name=C.item[i];if(story.stage===1){if(story.clues.includes(i)){toast('이미 살펴본 단서입니다.');return;}story.clues.push(i);story.insight+=1;story.score+=8;addLog('단서 발견: '+name);if(story.clues.length>=2)story.stage=2;hudUpdate();say('조사 기록','📜','단서 발견 · '+name,`${name}에서 사건을 바라보는 새로운 정보가 발견됐습니다. 지금까지 수집한 단서는 ${story.clues.length}개입니다.\n\n${story.clues.length>=2?C.resident+'에게 대화를 요청할 수 있습니다.':'다른 단서도 살펴보세요.'}`,[{label:'조사 계속하기',run:unlock}]);return}
+ if(story.stage===3&&story.branch==='investigate'&&i===2){story.insight+=3;story.score+=12;story.stage=4;addLog('추가 기록 검토: '+name);say('조사 기록','🔎','새로운 근거',`추가 기록을 살펴보니 처음에 들은 이야기에 빠진 부분이 있었습니다.\n${C.lesson}`,[{label:'결정하러 가기',run:unlock}]);hudUpdate();return}
+ say('조사 기록','🗒️',name,`이 물건은 ${C.world}에 놓여 있습니다. 지금 단계에서는 추가 조사가 필요하지 않습니다.`,[{label:'돌아가기',run:unlock}])}
+function inspectMemory(i){
+ if(!Array.isArray(story.memories))story.memories=[];
+ if(story.memories.includes(i)){toast('이 숨은 기록은 수첩에 이미 보관했습니다.');return}
+ const note=HIDDEN_NOTES[ID][i];story.memories.push(i);story.insight+=1;story.score=Math.min(100,story.score+5);
+ addLog('숨은 기록 '+story.memories.length+'/3: '+note[0]+' — '+note[1]);hudUpdate();
+ say('숨겨진 현장 기록','📚','발견: '+note[0],note[1]+'\n\n숨은 기록 '+story.memories.length+'/3개를 수집했습니다. 세 기록을 모두 발견하면 결말에 특별한 후일담이 추가됩니다.',[{label:'탐험 계속하기',run:unlock}]);
+}
+function residentDialogue(){if(story.stage<2){say(C.resident,'🧑🏻','현장의 목소리','"먼저 주변의 기록과 물건을 찾아보세요. 이야기를 나눌 때 도움이 될 거예요."',[{label:'알겠습니다',run:unlock}]);return}
+ if(story.stage>2){say(C.resident,'🧑🏻','다시 만난 사람',`"이전의 선택을 기억해요. ${story.branch==='listen'?'제 이야기에 귀 기울여 주었죠.':story.branch==='investigate'?'자료를 확인하겠다고 했죠.':'함께 해 보자고 말해주었죠.'}"`,[{label:'이야기 계속하기',run:unlock}]);return}
+ say(C.resident,'🧑🏻','엇갈린 의견',`"같은 사건인데 사람마다 설명이 달라요. ${story.opening}"\n\n지금 어떤 방향으로 진행할지 선택하세요. 이 선택이 다음 퀘스트를 결정합니다.`,[
+ {label:'🤝 당사자 의견을 더 듣는다',run:()=>branchChoose('listen')},
+ {label:'🔎 남아 있는 자료를 더 조사한다',run:()=>branchChoose('investigate')},
+ {label:'✨ 직접 체험하며 새 해결책을 만든다',run:()=>branchChoose('create')}
+])}
+function branchChoose(k){story.branch=k;story.stage=3;if(k==='listen'){story.trust+=2;story.score+=10}if(k==='investigate'){story.insight+=2;story.score+=10}if(k==='create'){story.creative+=2;story.score+=10}addLog('진행 방향: '+({listen:'의견 청취',investigate:'추가 조사',create:'체험 활동'}[k]));requestAI('branch',k,story.seed);resultSay({listen:'말을 더 듣기로 했습니다. 안내자에게 돌아가세요.',investigate:'근거를 더 살피기로 했습니다. 위쪽의 세 번째 단서를 확인하세요.',create:'새 해결책을 실험하기로 했습니다. 아래쪽 체험대로 이동하세요.'}[k],()=>{hudUpdate();toast('✦ 다음 목적지가 바뀌었습니다.')})}
+function startPuzzle(){if(story.stage!==3||story.branch!=='create'){say('체험대','🧩','전공 체험',`지금은 진행할 수 없습니다. ${objectiveText()[1]}`,[{label:'확인',run:unlock}]);return}
+ layerShow('puzzle');$('puzzleTitle').textContent=C.name+' · 현장 미션';$('puzzlePrompt').textContent=C.question;$('puzzleNote').textContent=diff==='easy'?'쉬움: 문장을 꼼꼼히 읽으면 답을 찾을 수 있습니다.':diff==='hard'?'어려움: 오답을 선택하면 탐험 점수가 줄어듭니다.':'근거를 생각하며 선택하세요.';
+ $('puzzleOptions').replaceChildren();C.answers.forEach((a,i)=>{const b=document.createElement('button');b.textContent=['① ','② ','③ '][i]+a;b.addEventListener('click',()=>{if(i===C.correct){story.puzzleSolved=true;story.stage=4;story.insight+=2;story.creative+=1;story.score+=20;addLog('전공 미션 해결: '+C.lesson);layerShow('');say('체험 기록','🏵️','문제 해결!',C.lesson,[{label:'최종 결정을 위해 이동하기',run:unlock}]);hudUpdate()}else{story.errors++;story.score=Math.max(0,story.score-(diff==='hard'?8:diff==='normal'?3:0));$('puzzleNote').textContent='다시 생각해 보세요. '+(diff==='easy'?C.lesson:'선택을 고치면 계속 진행할 수 있습니다.')}});$('puzzleOptions').append(b)});
+}
+function endingChoice(){if(story.stage!==4){say(C.expert,'🧑🏻‍🎓','아직 마무리할 때가 아니에요',objectiveText()[1],[{label:'돌아가기',run:unlock}]);return}
+ say(C.expert,'🧑🏻‍🎓','이야기의 마지막 선택',`${C.world}에서 모은 단서와 당신의 결정을 모두 되돌아볼 시간입니다.\n${C.lesson}\n\n어떤 방식으로 사건을 마무리하시겠습니까?`,C.choice.map((label,i)=>({label:['🤝 ','🔎 ','✨ '][i]+label,run:()=>finish(i)})))}
+function finish(i){story.finalChoice=i;story.complete=true;story.stage=5;const matching=story.pathChoice===i?10:0;story.score=lim(story.score+20+matching,0,100);const values=[story.trust,story.insight,story.creative];let strongest=values.indexOf(Math.max(...values));const branchText=story.branch==='listen'?'상대방의 이야기를 추가로 듣고':story.branch==='investigate'?'자료를 한 번 더 조사하고':'직접 체험한 결과를 바탕으로';
+ const endingNames=['공감의 마무리','탐구의 마무리','상상의 마무리'];story.outcome=endingNames[i];const secondary=story.clues.map(k=>C.item[k]).join(' · ');
+ const creativeEnding=ID==='creative'?`주인공은 ${story.pathChoice===0?'마음속 갈등을 마주하고':story.pathChoice===1?'사라진 기록의 흔적을 따라가고':'익숙한 규칙을 뒤집고'} 새로운 길을 발견했습니다. ${C.endings[i]}`:C.endings[i];
+ story.generatedText=`「${story.caseTitle}」\n\n${story.opening}\n\n당신은 ${secondary}에서 단서를 얻고, ${branchText} 사건을 바라보았습니다. ${creativeEnding}\n\n처음 선택한 방식과 마지막 결정이 ${story.pathChoice===i?'이어져':'서로 달라져'} 인물들의 반응에도 변화가 생겼습니다. ${['서로의 이야기가 쌓이는 마을이 되었습니다.','조사 결과를 다시 검토할 수 있는 기록이 남았습니다.','다음 세대가 이어갈 새로운 실험이 시작됐습니다.'][strongest]}`;
+ if((story.memories?.length||0)===3){story.outcome+=' · 기록 수집가';story.generatedText+='\n\n[숨은 후일담]\n'+HIDDEN_NOTES[ID].map(n=>n[0]).join('·')+'에 남은 기록을 함께 읽은 마을 사람들은 서로 다른 관점을 다시 나누기 시작했습니다.';story.score=Math.min(100,story.score+10)}
+ addLog('사건 해결: '+story.outcome);store();let stamps=[];try{stamps=JSON.parse(localStorage.getItem('dgu-mj-study-book-v1')||'[]')}catch{}if(!Array.isArray(stamps))stamps=[];if(!stamps.includes(ID))stamps.push(ID);try{localStorage.setItem('dgu-mj-study-book-v1',JSON.stringify(stamps))}catch{};
+ try{window.parent.postMessage({version:1,type:ID==='classic'?'dgu-classic-story-completed':'dgu-major-story-completed',major:ID,score:story.score,ending:story.outcome},location.origin==='null'?'*':location.origin)}catch{};
+ layerShow('ending');$('endIcon').textContent=C.icon;$('endingTitle').textContent=C.name+' · '+story.outcome;$('endingText').textContent=`사건을 마무리했습니다. 수집 단서 ${story.clues.length}개 · ${story.outcome} · 획득 점수 ${story.score}점. 전공 탐험 도장을 기록했습니다.`;$('endingStory').textContent=story.generatedText;$('endingScore').textContent='결말은 초기 선택, 조사 경로, 마지막 선택과 난이도에 따라 달라집니다. 같은 전공도 새 사건으로 다시 플레이할 수 있습니다.';requestAI('ending',i,story.seed)}
+function getActors(){return actors.filter(a=>!a.decor&&(!a.id.startsWith('clue')||story.stage===1||story.stage===3||story.stage===4)&&!(a.id==='support'&&story.stage!==3))}
+function relevant(a){const goal=activeObjective();if(goal==='mentor')return a.id==='mentor';if(goal==='resident')return a.id==='resident';if(goal==='expert')return a.id==='expert';if(goal==='clues')return a.id.startsWith('clue')&&!story.clues.includes(Number(a.id[4]));if(goal==='clue2')return a.id==='clue2';if(goal==='support')return a.id==='support';return false}
+function nearest(max=1.7){let best=null,dist=max;for(const a of getActors()){let d=Math.hypot(player.x-a.x,player.y-a.y);if(d<dist){dist=d;best=a}}return best}
+function interact(a=nearest()){if(!a){toast('NPC나 빛나는 단서에 조금 더 다가가세요.');return}path=[];if(a.id.startsWith('memory'))inspectMemory(Number(a.id.slice(-1)));else if(a.id==='mentor')talkMentor();else if(a.id==='resident')residentDialogue();else if(a.id==='expert')endingChoice();else if(a.id==='support')startPuzzle();else if(a.id.startsWith('clue'))inspectClue(Number(a.id[4]));}
+const goalLoc=()=>{let a=actors.find(a=>relevant(a));if(story.stage===1)a=actors.find(a=>a.id.startsWith('clue')&&!story.clues.includes(Number(a.id[4])));return a||actors[0]};
+function openJournal(){layerShow('journal');const b=$('journalBody');b.replaceChildren();const p=document.createElement('div');p.className='paper';p.textContent=`${story.caseTitle}\n${story.opening}\n\n현재 목표: ${objectiveText().join(' — ')}\n${C.lesson}`;b.append(p);const mem=document.createElement('div');mem.className='paper';mem.textContent='숨은 현장 기록 · '+(story.memories?.length||0)+'/3\n'+(story.memories?.length?story.memories.map(i=>HIDDEN_NOTES[ID][i][0]+' — '+HIDDEN_NOTES[ID][i][1]).join('\n\n'):'마을을 둘러보며 푸른빛으로 반짝이는 자료를 조사하세요. 본 이야기와 별개로 모을 수 있습니다.');b.append(mem);const h=document.createElement('h3');h.textContent='수집한 기록';b.append(h);const l=document.createElement('ol');l.className='journalList';for(const s of story.log){const li=document.createElement('li');li.textContent=s;l.append(li)}b.append(l);const v=document.createElement('p');v.textContent=`선택의 흔적: 신뢰 ${story.trust} · 탐구 ${story.insight} · 창의 ${story.creative} · 현재 점수 ${story.score}`;b.append(v)}
+function navigateToObjective(){if(paused)return;const a=goalLoc();if(!a){toast('현재 목적지가 없습니다.');return}let best=[];for(const [dx,dy] of [[0,0],[-1,0],[1,0],[0,-1],[0,1]]){const dest=bfs(a.x+dx,a.y+dy);if(dest.length&&(!best.length||dest.length<best.length))best=dest;}if(!best.length){toast('길을 찾을 수 없습니다. 직접 이동해 주세요.');return}path=best;toast('🧭 '+a.name+' 위치까지 길을 안내합니다.');}
+function hint(){if(diff==='hard'){story.score=Math.max(0,story.score-3);story.errors++;toast('힌트 사용으로 점수 -3')}const a=goalLoc();say('길 안내','🧭','목적지 찾기',`${objectiveText()[1]}\n\n현재 목표 방향: ${a.x>player.x?'오른쪽':a.x<player.x?'왼쪽':'같은 가로선'}, ${a.y>player.y?'아래쪽':a.y<player.y?'위쪽':'같은 세로선'}입니다.\n${C.lesson}`,[{label:'길을 찾아볼게요',run:unlock}]);}
+function bfs(tx,ty){const start=[Math.floor(player.x),Math.floor(player.y)];let dest=[lim(Math.floor(tx),1,W-2),lim(Math.floor(ty),1,H-2)];let q=[start],seen=new Set([start.join(',')]),from=new Map();for(let k=0;k<q.length;k++){const [x,y]=q[k];if(x===dest[0]&&y===dest[1])break;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy,key=nx+','+ny;if(nx<1||ny<1||nx>=W-1||ny>=H-1||seen.has(key)||arr[ny][nx]>=7)continue;seen.add(key);from.set(key,x+','+y);q.push([nx,ny])}}let key=dest.join(','),result=[];if(!seen.has(key))return [];let guard=0;while(key!==start.join(',')&&guard++<W*H){const [x,y]=key.split(',').map(Number);result.unshift({x:x+.5,y:y+.5});key=from.get(key);if(!key)break}return result}
+const isWalking=()=>keys.has('ArrowUp')||keys.has('ArrowDown')||keys.has('ArrowLeft')||keys.has('ArrowRight')||keys.has('w')||keys.has('a')||keys.has('s')||keys.has('d')||Math.abs(touch.x)+Math.abs(touch.y)>.13;
+function step(dt){if(paused)return;let mx=0,my=0;const has=k=>keys.has(k);if(has('ArrowUp')||has('w'))my--;if(has('ArrowDown')||has('s'))my++;if(has('ArrowLeft')||has('a'))mx--;if(has('ArrowRight')||has('d'))mx++;mx+=touch.x;my+=touch.y;let moving=Math.hypot(mx,my)>.12;
+ if(!moving&&path.length){const t=path[0],dx=t.x-player.x,dy=t.y-player.y,d=Math.hypot(dx,dy);if(d<.14){path.shift();if(!path.length){const n=nearest(1.6);if(n&&relevant(n))toast('✦ 상호작용 버튼을 눌러주세요.')}return}mx=dx/d;my=dy/d;moving=true}else if(moving)path=[];
+ player.moving=moving;
+ if(moving){const m=Math.hypot(mx,my);mx/=m;my/=m;let speed=diff==='easy'?3.9:3.4;const dx=mx*speed*dt,dy=my*speed*dt;if(!collides(player.x+dx,player.y))player.x+=dx;if(!collides(player.x,player.y+dy))player.y+=dy;player.dir=Math.abs(dx)>Math.abs(dy)?dx>0?'right':'left':dy>0?'down':'up';player.step+=dt*10;frameTick+=dt; if(frameTick>1.2){store();frameTick=0}}
+ }
+// Pixellated sprite helpers: all sprites and maps are original drawn Canvas, not ripped game assets.
+function px(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function linePixel(x,y,w,c){px(x,y,w,2,c)}
+function shade(col,v){return col}
+function randCell(x,y){const v=(Math.imul(x+193,92837111)^Math.imul(y+991,689287499)^seed)>>>0;return v%97}
+function ground(x,y,ox,oy,size){
+ const sx=x*TILE-ox,sy=y*TILE-oy;if(sx<-TILE||sy<-TILE||sx>innerWidth+TILE||sy>innerHeight+TILE)return;
+ const t=arr[y][x],n=randCell(x,y),grass=C.palette[0],stone=C.palette[1];
+ if(t===9){
+  const tx=Math.round(sx),ty=Math.round(sy);px(tx,ty,size+1,size+1,'#234d64');
+  px(tx+2,ty+2,size-4,size-4,'#32748b');
+  for(let k=0;k<5;k++){const q=(randCell(x+k,y*3+k)%9),shift=effectsOn?Math.round(Math.sin(sceneNow*.0025+k+x)*4):0;
+   px(tx+3+q*2,ty+5+k*7+shift,12,2,k%2?'#7dc5bf':'#a4ddd0');
+   px(tx+5+q*2,ty+7+k*7+shift,7,1,'#e4edcaaa');}
+  if((randCell(x,y)%5)===0){px(tx+5,ty+20,13,7,'#477f53');px(tx+7,ty+17,9,3,'#7caf78');}
+  const up=y===0||arr[y-1]?.[x]!==9,left=x===0||arr[y]?.[x-1]!==9,right=x===W-1||arr[y]?.[x+1]!==9,down=y===H-1||arr[y+1]?.[x]!==9;
+  if(up){px(tx,ty,40,5,'#8b795b');px(tx+2,ty,36,2,'#dbc3a0')}
+  if(left){px(tx,ty,5,40,'#7e745d');px(tx,ty+4,2,33,'#d2b997')}
+  if(right){px(tx+35,ty,5,40,'#756e56');px(tx+37,ty+4,2,32,'#dbc39b')}
+  if(down){px(tx,ty+35,40,5,'#85705c');px(tx+3,ty+37,34,2,'#ddc29b')}
+ }else if(t===1){
+  px(sx,sy,size+1,size+1,stone);
+  // Irregular hand-set cobblestones; deterministic per cell, no texture downloads.
+  for(let row=0;row<3;row++){
+   const yy=sy+row*13+2;let xx=sx+(row%2? -7:2);
+   while(xx<sx+size){const k=7+(n+row+Math.round(xx))%7, ww=Math.min(k,sx+size-xx);
+    px(xx,yy,ww-1,11,'#392f2f25');px(xx+1,yy+1,Math.max(1,ww-3),8,row%2?'#f0dcbf30':'#ffedc34a');px(xx+2,yy+2,Math.max(1,ww-5),1,'#fff9e03a');xx+=k+1;
+   }
+  }
+  if(n%5===0)px(sx+3+n%23,sy+30,4,2,'#b5a88773');
+ }else if(t===8){px(sx,sy,size+1,size+1,'#263b36');px(sx+2,sy+2,size-4,size-4,'#476853');if(n%3===0)px(sx+10,sy+16,7,4,'#74935a');}
+ else if(t===7){px(sx,sy,size+1,size+1,'#6f6252');px(sx+1,sy+1,size-2,size-2,'#8e8270');}
+ else{
+  px(sx,sy,size+1,size+1,grass);px(sx+1,sy+1,size-2,size-2,n%2?'#b4d29a13':'#0c382512');
+  for(let k=0;k<4;k++){let xx=sx+3+((n*13+k*11)%33),yy=sy+3+((n*7+k*9)%33);px(xx,yy,2,4,k%2?'#285b41a0':'#a6c68c9c');px(xx-2,yy+2,5,2,'#365e43aa');}
+  if(t===6){for(let k=0;k<3;k++){const xx=sx+8+(k*11+n)%25,yy=sy+12+(k*7+n)%19;px(xx,yy,4,5,C.palette[4]);px(xx-2,yy+1,2,3,'#ffd6df');px(xx+3,yy-2,2,3,'#fff6c7')}}
+  else if(n%7===0){px(sx+26,sy+14,3,3,'#fff0d1');px(sx+24,sy+16,2,2,'#e1a6c7')}
+ }
+}
+function drawTree(x,y,scale=1,variant=0){
+ const s=scale,col=ID==='modern'?'#31566b':ID==='creative'?'#6d6175':'#2b6242';
+ px(x-16*s,y+10*s,36*s,7*s,'#162a2688');px(x-4*s,y-5*s,8*s,33*s,'#6d4732');px(x+1*s,y-3*s,2*s,24*s,'#b48559');
+ const blobs=[[-14,-19,15],[-2,-29,18],[14,-17,14],[-19,-7,12],[-1,-10,21],[17,-5,12]];
+ for(let i=0;i<blobs.length;i++){let [bx,by,r]=blobs[i];px(x+(bx-r*.55)*s,y+(by-r*.58)*s,r*s*1.3,r*s,col);px(x+(bx-r*.38)*s,y+(by-r*.78)*s,r*s,r*s*.74,i%3?'#4d9162':'#83b276');px(x+(bx-r*.25)*s,y+(by-r*.68)*s,r*s*.4,3*s,'#b9d398')}
+ for(let k=0;k<4;k++){let xx=x+([0,-15,13,4][k])*s, yy=y+([-27,-13,-12,-37][k])*s;px(xx,yy,4*s,4*s,variant===1?'#ffd1df':'#ecb4c9');px(xx-2*s,yy+1*s,3*s,3*s,'#f6e2e1');}
+}
+function drawProp(a,ox,oy){const x=(a.x+.5)*TILE-ox,y=(a.y+.5)*TILE-oy;
+ if(x<-100||x>innerWidth+100||y<-100||y>innerHeight+100)return;
+ if(a.kind==='tree')drawTree(x,y,1,a.variant);
+ else if(a.kind==='shrub') {px(x-16,y+5,32,8,'#18332877');for(let k=0;k<3;k++){let xx=x-11+k*10;px(xx-5,y-8+(k%2)*2,18,19,'#2e6243');px(xx-3,y-11+(k%2)*2,15,15,k%2?'#69a46b':'#51955e');px(xx+3,y-9,4,3,'#bad48d')}if(a.variant===0)px(x-3,y-14,4,5,'#f7b9d2')}
+ else if(a.kind==='flower'){for(let i=0;i<4;i++){let xx=x+(i%2?8:-7)+(i*3%5),yy=y+((i*7)%15)-7;px(xx,yy,2,10,'#316b43');px(xx-3,yy-4,8,8,['#f7b1ce','#ffdd8c','#e9e7ee'][a.variant]);px(xx-1,yy-2,3,3,'#fff5be')}}
+}
+function drawBuilding(b,ox,oy){
+ const [gx,gy,gw,gh]=b,x=gx*TILE-ox,y=gy*TILE-oy,w=gw*TILE,h=gh*TILE;
+ if(x+w<-90||x>innerWidth+90||y+h<-130||y>innerHeight+70)return;
+ const traditional=['classic','multi','asia','creative'].includes(ID),blue=['modern','ling'].includes(ID),roof=traditional?'#273d48':blue?'#364b69':'#5a5146',light=traditional?'#4a7180':blue?'#647f92':'#86745b',wall=traditional?'#dbbe99':'#e9ddc1';
+ px(x-3,y+18,w+8,h-10,'#1b292b5f');px(x+1,y+19,w-2,h-22,'#70503d');px(x+7,y+26,w-14,h-30,wall);
+ for(let xx=16;xx<w-6;xx+=27){px(x+xx,y+29,5,h-37,traditional?'#a57655':'#c1ad90');px(x+xx+1,y+29,1,h-37,'#f6dcaa')}px(x+5,y+h-12,w-10,4,'#805e47');
+ // Detailed stepped tiled roof silhouette, eave shadows, finial and tile seams.
+ for(let band=0;band<4;band++){let inset=band*5;px(x-20+inset,y-18+band*7,w+40-inset*2,8,band%2?light:roof);px(x-18+inset,y-15+band*7,w+36-inset*2,2,'#9eabb1')}
+ px(x-23,y+9,w+46,9,'#172b38');px(x-22,y+9,w+44,3,'#9a7c52');
+ for(let row=0;row<3;row++)for(let xx=0;xx<w+18;xx+=14){const a=x-8+xx-row*4,top=y-11+row*7;px(a,top,10,2,'#a5b8a3');px(a+2,top+3,8,2,'#192c39');px(a+4,top+5,3,2,'#7f9a94')}
+ if(traditional){px(x+w/2-5,y-30,10,10,'#d7ad6e');px(x+w/2-2,y-36,4,8,'#ba8652')}
+ // Luminous lattice windows and wood doors.
+ const doorX=x+w*.5,doorY=y+h-67;px(doorX-23,doorY,46,66,'#684631');px(doorX-19,doorY+4,38,60,'#433b3d');px(doorX-16,doorY+7,32,57,'#b48156');
+ px(doorX-1,doorY+8,2,53,'#503c34');px(doorX+8,doorY+32,3,4,'#ffdb85');
+ for(let j=0;j<2;j++){const wx=x+23+j*(w-79);px(wx-3,y+43,48,43,'#6a4737');px(wx,y+46,42,37,'#f4d4a0');px(wx+3,y+49,36,31,ID==='modern'?'#8baac0':'#ffd69b');
+  for(let k=0;k<4;k++)px(wx+7+k*8,y+49,2,31,'#704a38');for(let k=0;k<3;k++)px(wx+3,y+57+k*10,36,2,'#704a38');px(wx+3,y+49,35,3,'#fff5d7a3');}
+ for(let k=0;k<3;k++){px(doorX-29+k*12,y+h-5-k*3,58-k*12,3,'#f0d8ab');}
+ // Architectural signboard: each major has a real label, not a decorative placeholder.
+ const roomLabel=ID==='classic'?'서책과 이야기':ID==='modern'?'문학 서재':ID==='ling'?'언어 연구소':ID==='teach'?'한국어 학당':ID==='creative'?'달빛 창작 공방':ID==='multi'?'문화 교류관':'아시아 문화관';
+ px(doorX-67,y+26,134,27,'#261e1a');px(doorX-64,y+28,128,23,'#b78b4e');px(doorX-61,y+30,122,19,'#2e3638');ctx.font='bold 13px system-ui';ctx.fillStyle='#fce7b4';ctx.textAlign='center';ctx.fillText(roomLabel,doorX,y+44);ctx.textAlign='start';
+ // Lanterns, banner, bookboxes and flowerpots on the facade.
+ for(const sx of [x+17,x+w-19]){px(sx-1,y+52,3,24,'#8d5c40');px(sx-8,y+72,17,20,'#824e38');px(sx-6,y+75,13,15,'#ffd588');px(sx-4,y+77,9,11,'#f7b766');px(sx-8,y+92,17,3,'#6d4332')}
+ for(const xx of [x+10,x+w-24]){px(xx,y+h-25,16,13,'#93694f');px(xx+3,y+h-34,10,12,'#39764d');px(xx+6,y+h-39,4,8,'#d2a2c2')}
+}
+function decorSign(cx,cy,label,ox,oy){const x=cx*TILE-ox,y=cy*TILE-oy;px(x-42,y-34,84,23,'#1c333d');px(x-40,y-32,80,19,C.palette[3]);px(x-40,y-32,80,2,'#f6d28b');ctx.font='bold 12px system-ui';ctx.fillStyle='#fff1ce';ctx.textAlign='center';ctx.fillText(label,x,y-18);ctx.textAlign='start';px(x-34,y-10,3,12,'#6b5039');px(x+31,y-10,3,12,'#6b5039')}
+function decorativeStall(cx,cy,ox,oy,variant){const x=cx*TILE-ox,y=cy*TILE-oy;px(x-28,y+8,56,7,'#5b4030');px(x-26,y-12,52,22,'#9d734b');px(x-31,y-21,62,10,C.palette[3]);for(let a=0;a<5;a++)px(x-29+a*12,y-20,7,9,a%2?'#ffe0a4':'#d09c75');px(x-24,y-12,4,26,'#664b33');px(x+19,y-12,4,26,'#664b33');for(let a=0;a<4;a++)px(x-19+a*12,y,8,6,['#d87e53','#f4d076','#6fa267','#98b2ce'][(a+variant)%4])}
+function decorateWorld(ox,oy,now){
+ const spots=[[7.5,8.5],[17.5,8.2],[22.5,15.6],[7.5,15.2]];
+ if(ID==='classic'||ID==='asia'||ID==='multi'){
+  spots.forEach(([x,y],i)=>decorativeStall(x,y,ox,oy,i));
+  for(let x of [4,11,18,26]){let xx=x*TILE-ox,yy=8.5*TILE-oy;px(xx,yy-58,3,56,'#6a4738');px(xx-4,yy-60,12,9,'#df9b5a');px(xx-2,yy-55,8,13,ID==='asia'?'#edb979':'#f1d89a')}
+ }
+ if(ID==='modern'){for(const [x,y] of spots){let a=x*TILE-ox,b=y*TILE-oy;px(a,b-40,5,56,'#4b4b55');px(a-10,b-43,23,8,'#29313c');px(a-7,b-39,16,8,'#ffe09e');px(a-6,b+12,18,4,'#404b54')}for(let k=0;k<30;k++){let a=(Math.imul(k+9,1679)%W)*TILE-ox,b=(Math.imul(k+4,1091)%H)*TILE-oy;if(a>0&&b>0&&a<innerWidth&&b<innerHeight)px(a,b,2,8,'#cce7f750')}}
+ if(ID==='ling'){for(const [x,y] of spots){const a=x*TILE-ox,b=y*TILE-oy;px(a-20,b-20,42,30,'#e1ebd6');px(a-17,b-17,35,24,'#64818d');ctx.font='bold 20px serif';ctx.fillStyle='#fff3d2';ctx.textAlign='center';ctx.fillText(['가','나','다','라'][spots.findIndex(z=>z[0]===x)],a,b+2);ctx.textAlign='start'}}
+ if(ID==='teach'){for(const [x,y] of spots){const a=x*TILE-ox,b=y*TILE-oy;px(a-24,b-13,50,28,'#e7dec3');px(a-24,b-16,50,5,'#8d755f');for(let i=0;i<3;i++)px(a-18+i*14,b-8,10,12,['#7396bb','#eabf73','#88b994'][i])}}
+ if(ID==='creative'){for(const [x,y] of spots){const a=x*TILE-ox,b=y*TILE-oy;px(a-18,b-17,36,28,'#64526b');px(a-15,b-21,30,28,'#e9d8bd');for(let i=0;i<4;i++)px(a-11,b-16+i*6,20,2,'#c09f79');px(a+18,b-25,3,33,'#a68caf');px(a+17,b-27,6,7,'#fce1b8')}}
+ // Distinctive original scenery at the edges of the square; decorative, no collision geometry.
+ const ex=20*TILE-ox,ey=7.6*TILE-oy;
+ if(ID==='classic'){px(ex-43,ey-21,88,5,'#68492c');px(ex-39,ey-38,6,49,'#6a422b');px(ex+30,ey-38,6,49,'#6a422b');px(ex-44,ey-45,90,11,'#a45d39');for(let i=0;i<5;i++)px(ex-35+i*16,ey-34,9,12,i%2?'#dfbd80':'#ed9a62');}
+ if(ID==='modern'){for(let i=0;i<3;i++){px(ex-36+i*25,ey-48,5,60,'#40424f');px(ex-39+i*25,ey-54,13,8,'#efd0a2')}px(ex-35,ey+12,73,5,'#545463')}
+ if(ID==='ling'){px(ex-47,ey-45,95,66,'#e8dac0');px(ex-40,ey-38,81,50,'#334b53');ctx.fillStyle='#f6e3a6';ctx.textAlign='center';ctx.font='bold 21px serif';ctx.fillText('가 · 나 · 다',ex,ey-7);ctx.textAlign='start'}
+ if(ID==='teach'){for(let i=0;i<3;i++){px(ex-39+i*29,ey-30,24,17,'#debd88');px(ex-36+i*29,ey-33,18,6,'#916f51');px(ex-37+i*29,ey-12,5,15,'#69533d')}}
+ if(ID==='creative'){px(ex-42,ey-44,82,64,'#6e566b');for(let i=0;i<3;i++){px(ex-34+i*26,ey-36,20,48,'#e9d5af');px(ex-28+i*26,ey-25,10,3,'#b28a6b')}}
+ if(ID==='multi'){for(let i=0;i<7;i++){const a=ex-49+i*17,b=ey-41+Math.sin(now*.001+i)*3;px(a,b,13,10,['#eeaf8c','#e7d597','#9ac5be','#bbb3df'][i%4]);px(a,b-4,2,5,'#f3e7be')}}
+ if(ID==='asia'){px(ex-51,ey-42,104,9,'#b76553');px(ex-44,ey-34,91,4,'#dcb27f');for(let i=0;i<4;i++){px(ex-33+i*25,ey-24,18,35,['#916e58','#567b87','#a87a65','#88648c'][i])}}
+ for(let i=0;i<3;i++){const lab=ID==='classic'?['서책방','장터','나루터'][i]:ID==='modern'?['문학서점','낭독관','원고실'][i]:ID==='ling'?['언어연구','말소리실','기록관'][i]:ID==='teach'?['한국어교실','교육자료','실습관'][i]:ID==='creative'?['이야기공방','편집실','서재'][i]:ID==='multi'?['교류센터','안내소','축제광장'][i]:['문화전시관','교류관','축제관'][i];decorSign([4.5,15,27][i],2.35,lab,ox,oy)}
+}
+
+function spriteForActor(a){
+ if(a.isPlayer)return 'hero';
+ if(a.id==='mentor')return 'mentor';
+ if(a.id==='resident')return 'resident';
+ if(a.id==='expert')return 'expert';
+ return (Math.round(a.x*31+a.y*7)%2)?'villager_a':'villager_b';
+}
+function drawSpriteActor(a,x,y,now){
+ const img=spriteAtlases[spriteForActor(a)];if(!img?.complete||!img.naturalWidth)return false;
+ const direction=a.isPlayer?(a.dir||'down'):(a.decor?(Math.cos(now*.001+a.x*2)>0?'right':'left'):'down');
+ const dirIndex=({down:0,left:1,right:2,up:3})[direction]??0;
+ const moving=a.isPlayer?!!a.moving:(!!a.decor&&effectsOn);
+ const frame=moving?(a.isPlayer?Math.floor(a.step*1.1)%4:Math.floor(now/220+a.x)%4):0;
+ const sx=frame*48,sy=dirIndex*64;
+ const bob=!a.isPlayer?Math.sin(now*.0017+a.x)*.5:0;
+ const dx=Math.round(x-24),dy=Math.round(y-47+bob);
+ ctx.drawImage(img,sx,sy,48,64,dx,dy,48,64);
+ if(a.isPlayer){
+  px(x-16,y+18,33,2,'#ffdc91');px(x-16,y+20,33,1,'#62412f');
+ }else if(!a.decor&&relevant(a)){
+  const by=y-68+(effectsOn?Math.sin(now*.004)*3:0);
+  px(x-10,by,21,23,'#3c352b');px(x-8,by+2,17,19,'#ffe0a1');px(x-1,by+6,3,9,'#7f4b18');px(x-1,by+17,3,2,'#7f4b18');
+ }
+ if(!a.isPlayer&&!a.decor&&a.name){
+  ctx.font='bold 10px system-ui';ctx.textAlign='center';const label=a.name.length>12?a.name.slice(0,11)+'…':a.name;
+  const lw=Math.min(154,ctx.measureText(label).width+16);
+  px(x-lw/2,y-82,lw,16,'#203a39e9');px(x-lw/2,y-82,lw,2,'#d8b06b');ctx.fillStyle='#fff0c6';ctx.fillText(label,x,y-70);ctx.textAlign='start';
+ }
+ return true;
+}
+
+function drawActor(a,ox,oy,now){
+ const sway=a.decor&&effectsOn?Math.sin(now*.001+a.x*2)*.28:0;
+ const x=Math.round((a.x+.5+sway)*TILE-ox),y=Math.round((a.y+.5)*TILE-oy);
+ if(x<-90||y<-100||x>innerWidth+90||y>innerHeight+70)return;
+ if(a.object){
+  const pul=Math.sin(now*.004+a.x)*3;
+  px(x-15,y+12,31,6,'#1c2e3677');
+  if(a.memory){px(x-17,y-12,34,29,'#6e91a1');px(x-13,y-15,26,30,'#d5e9e8');px(x-9,y-9,18,2,'#789bac');px(x-9,y-3,14,2,'#789bac');px(x-9,y+3,17,2,'#789bac');px(x-3,y-25+pul,7,8,'#adf7ee');px(x-1,y-28+pul,3,3,'#fff');}
+  else {px(x-16,y+2,33,15,'#694a37');px(x-13,y-9,27,20,'#a77e55');px(x-11,y-13,23,7,'#e1c58a');px(x-9,y-7,18,6,'#e8deaf');px(x-6,y+2,11,3,'#6e5945');px(x-1,y-19,3,6,'#ffe9aa');}
+  if(relevant(a)){const py=y-39+pul;px(x-10,py-2,20,24,'#2f363f');px(x-8,py,16,20,'#eac66d');px(x-2,py+2,4,10,'#543b30');px(x-2,py+15,4,4,'#543b30')}
+  return;
+ }
+ if(drawSpriteActor(a,x,y,now))return;
+ const p=!!a.isPlayer,moving=p&&!!player.moving,bob=moving?Math.round(Math.sin(player.step*2.2)*2):Math.round(Math.sin(now*.001+a.x)*1);
+ const faceDir=p?(player.dir||'down'):'down',bodyColor=a.robe||C.clothing;
+ // feet & shadow
+ px(x-16,y+13,33,7,'#142a2b8d');px(x-10,y+9+bob,8,9,'#343b44');px(x+2,y+9-bob,8,9,'#353641');px(x-10,y+12+bob,7,3,'#8e7263');px(x+3,y+12-bob,7,3,'#8e7263');
+ // layered clothing with sleeve hem and satchel
+ px(x-11,y-16+bob,24,28,'#2c363e');px(x-10,y-15+bob,21,26,bodyColor);px(x-7,y-13+bob,14,4,'#e5d4b8');px(x-6,y+4+bob,13,4,'#f3ddbb');px(x-15,y-11+bob,6,16,bodyColor);px(x+11,y-11+bob,6,16,bodyColor);px(x-16,y+2+bob,5,5,'#edc3a3');px(x+12,y+2+bob,5,5,'#edc3a3');
+ if(p){px(x+8,y-7+bob,6,15,'#8c6b47');px(x+10,y-2+bob,8,14,'#c19b5d');px(x+13,y+2+bob,4,5,'#f7d48b')}
+ const headY=y-29+bob;
+ px(x-12,headY,25,23,'#aa7960');px(x-11,headY+2,23,20,a.skin||'#efd0ab');px(x-15,headY+9,5,7,'#d9a88c');px(x+11,headY+9,5,7,'#d9a88c');
+ // 4-way sprite for actual walking direction; eyes visible in 3/4 views.
+ if(faceDir==='up'){px(x-11,headY+4,22,13,'#a98964');px(x-7,headY+15,15,4,'#f3d2b4')}
+ else if(faceDir==='left'||faceDir==='right'){
+  const d=faceDir==='right'?1:-1;
+  px(x+d*3,headY+9,3,4,'#203039');px(x+d*8,headY+14,3,3,'#b98773');px(x+d*5,headY+17,3,2,'#684f41');px(x-d*7,headY+14,4,3,'#e5a8a7');
+ }else{
+  px(x-7,headY+9,4,5,'#202b35');px(x+5,headY+9,4,5,'#202b35');px(x-6,headY+9,1,1,'#f8ffff');px(x+6,headY+9,1,1,'#f8ffff');px(x-10,headY+15,5,3,'#eba7a9');px(x+8,headY+15,5,3,'#eba7a9');px(x-1,headY+16,4,2,'#945a57');
+ }
+ // gat & scholar hat (graduated silhouette, broad brim separate from facial area)
+ if(p||ID==='classic'||ID==='creative'){
+  px(x-14,headY-3,28,6,'#343742');px(x-20,headY+1,40,4,'#252b36');px(x-17,headY+1,34,2,'#7e6c56');px(x-11,headY-10,23,9,'#30333e');px(x-7,headY-13,15,4,'#444650');
+ }else{px(x-15,headY-4,31,6,'#47525e');px(x-12,headY-8,25,6,'#343c51');px(x-10,headY-9,20,3,'#b58a62')}
+ if(p){px(x-19,y+17,39,2,'#ffdb91');px(x-19,y+19,39,2,'#4b3d27');}
+ if(!p&&!a.decor&&relevant(a)){
+  const by=y-62+Math.sin(now*.003)*3;
+  px(x-12,by,24,25,'#553b24');px(x-10,by+2,20,21,'#ffe2a1');px(x-2,by+5,4,10,'#65411d');px(x-2,by+17,4,3,'#65411d');
+ }
+ if(!p&&!a.decor&&a.name){ctx.font='bold 10px system-ui';ctx.textAlign='center';const label=a.name.length>12?a.name.slice(0,11)+'…':a.name;const lw=Math.min(154,ctx.measureText(label).width+16);px(x-lw/2,y-70,lw,16,'#203a39e9');px(x-lw/2,y-70,lw,2,'#d8b06b');ctx.fillStyle='#fff0c6';ctx.fillText(label,x,y-58);ctx.textAlign='start'}
+}
+function drawTownPlaza(ox,oy,now){
+ // Focus marker is an original pixel-art embossed lotus compass, not copied game art.
+ const x=16.5*TILE-ox,y=11.5*TILE-oy;
+ if(x<-150||y<-150||x>innerWidth+150||y>innerHeight+150)return;
+ for(let r=72;r>12;r-=10){const col=r%20===2?'#bca27a55':'#f4e8bf35';for(let k=0;k<48;k++){const a=k*Math.PI/24,sx=x+Math.cos(a)*r,sy=y+Math.sin(a)*r*.55;px(sx-2,sy-2,5,4,col)}}
+ for(let i=0;i<8;i++){let t=(i/8)*Math.PI*2;const xx=x+Math.cos(t)*33,yy=y+Math.sin(t)*16;px(xx-4,yy-5,9,12,i%2?'#fff3c289':'#d8a77677');px(xx-1,yy-8,3,7,'#f2db9f80')}
+ px(x-13,y-5,26,12,'#ffddab66');px(x-8,y-9,16,20,'#d4a45f88');px(x-2,y-12,5,24,'#f6e4b3');
+}
+function drawWorldAtmosphere(ox,oy,now){
+ if(!effectsOn)return;
+ const t=now*.001;
+ const budget=innerWidth<450?16:innerWidth<850?23:38;
+ for(let i=0;i<budget;i++){
+  const sx=((i*149+t*(ID==='modern'?-55:11+(i%4)*7)-ox*.13)%Math.max(1,innerWidth)+innerWidth)%innerWidth;
+  const sy=((i*131+t*(ID==='modern'?185:19+(i%5)*11)-oy*.08)%Math.max(1,innerHeight)+innerHeight)%innerHeight;
+  if(ID==='modern'){
+   px(sx,sy,1,9,'#cfe9fd65');px(sx+1,sy+6,1,3,'#d8ebff76');
+  }else if(ID==='ling'){
+   const c=i%2?'#deedda88':'#e0d5a77a';px(sx,sy,2,2,c);px(sx-2,sy+1,6,1,c);
+  }else if(ID==='teach'){
+   px(sx,sy,3,2,i%3?'#e6d49a88':'#c0ebbd91');px(sx+2,sy+2,2,1,'#fff9d77c');
+  }else if(ID==='creative'){
+   px(sx-2,sy,5,2,'#f2d4c58a');px(sx,sy-2,1,6,'#ffc6e286');
+  }else if(ID==='multi'){
+   px(sx-2,sy,4,3,['#eca9a17c','#d5c48e7c','#a6cdd57c'][i%3]);
+  }else if(ID==='asia'){
+   px(sx,sy,2,4,'#ffdc9c9a');px(sx-2,sy+1,6,1,'#fff0c279');
+  }else{
+   // Pixel blossom petal with seasonal lateral drift.
+   px(sx,sy,4,3,'#f6b7ccaa');px(sx+3,sy+1,2,2,'#ffe8e6c9');px(sx+1,sy+3,2,1,'#e88fa8a6');
+  }
+ }
+}
+function drawAmbientLights(ox,oy,now){
+ if(!effectsOn)return;
+ const lights=[[7.5,8.5],[17.5,8.2],[22.5,15.6],[7.5,15.2],[4,10],[27,10]];
+ // Clip inexpensive soft light to visible lantern areas and skip outside viewport.
+ ctx.save();ctx.globalCompositeOperation='screen';
+ for(let i=0;i<lights.length;i++){
+  const x=lights[i][0]*TILE-ox,y=(lights[i][1]-.9)*TILE-oy;
+  if(x<-80||x>innerWidth+80||y<-80||y>innerHeight+80)continue;
+  const flicker=.90+.08*Math.sin(now*.003+i*13);
+  const grad=ctx.createRadialGradient(x,y,2,x,y,47);
+  grad.addColorStop(0,`rgba(255,208,118,${.18*flicker})`);
+  grad.addColorStop(.42,`rgba(250,164,70,${.09*flicker})`);
+  grad.addColorStop(1,'rgba(240,145,72,0)');
+  ctx.fillStyle=grad;ctx.fillRect(x-48,y-48,96,96);
+ }
+ ctx.restore();
+}
+function render(now){const dpr=Math.min(2,devicePixelRatio||1),wid=Math.max(320,innerWidth),hei=Math.max(220,innerHeight);const targetW=Math.round(wid*dpr),targetH=Math.round(hei*dpr);if(canvas.width!==targetW||canvas.height!==targetH){canvas.width=targetW;canvas.height=targetH;canvas.style.width='100%';canvas.style.height='100%'}deviceScale=dpr;sceneNow=now;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.imageSmoothingEnabled=false;ctx.fillStyle='#132e30';ctx.fillRect(0,0,wid,hei);
+ const ox=lim(player.x*TILE-wid*.5,0,Math.max(0,worldW-wid)),oy=lim(player.y*TILE-hei*.53,0,Math.max(0,worldH-hei));cam.x=ox;cam.y=oy;
+ for(let y=Math.max(0,Math.floor(oy/TILE)-1);y<Math.min(H,Math.ceil((oy+hei)/TILE)+1);y++)for(let x=Math.max(0,Math.floor(ox/TILE)-1);x<Math.min(W,Math.ceil((ox+wid)/TILE)+1);x++)ground(x,y,ox,oy,TILE);
+ for(const b of buildings)drawBuilding(b,ox,oy);
+ for(const v of props)drawProp(v,ox,oy);
+ drawTownPlaza(ox,oy,now);
+ decorateWorld(ox,oy,now);
+ drawAmbientLights(ox,oy,now);
+ if(path.length){for(let i=0;i<path.length;i++){const t=path[i],x=t.x*TILE-ox,y=t.y*TILE-oy;const pulse=.65+.35*Math.sin(now*.008+i*.6);if(x>-10&&y>-10&&x<wid+10&&y<hei+10)px(x-3,y-3,6,6,`rgba(255,229,150,${pulse})`);}}
+ const sorted=[...actors,{...player,isPlayer:true,robe:C.clothing,skin:'#e9bd9e'}].sort((a,b)=>a.y-b.y);for(const a of sorted)drawActor(a,ox,oy,now);
+ drawWorldAtmosphere(ox,oy,now);
+ // Wayfinding glow visible on easy, or when close to an interactive quest object.
+ if(story&&!story.complete){for(const a of actors.filter(relevant)){const x=(a.x+.5)*TILE-ox,y=(a.y+.5)*TILE-oy;if(diff!=='hard'||Math.hypot(a.x-player.x,a.y-player.y)<3){ctx.strokeStyle='#f3de77';ctx.lineWidth=2;ctx.strokeRect(x-20,y-20,40,40);ctx.strokeStyle='#ffffff90';ctx.strokeRect(x-24,y-24,48,48)}}}
+ const a=nearest();$('action').hidden=!a||paused;$('action').textContent=a?.memory?'📚 기록 수집':a?.object?'🔎 조사하기':'💬 대화하기';if(frameTick>0.3||!playing)miniRender();requestAnimationFrame(tick)}
+function miniRender(){mctx.fillStyle=C.palette[0];mctx.fillRect(0,0,150,97);for(let y=0;y<H;y++)for(let x=0;x<W;x++){const t=arr[y]?.[x];mctx.fillStyle=t===9?'#357f9b':t===7?C.palette[2]:t===1?C.palette[1]:C.palette[0];mctx.fillRect(x*150/W,y*97/H,150/W+1,97/H+1)}mctx.fillStyle='#fce7b1';for(const a of actors.filter(relevant))mctx.fillRect(a.x*150/W-2,a.y*97/H-2,5,5);mctx.fillStyle='#8bd7e6';for(const a of actors.filter(a=>a.memory&&!story?.memories?.includes(Number(a.id.slice(-1)))))mctx.fillRect(a.x*150/W-1,a.y*97/H-1,3,3);mctx.fillStyle='#152d3e';mctx.fillRect(player.x*150/W-3,player.y*97/H-3,7,7);mctx.fillStyle='#fff';mctx.fillRect(player.x*150/W-1,player.y*97/H-1,3,3)}
+function tick(now){const dt=lim((now-lastTime)/1000||.016,0,.06);lastTime=now;step(dt);render(now)}
+window.addEventListener('keydown',e=>{const key=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright','w','a','s','d','e',' ','enter'].includes(key))e.preventDefault();if(e.repeat&&['e','enter',' '].includes(key))return;if(!paused&&key==='g')navigateToObjective();if(!paused&&['e','enter',' '].includes(key))interact();if(!paused)keys.add(e.key.startsWith('Arrow')?e.key:key);if(e.key==='Escape'){if(openLayer==='journal')unlock();else if(openLayer==='dialog')unlock();else if(openLayer==='puzzle')unlock()}});window.addEventListener('keyup',e=>keys.delete(e.key.startsWith('Arrow')?e.key:e.key.toLowerCase()));window.addEventListener('blur',()=>{keys.clear();touch={x:0,y:0}});
+canvas.addEventListener('pointerdown',e=>{if(paused)return;const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left+cam.x)/TILE,y=(e.clientY-rect.top+cam.y)/TILE;const target=actors.find(a=>!a.decor&&Math.hypot(a.x-x,a.y-y)<.75);if(target&&Math.hypot(player.x-target.x,player.y-target.y)<1.7)interact(target);else if(!collides(x,y))path=bfs(x,y)});
+const pad=$('pad'),knob=$('knob');function padMove(e){const r=pad.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),d=Math.hypot(x,y),max=r.width*.31,v=d?Math.min(d,max)/d:0;touch={x:x*v/max,y:y*v/max};knob.style.transform=`translate(calc(-50% + ${touch.x*max}px),calc(-50% + ${touch.y*max}px))`}pad.addEventListener('pointerdown',e=>{pad.setPointerCapture(e.pointerId);padMove(e)});pad.addEventListener('pointermove',e=>{if(pad.hasPointerCapture(e.pointerId))padMove(e)});for(const key of ['pointerup','pointercancel','lostpointercapture'])pad.addEventListener(key,()=>{touch={x:0,y:0};knob.style.transform='translate(-50%,-50%)'});
+$('fxBtn').addEventListener('click',()=>{effectsOn=!effectsOn;try{localStorage.setItem('dgu-rpg-effects',effectsOn?'on':'off')}catch{};$('fxBtn').setAttribute('aria-pressed',String(effectsOn));effectLabel();toast(effectsOn?'✨ 배경 효과를 켰습니다.':'🌙 배경 효과를 껐습니다.');});effectLabel();
+$('action').addEventListener('click',()=>interact());$('navBtn').addEventListener('click',navigateToObjective);$('hintBtn').addEventListener('click',hint);$('mobileHint').addEventListener('click',hint);$('journalBtn').addEventListener('click',openJournal);$('journalClose').addEventListener('click',unlock);$('mapBtn').addEventListener('click',()=>{$('minimap').hidden=!$('minimap').hidden;toast('🗺️ 미니맵 표시 전환')});$('restartBtn').addEventListener('click',()=>{seed=Math.floor(Math.random()*1e9);story=newStory(seed);buildMap();generateIntro();layerShow('intro');});
+$('difficultyButtons').addEventListener('click',e=>{const btn=e.target.closest('[data-diff]');if(!btn)return;diff=btn.dataset.diff;document.querySelectorAll('#difficultyButtons button').forEach(x=>x.classList.toggle('active',x===btn))});$('startBtn').addEventListener('click',startGame);$('resumeBtn').addEventListener('click',()=>{if(!story.complete){unlock();toast('⏯ 저장한 진행을 이어갑니다.')}});$('newSeedBtn').addEventListener('click',()=>{seed=Math.floor(Math.random()*1e9);story=newStory(seed);buildMap();generateIntro()});
+$('returnBtn').addEventListener('click',()=>{try{parent.postMessage({version:1,type:'dgu-story-return',major:ID},location.origin==='null'?'*':location.origin)}catch{};if(parent===window)location.href='./major_games_2d.html'});$('replayBtn').addEventListener('click',()=>{seed=Math.floor(Math.random()*1e9);story=newStory(seed);buildMap();generateIntro();layerShow('intro')});
+window.addEventListener('visibilitychange',()=>{if(document.hidden){keys.clear();touch={x:0,y:0};store()}});
+const foundSave=resumeFromStorage();if(!foundSave){story=newStory(seed)}buildMap();generateIntro();$('resumeBtn').hidden=!foundSave;hudUpdate();checkAI();requestAnimationFrame(tick);
+})();
+</script></body></html>
