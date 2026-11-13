@@ -1,7 +1,6 @@
 import { DurableObject } from 'cloudflare:workers';
 import { serveWithAuth, rateLimitAttempt } from './auth.js';
 
-const cleanName = v => String(v||'방문자').replace(/[<>\\]/g,'').trim().slice(0,12)||'방문자';
 const finite=(v,min,max)=>typeof v==='number'&&Number.isFinite(v)?Math.max(min,Math.min(max,v)):0;
 const ELEPHANTS=[{x:-9.6,z:2.8},{x:-6.5,z:4.1},{x:-8,z:7.6}];
 const rideIndex=v=>Number.isInteger(v)&&v>=0&&v<ELEPHANTS.length?v:null;
@@ -28,8 +27,37 @@ const cleanLook=v=>({
  bagColor:LOOK_ACCESSORY_COLORS.has(v?.bagColor)?v.bagColor:'sand'
 });
 const cleanWish=v=>String(v||'').replace(/[\x00-\x1F\x7F<>]/g,'').replace(/\s+/g,' ').trim().slice(0,30);
+// Optional Cloudflare Workers AI narrative embellishment for R13.24.
+// OFF by default: incurs no model calls until the owner sets the binding AND RPG_STORY_AI_ENABLED=true.
+const RPG_MAJOR_LABELS={classic:'고전문학',modern:'현대문학',ling:'국어학',teach:'한국어교육',creative:'문예창작',multi:'국제다문화학',asia:'한국·아시아문화학'};
+const rpgAttemptWindow=new Map();
+async function rpgScene(request,env){
+ const noStore={'Cache-Control':'private, no-store, max-age=0','Content-Type':'application/json; charset=utf-8'};
+ if(!env.AI||env.RPG_STORY_AI_ENABLED!=='true')return Response.json({enabled:false,reason:'not_configured'},{headers:noStore});
+ const type=(request.headers.get('content-type')||'').toLowerCase();
+ if(!type.startsWith('application/json'))return Response.json({enabled:true,error:'content_type'},{status:415,headers:noStore});
+ const length=Number(request.headers.get('content-length')||0);
+ if(length>1500)return Response.json({enabled:true,error:'too_large'},{status:413,headers:noStore});
+ let body;try{const raw=await request.text();if(raw.length>1500)throw Error('large');body=JSON.parse(raw)}catch{return Response.json({enabled:true,error:'invalid_payload'},{status:400,headers:noStore})}
+ if(!Object.hasOwn(RPG_MAJOR_LABELS,body?.major)||!['branch','ending'].includes(body?.phase)||!Number.isInteger(body?.choice)||body.choice<0||body.choice>2||typeof body?.title!=='string'||body.title.length>75)return Response.json({enabled:true,error:'invalid_options'},{status:400,headers:noStore});
+ const ip=request.headers.get('CF-Connecting-IP')||'unknown';const now=Date.now();
+ // Best-effort isolate throttle; for production scale use Cloudflare WAF/rate limiting.
+ for(const [key,val] of rpgAttemptWindow){if(now-val>75000)rpgAttemptWindow.delete(key)}
+ const bucket=ip+'|'+body.major;if(now-(rpgAttemptWindow.get(bucket)||0)<20000)return Response.json({enabled:true,error:'too_fast'},{status:429,headers:noStore});
+ rpgAttemptWindow.set(bucket,now);
+ const tone=['관계에 귀 기울이는','자료를 탐구하는','창의적인 방법을 만드는'][body.choice];
+ const stage=body.phase==='ending'?'마지막 결말':'사건의 전환 장면';
+ const system='당신은 한국어 2D 교육용 RPG의 안전한 창작 서술자입니다. 작품 인용문을 지어내지 마세요. 역사적 사실을 만들어내지 말고 반드시 게임 속 가상 사건으로 쓰세요. 사용자 선택을 반영해 2~3문장만 자연스러운 한국어 서술로 작성하세요. 개인정보, 폭력, 차별 고정관념 없이 긍정적이고 다면적인 반응을 적으세요. 마크다운, 리스트, 따옴표를 쓰지 마세요.';
+ try{
+  const out=await env.AI.run('@cf/google/gemma-4-26b-a4b-it',{messages:[{role:'system',content:system},{role:'user',content:`학문 분야: ${RPG_MAJOR_LABELS[body.major]} / 게임용 가상사건: ${body.title.replace(/[<>\\]/g,'')} / 단계: ${stage} / 플레이어가 선택한 방식: ${tone} / 이 선택으로 이후 인물 반응에 변화가 생기도록 표현해 주세요.`}],max_tokens:200,temperature:.65});
+  const val=String(out?.response||out?.result?.response||'').replace(/[\x00-\x1f<>]/g,' ').replace(/\s+/g,' ').trim().slice(0,360);
+  return Response.json({enabled:true,text:val},{headers:noStore});
+ }catch{return Response.json({enabled:true,error:'inference_unavailable'},{headers:noStore})}
+}
 async function fetchGame(request,env){
  const url=new URL(request.url);
+ if(url.pathname==='/__rpg/status')return Response.json({enabled:!!env.AI&&env.RPG_STORY_AI_ENABLED==='true'},{headers:{'Cache-Control':'private, no-store'}});
+ if(url.pathname==='/__rpg/scene')return rpgScene(request,env);
  if(url.pathname==='/ws'){
   const id=env.CAMPUS_ROOM.idFromName('public-campus-v1');
   return env.CAMPUS_ROOM.get(id).fetch(request);
@@ -42,7 +70,7 @@ export default {
  }
 };
 export class CampusRoom extends DurableObject{
- constructor(ctx,env){super(ctx,env);this.lastChat=new WeakMap();this.lastMove=new WeakMap();this.lastGreet=new WeakMap();this.lastWish=new WeakMap();this.lastLook=new WeakMap();
+ constructor(ctx,env){super(ctx,env);this.lastMove=new WeakMap();this.lastGreet=new WeakMap();this.lastWish=new WeakMap();this.lastLook=new WeakMap();
   // Storage survives WebSocket hibernation, object restarts and reconnects.
   ctx.blockConcurrencyWhile(async()=>{this.sugye=(await ctx.storage.get(SG_STORAGE))||SG_NEW();
     // Upgrade the persistent R13 schedule once: keep an in-progress event but randomize the next idle ceremony.
@@ -128,7 +156,7 @@ export class CampusRoom extends DurableObject{
   const state=ws.deserializeAttachment();if(!state)return;
   await this.sugyeAdvance();
   if(data.type==='hello'){
-   state.name=cleanName(data.name);state.look=cleanLook(data.look);state.ready=true;ws.serializeAttachment(state);
+   state.name='방문자';state.look=cleanLook(data.look);state.ready=true;ws.serializeAttachment(state);
    this.send(ws,{type:'identity',id:state.id,name:state.name});
    this.broadcast({type:'join',...state},ws);this.count();
   }else if(!state.ready){return;
@@ -219,9 +247,7 @@ export class CampusRoom extends DurableObject{
     // Send a complete, ordered view to every connected visitor, including the author.
     this.broadcast({type:'wishSync',wishes,createdBy:state.id});
    }catch(err){console.error('wish storage failure',err);this.send(ws,{type:'wishDenied',reason:'storage'});}
-  }else if(data.type==='chat'){
-   const now=Date.now();if(now-(this.lastChat.get(ws)||0)<750)return;this.lastChat.set(ws,now);
-   const text=String(data.text||'').trim().slice(0,250);if(text)this.broadcast({type:'chat',id:state.id,name:state.name,text},ws);
+
   }
  }
  async webSocketClose(ws){const state=ws.deserializeAttachment();if(state?.ready){

@@ -226,6 +226,17 @@ export async function serveWithAuth(request, env, gameFetch) {
     return Response.json({ authenticated: !!session }, { headers: securityHeaders() });
   }
   if (pathname.startsWith('/__auth/')) return new Response('Not Found', { status: 404, headers: securityHeaders() });
+  // R13.24: same-origin, authenticated, opt-in narrative API. No new unauthenticated paths.
+  if (pathname === '/__rpg/scene') {
+    if (!session) return new Response('Unauthorized', { status: 401, headers: securityHeaders() });
+    if (request.method !== 'POST') return new Response('Method Not Allowed', { status: 405, headers: securityHeaders({ Allow: 'POST' }) });
+    if (request.headers.get('Origin') !== url.origin) return new Response('Forbidden', { status: 403, headers: securityHeaders() });
+    const response = await gameFetch(request, env);
+    const h = new Headers(response.headers);
+    h.set('Cache-Control', 'private, no-store, max-age=0');
+    h.set('X-Content-Type-Options','nosniff');
+    return new Response(response.body, { status: response.status, headers: h });
+  }
   if (pathname === '/ws') {
     if (!session) return new Response('Unauthorized', { status: 401, headers: securityHeaders() });
     const origin = request.headers.get('Origin');
