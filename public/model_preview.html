@@ -1,0 +1,37 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>R13.21 · 동국 3D 모델 검사</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#20352e;color:#f5e6cd;font:14px/1.55 system-ui,'Malgun Gothic',sans-serif;min-height:100dvh;display:flex;flex-direction:column}
+header{padding:13px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;border-bottom:1px solid #8a765266;background:#19322b;z-index:2}header strong{font-size:16px;margin-right:auto}
+button,a{border:1px solid #bba577;background:#294b3b;color:#fff0d6;border-radius:10px;padding:9px 12px;font-weight:700;font-size:13px;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #f8c977}button.active{background:#d6b88a;color:#293d33}a{text-decoration:none}
+#stage{position:relative;flex:1;min-height:65dvh;touch-action:none}canvas{display:block;width:100%;height:100%;touch-action:none}
+#status{padding:12px 15px;background:#243e35;border-top:1px solid #8a765266;white-space:normal;overflow-wrap:anywhere;font-size:12px;color:#f6e6c8}small{color:#d1c9b1;font-size:11px}
+@media(max-width:600px){header{padding:12px;gap:7px}header strong{width:100%}button,a{padding:9px;font-size:12px}#stage{min-height:68dvh}}
+</style><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script></head>
+<body><header><strong>🪷 R13.21 · 캠퍼스 3D 모델 검사</strong><button id="fallback" class="active">기본 경량 GLB</button><button id="meshy">Meshy GLB</button><button id="reset">시점 초기화</button><a href="/" title="게임으로 돌아가기">게임으로</a></header><main id="stage" aria-label="3D 모델 미리보기"></main><div id="status" role="status" aria-live="polite">모델을 준비하고 있습니다… <small>화면 드래그: 회전 · 휠 또는 두 손가락: 확대·축소</small></div>
+<script type="module">
+const status=document.getElementById('status'),stage=document.getElementById('stage');
+try{
+ const THREE=await import('three');const {GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js');const {OrbitControls}=await import('three/addons/controls/OrbitControls.js');
+ const scene=new THREE.Scene();scene.background=new THREE.Color(0x254136);const camera=new THREE.PerspectiveCamera(42,1,.02,80);camera.position.set(2.8,2.2,4.6);
+ const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;stage.appendChild(renderer.domElement);
+ scene.add(new THREE.HemisphereLight(0xfff8e9,0x566558,2.1));const light=new THREE.DirectionalLight(0xffead2,2.8);light.position.set(2,4,3);scene.add(light);
+ const floor=new THREE.Mesh(new THREE.CircleGeometry(1.3,48),new THREE.MeshStandardMaterial({color:0xa58c65,roughness:.85}));floor.rotation.x=-Math.PI/2;floor.position.y=-.013;scene.add(floor);
+ const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1,0);controls.enableDamping=true;controls.maxPolarAngle=Math.PI*.72;controls.minDistance=1.5;controls.maxDistance=12;controls.update();
+ const loader=new GLTFLoader();let model=null;
+ async function load(which){
+  for(const el of document.querySelectorAll('header button'))el.classList.toggle('active',el.id===which);
+  const url=which==='meshy'?'/assets/meshy/novice_meshy.glb':'/assets/meshy/novice_fallback.glb';
+  status.textContent='3D 모델 읽는 중: '+url;
+  try{
+   const gltf=await loader.loadAsync(url);if(model)scene.remove(model);model=gltf.scene;
+   const box=new THREE.Box3().setFromObject(model),sz=new THREE.Vector3(),center=new THREE.Vector3();box.getSize(sz);box.getCenter(center);
+   if(sz.y<.01)throw new Error('모델의 높이 값이 잘못되었습니다.');const sc=2.15/sz.y;model.scale.setScalar(sc);model.position.set(-center.x*sc,-box.min.y*sc,-center.z*sc);scene.add(model);
+   status.textContent=(which==='meshy'?'Meshy 다운로드 GLB':'기본 경량 GLB')+' 표시 완료 · 확대/축소·회전으로 확인하세요. '+Math.round(sz.y*100)/100+' 원본 높이 단위';
+  }catch(err){status.textContent='파일을 열 수 없습니다: '+String(err)+'. Meshy GLB는 프로젝트 public/assets/meshy/novice_meshy.glb 경로에 넣어 주세요.';}
+ }
+ document.getElementById('fallback').onclick=()=>load('fallback');document.getElementById('meshy').onclick=()=>load('meshy');document.getElementById('reset').onclick=()=>{camera.position.set(2.8,2.2,4.6);controls.target.set(0,1,0);controls.update()};
+ const resize=()=>{const w=stage.clientWidth,h=stage.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)};
+ new ResizeObserver(resize).observe(stage);resize();
+ const animate=()=>{requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)};animate();load('fallback');
+}catch(err){status.textContent='3D 미리보기 실행 오류: '+String(err)+' · 온라인 접속 및 Three.js CDN 연결을 확인해 주세요.';}
+</script></body></html>
