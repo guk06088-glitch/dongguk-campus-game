@@ -10,9 +10,38 @@ const app = document.querySelector('#app');
 app.innerHTML = `<main id="game" aria-label="동국대학교 대학원 전공 탐험 RPG"><canvas id="world" width="1536" height="864" aria-label="이동 가능한 캠퍼스 게임 월드"></canvas><div id="hud"></div><div class="toast" role="status"></div><div id="loading"><div class="loading-title">東國<br>동국대학교 대학원<p>전공 탐험 RPG</p><p>봄날의 캠퍼스를 준비하고 있습니다…</p></div></div></main>`;
 const game = document.querySelector('#game'), hud = document.querySelector('#hud'), canvas = document.querySelector('#world'), ctx = canvas.getContext('2d');
 new ResizeObserver(() => { game.style.setProperty('--ui-scale', String(game.clientWidth / 1536)); }).observe(game);
+// R13.43: Same-origin nickname across meditation campus and the major RPG.
+const DGU_SHARED_NAME_KEY = 'dgu-campus-character-name-v1';
+function dguSafeName(input) {
+    return Array.from(String(input ?? '').replace(/[\x00-\x1f\x7f<>]/g, '').replace(/\s+/g, ' ').trim()).slice(0, 12).join('') || '방문자';
+}
+function dguReadSharedName() {
+    try { return localStorage.getItem(DGU_SHARED_NAME_KEY); } catch { return null; }
+}
+function dguWriteSharedName(name) {
+    try { localStorage.setItem(DGU_SHARED_NAME_KEY, dguSafeName(name)); } catch { /* Storage can be disabled. */ }
+}
 let state = load();
+// An existing meditation nickname has precedence; otherwise migrate the RPG's prior name.
+const dguExistingSharedName = dguReadSharedName();
+if (dguExistingSharedName !== null) {
+    state.name = dguSafeName(dguExistingSharedName);
+} else {
+    state.name = dguSafeName(state.name || '방문자');
+    dguWriteSharedName(state.name);
+}
 let px = 550, py = 1080, camX = 550, camY = 1080, target = null, time = 0, last = 0, walk = false, facing = 1, zoom = 1.4, modalOpen = false, muted = true;
 let adventureWorldSignature = '';
+function dguRefreshSharedName() {
+    const shared = dguReadSharedName();
+    if (shared === null) return;
+    const normalized = dguSafeName(shared);
+    if (state.name !== normalized) { state.name = normalized; save(); renderHUD(); }
+}
+window.addEventListener('pageshow', dguRefreshSharedName);
+window.addEventListener('storage', event => {
+    if (event.key === DGU_SHARED_NAME_KEY) dguRefreshSharedName();
+});
 const dguTargetFrameMs=(matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>0)?33:16;
 let dguLastFramePaint=0;
 const director = new CampusDirector({ position: () => ({ x: px, y: py, region: state.region }), selectMajor: i => { state.major = i; if (!state.completed.includes('major'))
@@ -126,8 +155,36 @@ function openModal(title, sub, body) { closeModal(); modalOpen = true; target = 
     closeModal(); }); return el.querySelector('.content'); }
 function closeModal() { document.querySelector('.overlay')?.remove(); modalOpen = mobileShell?.isOpen() ?? false; }
 function worldMap() { const el = openModal('캠퍼스 지도', '네 개의 공간, 하나의 배움', `<p>벚꽃길을 따라 새로운 연구의 세계로 떠나세요.</p>`); regions.forEach((r, i) => el.append(button(`<b>0${i + 1}　${r.name}</b><br><small>${r.sub}${i === state.region ? ' · 현재 위치' : ''}</small>`, () => changeRegion(i)))); }
-function selectMajor(i) { const m = majors[i]; const el = openModal(m.name + ' 전공', '일곱 갈래의 길, 나만의 연구', `<p>${m.desc}</p><div class="reward">전공 능력 · ${m.ability}<br>전공 연구 · ${m.quest}<br>활동 지역 · ${regions[m.area].name}</div>`); el.append(button(state.major === i ? '선택한 전공으로 탐험하기' : m.name + ' 전공 선택', () => { state.major = i; reward('major', 60, '전공 연구 안내서'); save(); closeModal(); renderHUD(); toast(m.name + ' 전공을 선택했습니다. 교수님과 이야기해 보세요.'); }, 'option primary')); el.prepend(button('이 전공의 모험 · ' + campaigns[i].title, () => { state.major = i; save(); setupMap(); renderHUD(); void director.adventure.open(); }, 'option primary')); el.append(button('학관 안으로 들어가기', () => interior(m.name, i))); el.append(button('전공 활동 지역으로 이동', () => changeRegion(m.area))); }
-function interior(name, major) { const el = openModal(name, '학관 내부 · 작은 연구실', `<div class="npc-head"><img src="./assets/professor.png" alt="지도교수"><div><b>지도교수 연구실</b><small>창호 너머 봄빛이 내려앉는 공간</small></div></div><p>“어서 오세요. 오늘의 질문을 함께 살펴볼까요? 좋은 연구는 작은 호기심에서 시작됩니다.”</p><div class="reward">서가 · 공동 연구 테이블 · 교수 상담실</div>`); el.append(button('지도교수와 전공 연구하기', () => quiz(major ?? (state.major >= 0 ? state.major : 4)))); el.append(button('서가에서 학습 자료 수집', () => { reward('shelf-' + name, 20, name + ' 연구 자료'); closeModal(); })); el.append(button('광장으로 나가기', closeModal, 'option primary')); }
+function selectMajor(i) { const m = majors[i]; const el = openModal(m.name + ' 전공', '일곱 갈래의 길, 나만의 연구', `<p>${m.desc}</p><div class="reward">전공 능력 · ${m.ability}<br>전공 연구 · ${m.quest}<br>활동 지역 · ${regions[m.area].name}</div>`); el.append(button(state.major === i ? '선택한 전공으로 탐험하기' : m.name + ' 전공 선택', () => { state.major = i; reward('major', 60, '전공 연구 안내서'); save(); closeModal(); renderHUD(); toast(m.name + ' 전공을 선택했습니다. 교수님과 이야기해 보세요.'); }, 'option primary')); el.prepend(button('이 전공의 모험 · ' + campaigns[i].title, () => { state.major = i; save(); setupMap(); renderHUD(); void director.adventure.open(); }, 'option primary')); el.append(button('학관 안으로 들어가기 · 전공 체험게임', () => interior(m.name, i))); el.append(button('전공 활동 지역으로 이동', () => changeRegion(m.area))); }
+// Original seven interactive experiences from the older campus project, restored only inside the major RPG.
+const DGU_EXPERIENCE_PAGES = [
+    'classic_story.html', 'linguistics_story.html', 'creative_writing_story.html',
+    'modern_story.html', 'korean_teaching_story.html', 'multicultural_story.html',
+    'asia_culture_story.html'
+];
+function launchMajorExperience(major) {
+    if (!Number.isInteger(major) || major < 0 || major >= DGU_EXPERIENCE_PAGES.length) {
+        toast('먼저 전공을 선택한 다음 학관에 입장해 주세요.');
+        majorMenu();
+        return;
+    }
+    state.major = major;
+    state.name = dguSafeName(state.name);
+    dguWriteSharedName(state.name);
+    save();
+    // Distinct, original, fully playable story minigame for each major.
+    window.location.assign('./experience/' + DGU_EXPERIENCE_PAGES[major] + '?from=rpg');
+}
+function interior(name, major) {
+    if (Number.isInteger(major)) {
+        launchMajorExperience(major);
+        return;
+    }
+    // Generic non-major buildings retain their pre-existing study-room interaction.
+    const el = openModal(name, '학관 내부 · 작은 연구실', `<div class="npc-head"><img src="./assets/professor.png" alt="지도교수"><div><b>지도교수 연구실</b><small>연구실 · 도서 자료 · 교수 상담</small></div></div><p>전공을 선택하면 해당 전공의 체험형 게임을 시작할 수 있습니다.</p>`);
+    el.append(button('전공 선택하고 체험하기', majorMenu, 'option primary'));
+    el.append(button('광장으로 나가기', closeModal));
+}
 function interact(o) { if (o.kind === 'building') {
     if (o.major !== undefined)
         selectMajor(o.major);
@@ -225,7 +282,7 @@ function daily() { const day = new Date().toISOString().slice(0, 10); const e = 
 }
 else
     toast('내일 다시 만나요!'); })); }
-function menu() { const e = openModal('여정의 쉼표', '동국대학교 대학원 전공 탐험 RPG', `<p>이동 · WASD / 방향키 / 터치 조이스틱<br>목적지 이동 · 바닥 클릭<br>대화 · NPC 클릭 / 가까이에서 E<br>지도 · M　닫기 · Esc<br><small>진행은 이 브라우저에 자동 저장됩니다.</small></p>`); e.append(button('캐릭터 이름 바꾸기', () => { const f = openModal('나의 이름', '새로운 연구자의 이름', `<input id="playername" maxlength="12" style="width:100%;padding:12px;border:1px solid #bca47c" aria-label="캐릭터 이름"/>`); f.querySelector('input').value = state.name; f.append(button('이름 저장', () => { state.name = f.querySelector('input').value.trim() || '동국대 대학원생'; save(); renderHUD(); closeModal(); })); })); e.append(button(muted ? '효과음 켜기' : '효과음 끄기', () => { muted = !muted; toast(muted ? '효과음을 껐습니다' : '효과음을 켰습니다'); menu(); })); e.append(button('진행 저장', () => { if(persist(state))toast('현재 여정을 저장했습니다.'); else toast('브라우저 저장공간이 차단되어 기기에 저장하지 못했습니다.'); })); e.append(button('저장 데이터 내려받기', () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' })); a.download = '동국대-연구여정.json'; a.click(); URL.revokeObjectURL(a.href); })); e.append(button('저장 데이터 불러오기', () => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = async () => { try {
+function menu() { const e = openModal('여정의 쉼표', '동국대학교 대학원 전공 탐험 RPG', `<p>이동 · WASD / 방향키 / 터치 조이스틱<br>목적지 이동 · 바닥 클릭<br>대화 · NPC 클릭 / 가까이에서 E<br>지도 · M　닫기 · Esc<br><small>진행은 이 브라우저에 자동 저장됩니다.</small></p>`); e.append(button('캐릭터 이름 바꾸기', () => { const f = openModal('나의 이름', '새로운 연구자의 이름', `<input id="playername" maxlength="12" style="width:100%;padding:12px;border:1px solid #bca47c" aria-label="캐릭터 이름"/>`); f.querySelector('input').value = state.name; f.append(button('이름 저장', () => { state.name = dguSafeName(f.querySelector('input').value); dguWriteSharedName(state.name); save(); renderHUD(); closeModal(); })); })); e.append(button(muted ? '효과음 켜기' : '효과음 끄기', () => { muted = !muted; toast(muted ? '효과음을 껐습니다' : '효과음을 켰습니다'); menu(); })); e.append(button('진행 저장', () => { if(persist(state))toast('현재 여정을 저장했습니다.'); else toast('브라우저 저장공간이 차단되어 기기에 저장하지 못했습니다.'); })); e.append(button('저장 데이터 내려받기', () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' })); a.download = '동국대-연구여정.json'; a.click(); URL.revokeObjectURL(a.href); })); e.append(button('저장 데이터 불러오기', () => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = async () => { try {
     const v = JSON.parse(await input.files[0].text());
     if (!Array.isArray(v.research) || v.research.length !== 7 || !Array.isArray(v.items) || !Number.isInteger(v.region) || v.region < 0 || v.region > 3 || !Array.isArray(v.completed) || !Array.isArray(v.visited) || !Array.isArray(v.accepted))
         throw Error();
